@@ -31,7 +31,6 @@
 #include <HTTPClient.h>
 #include "BluetoothSerial.h"
 #include <font.h>
-#include <image.h>
 #include "FS.h"
 #include "SPIFFS.h"
 #include <M5StackUpdater.h>

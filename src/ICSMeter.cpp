@@ -2,7 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #include <ICSMeter.h>
+#include <image.h>
 #include "functions.h"
+#include "command.h"
 #include "tasks.h"
 
 // Setup
@@ -94,30 +96,22 @@ void loop()
       viewBattery();
       viewBaseline(alternance);
 
-      if (btConnected == false)
+      getMode();
+      getFrequency();
+
+      switch (option)
       {
-        value("NEED PAIRING");
-      }
+      case 0:
+        getPower();
+        break;
 
-      if (btConnected == true)
-      {
-        getMode();
-        getFrequency();
+      case 1:
+        getSmeter();
+        break;
 
-        switch (option)
-        {
-        case 0:
-          getPower();
-          break;
-
-        case 1:
-          getSmeter();
-          break;
-
-        case 2:
-          getSWR();
-          break;
-        }
+      case 2:
+        getSWR();
+        break;
       }
     }
   }
