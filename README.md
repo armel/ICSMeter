@@ -1,25 +1,25 @@
-# IC705SMeter
+# ICSMeter
 ![basic](https://img.shields.io/badge/M5Stack-BASIC-blue)
 ![grey](https://img.shields.io/badge/M5Stack-GREY-blue)
 ![fire](https://img.shields.io/badge/M5Stack-FIRE-orange)
 ![core2](https://img.shields.io/badge/M5Stack-CORE2-green)
 ![aws](https://img.shields.io/badge/M5Stack-AWS-orange)
 
-![licence](https://img.shields.io/github/license/armel/IC705SMeter)
-![language](https://img.shields.io/github/languages/top/armel/IC705SMeter)
-![size](https://img.shields.io/github/repo-size/armel/IC705SMeter)
-![version](https://img.shields.io/github/v/release/armel/IC705SMeter)
-![activity](https://img.shields.io/github/commit-activity/y/armel/IC705SMeter)
+![licence](https://img.shields.io/github/license/armel/ICSMeter)
+![language](https://img.shields.io/github/languages/top/armel/ICSMeter)
+![size](https://img.shields.io/github/repo-size/armel/ICSMeter)
+![version](https://img.shields.io/github/v/release/armel/ICSMeter)
+![activity](https://img.shields.io/github/commit-activity/y/armel/ICSMeter)
 
 **An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by @HamRadioDude about the installation of the IC705SMeter project. It can help you !** 
 
-The IC7505SMeter project allows to equip the extraordinary IC705 produced by ICOM, with a needle S-Meter ! The S-Meter allows to measure the S signal, the Po power and the SWR. It also displays the current frequency, mode and filter.
+The ICSMeter project allows to equip the IC-705, IC-7300 and IC-9700 produced by ICOM, with a needle S-Meter ! The S-Meter allows to measure the S signal, the Po power and the SWR. It also displays the current frequency, mode and filter.
 
-![IC705SMeter S](https://github.com/armel/IC705SMeter/blob/main/img/S.png)
+![ICSMeter S](https://github.com/armel/ICSMeter/blob/main/img/S.png)
 
-![IC705SMeter PWR](https://github.com/armel/IC705SMeter/blob/main/img/PWR.png)
+![ICSMeter PWR](https://github.com/armel/ICSMeter/blob/main/img/PWR.png)
 
-![IC705SMeter SWR](https://github.com/armel/IC705SMeter/blob/main/img/SWR.png)
+![ICSMeter SWR](https://github.com/armel/ICSMeter/blob/main/img/SWR.png)
 
 # Technical architecture
 
@@ -63,17 +63,15 @@ About the QSJ, count around 45€. You then have a complete development platform
 
 The easiest way is to install [PlateformIO for VSCode](https://platformio.org/install/ide?install=vscode) on your PC (Linux or Windows) or on your Mac (Intel or M1). It is a cross-platform and multilanguage development environment that is powerful and pleasant to use.
 
-Then, still on your PC or Mac, clone the IC705SMeter project via the command :
+Then, still on your PC or Mac, clone the ICSMeter project via the command :
 
-`git clone https://github.com/armel/IC705SMeter.git`
+`git clone https://github.com/armel/ICSMeter.git`
 
-You can also download a [zip archive](https://github.com/armel/IC705SMeter/releases) of the project, if you prefer, and unzip it.
+You can also download a [zip archive](https://github.com/armel/ICSMeter/releases) of the project, if you prefer, and unzip it.
 
 As I said, an excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by @HamRadioDude about the installation of the IC705SMeter project. It can help you !
 
 ## Configuration
-
-Open the IC705SMeter project with PlateformIO for VSCode.
 
 ### File `src/settings.h`
 
@@ -98,26 +96,100 @@ Line 5, check that the constant `BOARD` corresponds to your M5Stack model (by de
 ```
 #define BOARD CORE2
 ```
+#### IC Transceiver Model
 
-#### Bluetooth Address of your IC705
+Line 8, the constant `IC_MODEL` set your Transceiver model.
+Choose between : 705, 7300 or 9700.
 
-Line 8, change the address of your IC705 if necessary. I have indicated the default value. Refer to the documentation, if needed.
+> I don't own the IC-9700, so I haven't tested it.
+
+#### IC Connect method
+
+If you're a using an IC-7300 or IC-9700, choose __USB__ !
+
+Line 11, the constant `IC_CONNECT` set your connect method.
+Choose between : BT or USB
+
+> Note that BT only works with IC-705.
+
+#### CI-V Address of your Transceiver
+
+Line 14, the constant `CI_V_ADDRESS` set the CI-V Address of your Transceiver. I have indicated the default value. Refer to the documentation, if needed.
+
+> Note that, if you read 94h as `CI_V_ADDRESS` on your Transceiver, you must indicate 0x94. If it's A4h, you must indicate 0xA4. And so on. 
 
 #### Wifi Configuration 
 
-Line 11 and 12, indicate your SSID and your Wifi password. You can view your IC705SMeter from a simple browser. It is even possible to control it by this way, as the buttons are clickable. In order to display your IC705SMeter in your browser, just go to `http://ip_address_of_your_ic705smeter/`. As a reminder, the IP address that your IC705SMeter retrieves is displayed on the screen.
+If you're a using an IC-7300 or IC-9700, __it's necessary__ !
+
+Line 17 and 18, the constants `WIFI_SSID` and `WIFI_PASSWORD` set your Wifi configuration.
+
+In complement, you can view your ICSMeter from a simple browser. It is even possible to control it by this way, as the buttons are clickable. In order to display your ICSMeter in your browser, just go to `http://ip_address_of_your_ICSMeter/`. As a reminder, the IP address that your ICSMeter retrieves is sometimes displayed on the screen.
 
 > Beware: it's slow! And there is no automatic refresh. You have to click on the background of the screen image to make a new capture. And otherwise, as said, the buttons are functional.
+
+#### Proxy Configuration
+
+If you're a using an IC-7300 or IC-9700, __it's necessary__ ! 
+
+You will need to take a look at my other project, [ICUSBProxy](https://github.com/armel/ICUSBProxy). This project allows to set up an HTTP _proxy_ allowing to talk wirelessly, from an M5Stack (or other equipment), with an Icom transceiver like IC-7300 or IC-9700 and sending CI-V commands.
+
+Please, take the time to read the [README.md](https://github.com/armel/ICUSBProxy/blob/main/README.md) and install [ICUSBProxy](https://github.com/armel/ICUSBProxy).
+
+It's done ? Nice, so we can move forward.
+
+Line 21 and 22, the constants `SERIAL_DEVICE` and `BAUDE_RATE` set the CI-V COM port settings. So COM port number (COM1, /dev/ttyUSB0, etc.) and Baude rate (115900, 19200, 9600, etc.).
+Line 23 and 24, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port of the Proxy.
+
+> About Proxy, the idea is to use a PC or a nano computer (like a Raspberry Pi) to connect the IC-7300 or IC-9700 transceiver via the USB cable (USB type A to USB type B). The M5Stack will talk to this PC by Wifi and the PC will talk to the transceiver by the USB cable. By this way, the M5Stack keeps the big advantage of being wireless.
 
 #### TFT image retention
 
 To avoid TFT image retention (also called _Burn In_), there is a kind of screen saver. If there is no action on the buttons or PTT, after a delay of 60 minutes, the screen will show the Icom logo. 
 
-You can change the delay, line 14. 
+You can change the constant `TIMEOUT_SCREENSAVER` to set the delay, line 27. 
 
-If the screen saver is active and you press a button or the PTT to transmit, the IC705SMeter screen will come back.
+If the screen saver is active and you press a button or the PTT to transmit, the ICMultiMeter screen will come back.
 
-Note that if the connection between your M5Stack and the IC705 has been established and you turn off your IC705 or disconnect the Bluetooth link, the screen will go completely into _sleep mode_. The IC705SMeter screen will come back as soon as the Bluetooth link is established again.  
+Note that if the connection between your M5Stack and the Transceiver has been established and you turn off your Transceiver (or disconnect the Bluetooth link, with IC-705), the screen will go completely into _sleep mode_. The screen will come back as soon as the connection is established again after you turn on your Transceiver. 
+
+#### Examples of settings
+
+##### IC-705, BT
+
+| settings        | value           | 
+| ------------- |:-------------:| 
+| IC_MODEL      | 705 | 
+| IC_CONNECT      | BT      | 
+| CI_V_ADDRESS | 0xA4      |
+
+##### IC-705, USB
+
+| settings        | value           | 
+| ------------- |:-------------:| 
+| IC_MODEL      | 705 | 
+| IC_CONNECT      | USB      | 
+| CI_V_ADDRESS | 0xA4      |
+| WIFI_SSID   |  _My WiFi SSID_ |
+| WIFI_PASSWORD | _My WiFi Password_ |
+| SERIAL_DEVICE | "/dev/ttyACM0" |
+| BAUDE_RATE | 115900 | 
+| PROXY_URL | "http://192.168.1.32" |
+| PROXY_PORT | 1234 |    
+
+##### IC-7300, USB
+
+| settings        | value           | 
+| ------------- |:-------------:| 
+| IC_MODEL      | 7300 | 
+| IC_CONNECT      | USB      | 
+| CI_V_ADDRESS | 0x94      |
+| WIFI_SSID   |  _My WiFi SSID_ |
+| WIFI_PASSWORD | _My WiFi Password_ |
+| SERIAL_DEVICE | "/dev/ttyUSB0" |
+| BAUDE_RATE | 115900 | 
+| PROXY_URL | "http://192.168.1.32" |
+| PROXY_PORT | 1234 |    
 
 ### File `platformio.ini`
 
@@ -143,9 +215,13 @@ Compile and upload the project to your M5Stack. You are done !
 
 # Usage
 
-Once launched, you must connect your IC705 to your M5Stack via the menu (Set / Bluetooth Set) of your transceiver. Refer to the documentation, if needed.
+Once launched, if you're using Bluetooth with an IC-705, you must connect your IC-705 to your M5Stack via the menu (Set / Bluetooth Set) of your transceiver. Refer to the documentation, if needed.
 
-Using the buttons, you can change the measurement:
+If you're using USB with [ICUSBProxy](https://github.com/armel/ICUSBProxy), plug your Transceiver via the USB cable (USB type A to USB type B) to your PC. It's time to start the Python3 script :
+
+`./ICUSBProxy.py`
+
+With the buttons, you can change the measurement:
 
 - left: Po or PWR power
 - middle : S signal
@@ -167,19 +243,19 @@ It's possible to store several applications on the SPI Flash File Storage of you
 
 ## Preparation
 
-I will detail here the procedure to deploy IC705SMeter and IC705MultiMeter applications on the same M5Stack.
+I will detail here the procedure to deploy ICSMeter and ICMultiMeter applications on the same M5Stack.
 
 ### Step 1 - Compile
 
-Start by compiling your applications, as you used to do. Nothing changes here. For example, start by compiling the IC705SMeter application. Then do the same with the IC705MultiMeter application. 
+Start by compiling your applications, as you used to do. Nothing changes here. For example, start by compiling the ICSMeter application. Then do the same with the ICMultiMeter application. 
 
 ### Step 2 - Collecting the binary files
 
-That's it, you have compiled the IC705SMeter and IC705MultiMeter application? It's perfect.
+That's it, you have compiled the ICSMeter and ICMultiMeter application? It's perfect.
 
 Each compilation has produced a binary. It is this binary that is sent / flashed to your M5Stack, via the USB connection.
 
-Go to the root of the IC705SMeter folder, which contains the whole project. And go to the :
+Go to the root of the ICSMeter folder, which contains the whole project. And go to the :
 
 - `.pio/build/m5stack-basic-grey`, if you compiled for a GREY or BASIC M5Stack
 - `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
@@ -190,30 +266,30 @@ You will find a `firmware.bin` file there. Now, there are 2 solutions...
 
 Format an SD Card as FAT32.
 
-Copy the `firmware.bin` at the root of the SD Card. And take the opportunity to rename it, for example, `IC705SMeter.bin`.
+Copy the `firmware.bin` at the root of the SD Card. And take the opportunity to rename it, for example, `ICSMeter.bin`.
 
-Do the same with the IC705MultiMeter application. Of course rename it with a different name, for example, `IC705MultiMeter.bin`.
+Do the same with the ICMultiMeter application. Of course rename it with a different name, for example, `ICMultiMeter.bin`.
 
-At this point, you should have 2 clearly identified binaries in the root of your SD Card : `IC705SMeter.bin` and `IC705MultiMeter.bin`.
+At this point, you should have 2 clearly identified binaries in the root of your SD Card : `ICSMeter.bin` and `ICMultiMeter.bin`.
 
 ### Step 2.2 - SPI Flash File Storage (more difficult)
 
-Copy `firmware.bin` in the `data` directory at the root of the IC705SMeter folder. And take the opportunity to rename it, for example, `IC705SMeter.bin`.
+Copy `firmware.bin` in the `data` directory at the root of the ICSMeter folder. And take the opportunity to rename it, for example, `ICSMeter.bin`.
 
 > If the `data` folder does not exist, create it.
 
-Do the same with the IC705MultiMeter application. Go to the root of the IC705MultiMeter folder, which contains the whole project. And go to the directory :
+Do the same with the ICMultiMeter application. Go to the root of the ICMultiMeter folder, which contains the whole project. And go to the directory :
 
 - `.pio/build/m5stack-basic-grey`, if you have compiled for a M5Stack GREY or BASIC
 - `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
 
-You will also find a `firmware.bin` file. Copy it, too, in the `data` directory at the __root of the IC705SMeter folder__. And take the opportunity to rename it to, for example, `IC705MultiMeter.bin`.
+You will also find a `firmware.bin` file. Copy it, too, in the `data` directory at the __root of the ICSMeter folder__. And take the opportunity to rename it to, for example, `ICMultiMeter.bin`.
 
-> Important, the idea is to copy these 2 binaries in the same directory `data`** (located at the root of the IC705SMeter folder).
+> Important, the idea is to copy these 2 binaries in the same directory `data`** (located at the root of the ICSMeter folder).
 
-At this point, you should have 2 clearly identified binaries: `IC705SMeter.bin` and `IC705MultiMeter.bin` in the `data` directory at the root of the IC705SMeter folder.
+At this point, you should have 2 clearly identified binaries: `ICSMeter.bin` and `ICMultiMeter.bin` in the `data` directory at the root of the ICSMeter folder.
 
-So let's move on to what is probably the most complicated step. Open the IC705SMeter project from Visual Studio Code, as you would compile it. 
+So let's move on to what is probably the most complicated step. Open the ICSMeter project from Visual Studio Code, as you would compile it. 
 
 ![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_1.png)
 
@@ -237,7 +313,7 @@ As soon as the first little dot appears, you can :
 - either press the left or right button, to launch the default application.
 - or press the central button. In this case, the Bin Loader menu appears and offers you the list of available binaries in SPI Flash File Storage or SD Card. 
 
-If you have followed the procedure perfectly, you should have a choice between `IC705SMeter.bin` and `IC705MultiMeter.bin`.
+If you have followed the procedure perfectly, you should have a choice between `ICSMeter.bin` and `ICMultiMeter.bin`.
 
 The left and right buttons allow you to switch from one binary to another. And the middle button validates the selected binary. In this case, the selected application will be loaded ;)
 

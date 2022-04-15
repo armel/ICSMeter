@@ -317,7 +317,8 @@ void getMode()
   if (valString != filterOld)
   {
     filterOld = valString;
-    M5.Lcd.fillRoundRect(44, 199, 44, 13, 2, TFT_MODE);
+    M5.Lcd.fillRoundRect(44, 198, 44, 15, 2, TFT_MODE_BACK);
+    M5.Lcd.drawRoundRect(44, 198, 44, 15, 2, TFT_MODE_BORDER);
     M5.Lcd.drawString(valString, 66, 206);
   }
 
@@ -332,7 +333,8 @@ void getMode()
   if (valString != modeOld)
   {
     modeOld = valString;
-    M5.Lcd.fillRoundRect(232, 199, 44, 13, 2, TFT_MODE);
+    M5.Lcd.fillRoundRect(232, 198, 44, 15, 2, TFT_MODE_BACK);
+    M5.Lcd.drawRoundRect(232, 198, 44, 15, 2, TFT_MODE_BORDER);
     M5.Lcd.drawString(valString, 254, 206);
   }
 

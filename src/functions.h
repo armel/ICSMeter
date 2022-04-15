@@ -87,6 +87,18 @@ void viewGUI()
   M5.Lcd.drawJpg(smeterTop, sizeof(smeterTop), 0, 0, 320, 20);
   M5.Lcd.drawJpg(smeterMiddle, sizeof(smeterMiddle), 0, 20, 320, 140);
   M5.Lcd.drawJpg(smeterBottom, sizeof(smeterBottom), 0, 160, 320, 80);
+
+  M5.Lcd.setFreeFont(0);
+  M5.Lcd.setTextDatum(CC_DATUM);
+
+  M5.Lcd.fillRoundRect(6, 4, 40, 12, 2, TFT_MODE_BACK);
+  M5.Lcd.drawRoundRect(6, 4, 40, 12, 2, TFT_MODE_BORDER);
+  M5.Lcd.setTextColor(TFT_WHITE);
+
+  if (IC_CONNECT == BT)
+    M5.Lcd.drawString(String(IC_MODEL) + " BT", 10, 20);
+  else
+    M5.Lcd.drawString(String(IC_MODEL) + " USB", 10, 20);
 }
 
 void clearData() 
