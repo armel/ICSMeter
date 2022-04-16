@@ -54,14 +54,15 @@ void getSmeter()
     }
 
     // Debug trace
-    /*
-    Serial.print("Get S");
-    Serial.print(val0);
-    Serial.print(" ");
-    Serial.print(val1);
-    Serial.print(" ");
-    Serial.println(angle);
-    */
+    if (DEBUG)
+    {
+      Serial.print("Get S");
+      Serial.print(val0);
+      Serial.print(" ");
+      Serial.print(val1);
+      Serial.print(" ");
+      Serial.println(angle);
+    }
    
     // Draw line
     needle(angle);
@@ -137,14 +138,15 @@ void getSWR()
     valString = "SWR " + String(val1);
 
     // Debug trace
-    /*
-    Serial.print("Get SWR");
-    Serial.print(val0);
-    Serial.print(" ");
-    Serial.print(val1);
-    Serial.print(" ");
-    Serial.println(angle);
-    */
+    if (DEBUG)
+    {
+      Serial.print("Get SWR");
+      Serial.print(val0);
+      Serial.print(" ");
+      Serial.print(val1);
+      Serial.print(" ");
+      Serial.println(angle);
+    }
 
     // Draw line
     needle(angle);
@@ -222,15 +224,16 @@ void getPower()
     valString = "PWR " + String((val2 / 10)) + " W";
 
     // Debug trace
-    /*
-    Serial.print("Get PWR");
-    Serial.print(val0);
-    Serial.print(" ");
-    Serial.print(val1);
-    Serial.print(" ");
-    Serial.println(angle);
-    */
-   
+    if (DEBUG)
+    {
+      Serial.print("Get PWR");
+      Serial.print(val0);
+      Serial.print(" ");
+      Serial.print(val1);
+      Serial.print(" ");
+      Serial.println(angle);
+    }
+
     // Draw line
     needle(angle);
 
@@ -248,8 +251,6 @@ void getDataMode()
   size_t n = sizeof(request) / sizeof(request[0]);
 
   sendCommand(request, n, buffer, 6);
-
-  //Serial.print("Get Data");
 
   dataMode = buffer[4];
 }
@@ -289,9 +290,6 @@ void getFrequency()
   val2 = valString.substring(0, lenght - 6);
 
   subValue(val2 + "." + val1 + "." + val0);
-
-  //Serial.print("Get frequency");
-
 }
 
 // Get Mode
@@ -337,8 +335,6 @@ void getMode()
     M5.Lcd.drawRoundRect(232, 198, 44, 15, 2, TFT_MODE_BORDER);
     M5.Lcd.drawString(valString, 254, 206);
   }
-
-  //Serial.print("Get Mode");
 }
 
 // Get TX
@@ -440,12 +436,15 @@ void getDebug()
       valString = "PWR " + String((val2 / 10)) + " W";
 
       // Debug trace
-      Serial.print(val0);
-      Serial.print(" ");
-      Serial.print(val1);
-      Serial.print(" ");
-      Serial.println(angle);
-
+      if (DEBUG)
+      {
+        Serial.print(val0);
+        Serial.print(" ");
+        Serial.print(val1);
+        Serial.print(" ");
+        Serial.println(angle);
+      }
+      
       // Draw line
       needle(angle);
 
