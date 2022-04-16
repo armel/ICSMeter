@@ -98,7 +98,10 @@ void viewBattery() {
 void viewGUI()
 {
   M5.Lcd.drawJpg(smeterTop, sizeof(smeterTop), 0, 0, 320, 20);
-  M5.Lcd.drawJpg(smeterMiddle, sizeof(smeterMiddle), 0, 20, 320, 140);
+  if(IC_MODEL == 705)
+    M5.Lcd.drawJpg(smeterMiddle10, sizeof(smeterMiddle10), 0, 20, 320, 140);
+  else
+    M5.Lcd.drawJpg(smeterMiddle100, sizeof(smeterMiddle100), 0, 20, 320, 140);
   M5.Lcd.drawJpg(smeterBottom, sizeof(smeterBottom), 0, 160, 320, 80);
 }
 
@@ -170,7 +173,10 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uin
     c = 160 + x;
     d = 220 - y;
 
-    M5.Lcd.drawJpg(smeterMiddle, sizeof(smeterMiddle), 0, 20, 320, 130);
+  if(IC_MODEL == 705)
+    M5.Lcd.drawJpg(smeterMiddle10, sizeof(smeterMiddle10), 0, 20, 320, 130);
+  else
+    M5.Lcd.drawJpg(smeterMiddle100, sizeof(smeterMiddle100), 0, 20, 320, 130);
 
     // M5.Lcd.drawFastHLine(0, 150, 320, TFT_BLACK);
 
@@ -544,6 +550,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
   http.addHeader("Connection", "keep-alive");                                                            // Specify header
   http.setTimeout(100);                                                                                  // Set Time Out
   httpCode = http.GET();                                                                                 // Make the request
+
   if (httpCode == 200)
   {
     proxyConnected = true;
@@ -553,6 +560,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
     response.trim();
     response = response.substring(4);
 
+    
     if (response == "")
     {
       txConnected = false;
@@ -966,6 +974,7 @@ boolean checkConnection()
       {
         message = "Check Proxy";
       }
+      http.end(); // Free the resources
     }
 
     if (message != "")

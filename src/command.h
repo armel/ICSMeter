@@ -221,7 +221,10 @@ void getPower()
     }
 
     val2 = round(val1 * 10);
-    valString = "PWR " + String((val2 / 10)) + " W";
+    if(IC_MODEL == 705)
+      valString = "PWR " + String((val2 / 10)) + " W";
+    else
+      valString = "PWR " + String(val2) + " W";
 
     // Debug trace
     if (DEBUG)
