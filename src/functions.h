@@ -908,7 +908,6 @@ boolean checkConnection()
   String command = "";
   String response = "";
 
-  char buffer[8];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
 
   char s[4];
@@ -923,7 +922,7 @@ boolean checkConnection()
   if (screensaverMode == 0)
   {
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
-      message = "Check Pairing";
+      message = "Need Pairing";
     else if (IC_CONNECT == USB && wifiConnected == false)
       message = "Check Wifi";
     else if (IC_CONNECT == USB && (proxyConnected == false || txConnected == false))
@@ -971,7 +970,15 @@ boolean checkConnection()
 
     if (message != "")
     {
-      value(message);
+      M5.Lcd.setTextDatum(CC_DATUM);
+      M5.Lcd.setFreeFont(&stencilie16pt7b);
+      // M5.Lcd.setFreeFont(&YELLOWCRE8pt7b);
+      M5.Lcd.setTextPadding(190);
+      M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
+      M5.Lcd.drawString(message, 160, 180);
+      vTaskDelay(500);
+      M5.Lcd.drawString("", 160, 180);
+      vTaskDelay(100);
       frequencyOld = "";
       return false;
     }
