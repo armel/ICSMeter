@@ -91,8 +91,6 @@ void loop()
     tx = getTX();
     if(tx != 0) screensaver = millis();   // If transmit, refresh tempo
 
-    Serial.println(screenshot);
-
     if (screensaverMode == 0 && screenshot == false) {
 
       viewMenu();
