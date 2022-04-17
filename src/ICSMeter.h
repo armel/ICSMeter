@@ -14,20 +14,24 @@
 #define DEBUG false
 
 #if BOARD == BASIC
+  #define LED_PIN 15
   #include <M5Stack.h>
   #include "BasicAndGrey.h"
   #include "WebIndexBasicAndGrey.h"
 #elif BOARD == GREY
+  #define LED_PIN 15
   #include <M5Stack.h>
   #include "BasicAndGrey.h"
   #include "WebIndexBasicAndGrey.h"
 #elif BOARD == CORE2
+  #define LED_PIN 15
   #include <M5Core2.h>
   #include "Core2.h"
   #include "WebIndexCore2.h"
 #endif
 
 #include <Preferences.h>
+#include <FastLED.h>
 #include <HTTPClient.h>
 #include "BluetoothSerial.h"
 #include <font.h>
@@ -38,6 +42,9 @@
 #define VERSION "0.0.2"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
+
+#define FASTLED_INTERNAL // To disable pragma messages on compile
+#define STEP 2
 
 // Color
 #define TFT_MODE_BORDER M5.Lcd.color565(115, 135, 159)
@@ -69,7 +76,7 @@ float angleOld = 0;
 
 boolean reset = true;
 boolean screenshot = false;
-boolean screensaverMode = 0;
+boolean screensaverMode = false;
 boolean btConnected = false;
 boolean wifiConnected = false;
 boolean proxyConnected = false;
@@ -91,6 +98,10 @@ String subValStringOld = "";
 char dataMode = 0;
 
 const char *menu[] = {"PWR", "S", "SWR"};
+
+// LED
+#define NUM_LEDS 10
+CRGB leds[NUM_LEDS];
 
 // Web site Screen Capture stuff
 #define GET_unknown 0

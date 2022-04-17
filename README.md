@@ -331,11 +331,12 @@ Many thanks to...
 |:------------------- | :---------------------------------------------------- | :------------------------------------------- |
 | M5Stack             | [M5Stack](https://twitter.com/M5Stack)                | https://github.com/m5stack/M5Stack           |
 | M5Stack-SD-Updater  | [Tobozo](https://twitter.com/TobozoTagada)            | https://github.com/tobozo/M5Stack-SD-Updater |
-
+| FastLED             | FastLED                                               | https://github.com/FastLED/FastLED           |
 
 # Donations
 
-Special thanks to Matt B-Wilkinson, Rolf Schroeder, Brian Garber, Robert Agnew and Meinhard Frank Günther for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson
+and Tadeusz Pater for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 

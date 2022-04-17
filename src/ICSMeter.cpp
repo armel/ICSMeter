@@ -18,6 +18,9 @@ void setup()
   // Init M5
   M5.begin(true, true, false, false);
 
+  // Init Led
+  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);  // GRB ordering is assumed
+
   // Init Power
   power();
 
@@ -93,6 +96,21 @@ void loop()
 
     if (screensaverMode == 0 && screenshot == false) {
 
+      if(tx == 0) {
+        for(uint8_t i = 0; i <= 9; i++){
+          leds[i] = CRGB::Black;
+        }
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else {
+       for(uint8_t i = 0; i <= 9; i++){
+          leds[i] = CRGB::Red;
+        }
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+     
       viewMenu();
       viewBattery();
       viewBaseline(alternance);

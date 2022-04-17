@@ -6,9 +6,13 @@ void button(void *pvParameters)
 {
   for (;;)
   {
+
+    // Get screenshot
     getScreenshot();
+
+    // Get button
     getButton();
-    
+        
     if(btnA || btnB || btnC) {
       screensaver = millis();
     }
