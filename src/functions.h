@@ -817,7 +817,7 @@ void wakeAndSleep()
     screensaver = 0;
     M5.Lcd.fillScreen(TFT_BLACK);
   }
-  else if (screensaverMode == true && screensaver == true)
+  else if (screensaverMode == true && screensaver != 0)
   {
     M5.Lcd.fillScreen(TFT_BLACK);
     clearData();
