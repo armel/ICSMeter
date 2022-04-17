@@ -35,7 +35,7 @@
 #include "SPIFFS.h"
 #include <M5StackUpdater.h>
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -59,7 +59,6 @@ Preferences preferences;
 WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
 uint8_t htmlGetRequest;
-uint8_t htmlGetRefresh = 3;
 uint8_t option = 2;
 uint8_t brightness = 64;
 uint8_t optionOld = 5;
@@ -69,6 +68,7 @@ uint32_t screensaver;
 float angleOld = 0;
 
 boolean reset = true;
+boolean screenshot = false;
 boolean screensaverMode = 0;
 boolean btConnected = false;
 boolean wifiConnected = false;

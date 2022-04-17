@@ -526,8 +526,6 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
 void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
 {
   static uint8_t proxyError = 0;
-  uint8_t byte1, byte2, byte3;
-  uint8_t counter = 0;
 
   HTTPClient http;
   uint16_t httpCode;
@@ -559,7 +557,6 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
     response = http.getString(); // Get data
     response.trim();
     response = response.substring(4);
-
     
     if (response == "")
     {
@@ -645,6 +642,7 @@ bool M5Screen24bmp()
     header[18 + i] = (char)((image_width >> (8 * i)) & 255);
     header[22 + i] = (char)((image_height >> (8 * i)) & 255);
   }
+
   // Write the header to the file
   httpClient.write(header, 54);
 
@@ -681,10 +679,9 @@ void getScreenshot()
   unsigned long timeout_millis = millis() + 3000;
   String currentLine = "";
 
-  httpClient = httpServer.available();
-
   if (WiFi.status() == WL_CONNECTED)
   {
+    httpClient = httpServer.available();
     // httpClient.setNoDelay(1);
     if (httpClient)
     {
@@ -703,6 +700,7 @@ void getScreenshot()
         // If there's bytes to read from the client,
         if (httpClient.available())
         {
+          screenshot = true;
           char c = httpClient.read();
           Serial.write(c);
           // If the byte is a newline character
@@ -734,6 +732,8 @@ void getScreenshot()
                 httpClient.println("Content-type:image/bmp");
                 httpClient.println();
                 M5Screen24bmp();
+                vTaskDelay(1000);
+                screenshot = false;
                 break;
               }
               default:
@@ -758,34 +758,29 @@ void getScreenshot()
                 // If no specific target is requested
                 if (currentLine.startsWith("GET / "))
                 {
-                  htmlGetRefresh = 3;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the screenshot image is requested
                 if (currentLine.startsWith("GET /screenshot.bmp"))
                 {
-                  htmlGetRefresh = 3;
                   htmlGetRequest = GET_screenshot;
                 }
                 // If the button left was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonLeft"))
                 {
                   buttonLeftPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the button center was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonCenter"))
                 {
                   buttonCenterPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the button right was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonRight"))
                 {
                   buttonRightPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
               }
@@ -803,6 +798,7 @@ void getScreenshot()
       // Close the connection
       httpClient.stop();
       // Serial.println("Client Disconnected.");
+      vTaskDelay(100);
     }
   }
 }
@@ -927,7 +923,7 @@ boolean checkConnection()
 
   command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
 
-  if (screensaverMode == 0)
+  if (screensaverMode == 0 && screenshot == false)
   {
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       message = "Need Pairing";

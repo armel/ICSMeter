@@ -31,6 +31,7 @@ void setup()
 
   // Wifi
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  
   while (WiFi.status() != WL_CONNECTED && loop <= 10)
   {
     delay(250);
@@ -90,7 +91,9 @@ void loop()
     tx = getTX();
     if(tx != 0) screensaver = millis();   // If transmit, refresh tempo
 
-    if (screensaverMode == 0) {
+    Serial.println(screenshot);
+
+    if (screensaverMode == 0 && screenshot == false) {
 
       viewMenu();
       viewBattery();
@@ -120,15 +123,4 @@ void loop()
 
   // Manage Screen Saver
   wakeAndSleep();
-
-  // Manage Web Server if enable
-  if (WiFi.status() == WL_CONNECTED)
-  {
-    getScreenshot();
-  }
-  else {
-    wifiConnected = false;
-  }
-
-  vTaskDelay(10);
 }
