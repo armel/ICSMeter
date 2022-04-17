@@ -24,7 +24,7 @@
   #include "BasicAndGrey.h"
   #include "WebIndexBasicAndGrey.h"
 #elif BOARD == CORE2
-  #define LED_PIN 15
+  #define LED_PIN 25
   #include <M5Core2.h>
   #include "Core2.h"
   #include "WebIndexCore2.h"

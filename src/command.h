@@ -351,8 +351,6 @@ uint8_t getTX()
   static char buffer[5];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1C, 0x00, 0xFD};
 
-  if (btConnected == false) return 0;
-
   size_t n = sizeof(request) / sizeof(request[0]);
 
   sendCommand(request, n, buffer, 5);
