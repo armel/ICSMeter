@@ -50,7 +50,10 @@ void getSmeter()
     else
     {
       angle = mapFloat(val0, 121, 241, -6.50f, -43.0f);
-      valString = "S 9 + " + String(int(round(val1))) + " dB";
+      if(int(round(val1) < 10))
+        valString = "S 9 + 0" + String(int(round(val1))) + " dB";
+      else
+        valString = "S 9 + " + String(int(round(val1))) + " dB";
     }
 
     // Debug trace
