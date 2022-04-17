@@ -94,7 +94,7 @@ void loop()
     tx = getTX();
     if(tx != 0) screensaver = millis();   // If transmit, refresh tempo
 
-    if (screensaverMode == 0 && screenshot == false) {
+    if (screensaverMode == false && screenshot == false) {
 
       if(tx == 0) {
         for(uint8_t i = 0; i <= 9; i++){

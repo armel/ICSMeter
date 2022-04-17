@@ -17,7 +17,7 @@ void button(void *pvParameters)
       screensaver = millis();
     }
 
-    if(screensaverMode == 0)
+    if(screensaverMode == false)
     {
       if (btnA == 1 || buttonLeftPressed == 1)
       {
