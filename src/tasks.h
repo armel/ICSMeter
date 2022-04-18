@@ -7,13 +7,17 @@ void button(void *pvParameters)
   for (;;)
   {
 
-    getButton();
+    // Get screenshot
+    getScreenshot();
 
+    // Get button
+    getButton();
+        
     if(btnA || btnB || btnC) {
       screensaver = millis();
     }
 
-    if(screensaverMode == 0)
+    if(screensaverMode == false)
     {
       if (btnA == 1 || buttonLeftPressed == 1)
       {

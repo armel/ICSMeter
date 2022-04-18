@@ -50,7 +50,10 @@ void getSmeter()
     else
     {
       angle = mapFloat(val0, 121, 241, -6.50f, -43.0f);
-      valString = "S 9 + " + String(int(round(val1))) + " dB";
+      if(int(round(val1) < 10))
+        valString = "S 9 + 0" + String(int(round(val1))) + " dB";
+      else
+        valString = "S 9 + " + String(int(round(val1))) + " dB";
     }
 
     // Debug trace
@@ -221,7 +224,10 @@ void getPower()
     }
 
     val2 = round(val1 * 10);
-    valString = "PWR " + String((val2 / 10)) + " W";
+    if(IC_MODEL == 705)
+      valString = "PWR " + String((val2 / 10)) + " W";
+    else
+      valString = "PWR " + String(val2) + " W";
 
     // Debug trace
     if (DEBUG)
@@ -344,8 +350,6 @@ uint8_t getTX()
 
   static char buffer[5];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1C, 0x00, 0xFD};
-
-  if (btConnected == false) return 0;
 
   size_t n = sizeof(request) / sizeof(request[0]);
 

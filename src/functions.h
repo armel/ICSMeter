@@ -45,7 +45,7 @@ void viewBattery() {
   uint8_t batteryLevel;
   boolean batteryCharging;
 
-  if(screensaverMode == 0) {
+  if(screensaverMode == false) {
     // On left, view battery level
     batteryLevel = map(getBatteryLevel(1), 0, 100, 0, 16);
     batteryCharging = isCharging();
@@ -98,7 +98,10 @@ void viewBattery() {
 void viewGUI()
 {
   M5.Lcd.drawJpg(smeterTop, sizeof(smeterTop), 0, 0, 320, 20);
-  M5.Lcd.drawJpg(smeterMiddle, sizeof(smeterMiddle), 0, 20, 320, 140);
+  if(IC_MODEL == 705)
+    M5.Lcd.drawJpg(smeterMiddle10, sizeof(smeterMiddle10), 0, 20, 320, 140);
+  else
+    M5.Lcd.drawJpg(smeterMiddle100, sizeof(smeterMiddle100), 0, 20, 320, 140);
   M5.Lcd.drawJpg(smeterBottom, sizeof(smeterBottom), 0, 160, 320, 80);
 }
 
@@ -170,7 +173,10 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uin
     c = 160 + x;
     d = 220 - y;
 
-    M5.Lcd.drawJpg(smeterMiddle, sizeof(smeterMiddle), 0, 20, 320, 130);
+  if(IC_MODEL == 705)
+    M5.Lcd.drawJpg(smeterMiddle10, sizeof(smeterMiddle10), 0, 20, 320, 130);
+  else
+    M5.Lcd.drawJpg(smeterMiddle100, sizeof(smeterMiddle100), 0, 20, 320, 130);
 
     // M5.Lcd.drawFastHLine(0, 150, 320, TFT_BLACK);
 
@@ -520,8 +526,6 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
 void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
 {
   static uint8_t proxyError = 0;
-  uint8_t byte1, byte2, byte3;
-  uint8_t counter = 0;
 
   HTTPClient http;
   uint16_t httpCode;
@@ -544,6 +548,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
   http.addHeader("Connection", "keep-alive");                                                            // Specify header
   http.setTimeout(100);                                                                                  // Set Time Out
   httpCode = http.GET();                                                                                 // Make the request
+
   if (httpCode == 200)
   {
     proxyConnected = true;
@@ -552,7 +557,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
     response = http.getString(); // Get data
     response.trim();
     response = response.substring(4);
-
+    
     if (response == "")
     {
       txConnected = false;
@@ -637,6 +642,7 @@ bool M5Screen24bmp()
     header[18 + i] = (char)((image_width >> (8 * i)) & 255);
     header[22 + i] = (char)((image_height >> (8 * i)) & 255);
   }
+
   // Write the header to the file
   httpClient.write(header, 54);
 
@@ -673,10 +679,9 @@ void getScreenshot()
   unsigned long timeout_millis = millis() + 3000;
   String currentLine = "";
 
-  httpClient = httpServer.available();
-
   if (WiFi.status() == WL_CONNECTED)
   {
+    httpClient = httpServer.available();
     // httpClient.setNoDelay(1);
     if (httpClient)
     {
@@ -695,6 +700,7 @@ void getScreenshot()
         // If there's bytes to read from the client,
         if (httpClient.available())
         {
+          screenshot = true;
           char c = httpClient.read();
           Serial.write(c);
           // If the byte is a newline character
@@ -726,6 +732,8 @@ void getScreenshot()
                 httpClient.println("Content-type:image/bmp");
                 httpClient.println();
                 M5Screen24bmp();
+                vTaskDelay(1000);
+                screenshot = false;
                 break;
               }
               default:
@@ -750,34 +758,29 @@ void getScreenshot()
                 // If no specific target is requested
                 if (currentLine.startsWith("GET / "))
                 {
-                  htmlGetRefresh = 3;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the screenshot image is requested
                 if (currentLine.startsWith("GET /screenshot.bmp"))
                 {
-                  htmlGetRefresh = 3;
                   htmlGetRequest = GET_screenshot;
                 }
                 // If the button left was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonLeft"))
                 {
                   buttonLeftPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the button center was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonCenter"))
                 {
                   buttonCenterPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
                 // If the button right was pressed on the HTML page
                 if (currentLine.startsWith("GET /buttonRight"))
                 {
                   buttonRightPressed = true;
-                  htmlGetRefresh = 1;
                   htmlGetRequest = GET_index_page;
                 }
               }
@@ -795,6 +798,7 @@ void getScreenshot()
       // Close the connection
       httpClient.stop();
       // Serial.println("Client Disconnected.");
+      vTaskDelay(100);
     }
   }
 }
@@ -807,46 +811,22 @@ void wakeAndSleep()
   static boolean xDir = rand() & 1;
   static boolean yDir = rand() & 1;
 
-  /*
-  if (screensaverMode == 0 && millis() - screensaver > TIMEOUT_SCREENSAVER)
+  if (screensaverMode == false && millis() - screensaver > TIMEOUT_SCREENSAVER)
   {
-    for (uint8_t i = brightness; i >= 1; i--)
-    {
-      setBrightness(i);
-      delay(10);
-    }
-    screensaverMode = 1;
-    screensaver = 0;
-    M5.Lcd.sleep();
-  }
-  else if (screensaverMode == 1 && screensaver != 0)
-  {
-    M5.Lcd.wakeup();
-    screensaverMode = 0;
-    for (uint8_t i = 1; i <= brightness; i++)
-    {
-      setBrightness(i);
-      delay(10);
-    }
-  }
-  */
-
-  if (screensaverMode == 0 && millis() - screensaver > TIMEOUT_SCREENSAVER)
-  {
-    screensaverMode = 1;
+    screensaverMode = true;
     screensaver = 0;
     M5.Lcd.fillScreen(TFT_BLACK);
   }
-  else if (screensaverMode == 1 && screensaver != 0)
+  else if (screensaverMode == true && screensaver != 0)
   {
     M5.Lcd.fillScreen(TFT_BLACK);
     clearData();
     viewGUI();
-    screensaverMode = 0;
+    screensaverMode = false;
 
     vTaskDelay(100);
   }
-  else if (screensaverMode == 1) {
+  else if (screensaverMode == true) {
   
     M5.Lcd.fillRect(x, y, 44, 22, TFT_BLACK);
 
@@ -919,7 +899,7 @@ boolean checkConnection()
 
   command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
 
-  if (screensaverMode == 0)
+  if (screenshot == false)
   {
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       message = "Need Pairing";
@@ -944,6 +924,7 @@ boolean checkConnection()
           if(startup == false)
           {
             clearData();
+            screensaver = millis();
             M5.Lcd.wakeup();
             Serial.println("TX connected");
           }
@@ -966,9 +947,10 @@ boolean checkConnection()
       {
         message = "Check Proxy";
       }
+      http.end(); // Free the resources
     }
 
-    if (message != "")
+    if (message != "" && screensaverMode == false)
     {
       M5.Lcd.setTextDatum(CC_DATUM);
       M5.Lcd.setFreeFont(&stencilie16pt7b);

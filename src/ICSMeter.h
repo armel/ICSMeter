@@ -14,20 +14,24 @@
 #define DEBUG false
 
 #if BOARD == BASIC
+  #define LED_PIN 15
   #include <M5Stack.h>
   #include "BasicAndGrey.h"
   #include "WebIndexBasicAndGrey.h"
 #elif BOARD == GREY
+  #define LED_PIN 15
   #include <M5Stack.h>
   #include "BasicAndGrey.h"
   #include "WebIndexBasicAndGrey.h"
 #elif BOARD == CORE2
+  #define LED_PIN 25
   #include <M5Core2.h>
   #include "Core2.h"
   #include "WebIndexCore2.h"
 #endif
 
 #include <Preferences.h>
+#include <FastLED.h>
 #include <HTTPClient.h>
 #include "BluetoothSerial.h"
 #include <font.h>
@@ -35,9 +39,12 @@
 #include "SPIFFS.h"
 #include <M5StackUpdater.h>
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
+
+#define FASTLED_INTERNAL // To disable pragma messages on compile
+#define STEP 2
 
 // Color
 #define TFT_MODE_BORDER M5.Lcd.color565(115, 135, 159)
@@ -59,7 +66,6 @@ Preferences preferences;
 WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
 uint8_t htmlGetRequest;
-uint8_t htmlGetRefresh = 3;
 uint8_t option = 2;
 uint8_t brightness = 64;
 uint8_t optionOld = 5;
@@ -69,7 +75,8 @@ uint32_t screensaver;
 float angleOld = 0;
 
 boolean reset = true;
-boolean screensaverMode = 0;
+boolean screenshot = false;
+boolean screensaverMode = false;
 boolean btConnected = false;
 boolean wifiConnected = false;
 boolean proxyConnected = false;
@@ -91,6 +98,10 @@ String subValStringOld = "";
 char dataMode = 0;
 
 const char *menu[] = {"PWR", "S", "SWR"};
+
+// LED
+#define NUM_LEDS 10
+CRGB leds[NUM_LEDS];
 
 // Web site Screen Capture stuff
 #define GET_unknown 0
