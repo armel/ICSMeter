@@ -924,6 +924,7 @@ boolean checkConnection()
           if(startup == false)
           {
             clearData();
+            screensaver = millis();
             M5.Lcd.wakeup();
             Serial.println("TX connected");
           }
