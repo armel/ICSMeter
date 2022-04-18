@@ -949,7 +949,7 @@ boolean checkConnection()
       http.end(); // Free the resources
     }
 
-    if (message != "")
+    if (message != "" && screensaverMode == false)
     {
       M5.Lcd.setTextDatum(CC_DATUM);
       M5.Lcd.setFreeFont(&stencilie16pt7b);
