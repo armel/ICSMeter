@@ -16,9 +16,6 @@ void setup()
 {
   uint8_t loop = 0;
 
-  // Debug
-  Serial.begin(115200);
-
   // Init M5
   auto cfg = M5.config();
   M5.begin(cfg);
@@ -40,14 +37,14 @@ void setup()
   brightness = preferences.getUInt("brightness", 64);
 
   // Bin Loader
-  binLoader();
+  //binLoader();
 
   // Wifi
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   
   while (WiFi.status() != WL_CONNECTED && loop <= 10)
   {
-    delay(250);
+    vTaskDelay(250);
     loop += 1;
   }
 
@@ -63,7 +60,7 @@ void setup()
   if(IC_MODEL == 705 && IC_CONNECT == BT)
   {
     CAT.register_callback(callbackBT);
-
+    
     if (!CAT.begin(NAME))
     {
       Serial.println("An error occurred initializing Bluetooth");

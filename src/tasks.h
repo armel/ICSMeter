@@ -9,7 +9,6 @@ void button(void *pvParameters)
 
   for (;;)
   {
-
     // Get screenshot
     getScreenshot();
 

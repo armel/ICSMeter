@@ -11,8 +11,8 @@
 #include <SD.h>
 #include <FS.h>
 #include <SPIFFS.h>
-#include <BluetoothSerial.h>
 #include <M5Unified.h>
+#include "BluetoothSerial.h"
 #include <M5StackUpdater.h>
 
 #define BT 1
@@ -32,8 +32,8 @@
 #define TFT_NEDDLE_2 M5.Lcd.color565(241, 170, 170)
 
 // Optimize SPI Speed
-#undef SPI_READ_FREQUENCY
-#define SPI_READ_FREQUENCY 40000000
+//#undef SPI_READ_FREQUENCY
+//#define SPI_READ_FREQUENCY 40000000
 
 // Web site Screen Capture stuff
 #define GET_unknown 0
