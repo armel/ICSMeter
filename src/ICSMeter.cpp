@@ -28,16 +28,13 @@ void setup()
     FastLED.addLeds<NEOPIXEL, 25>(leds, NUM_LEDS);  // GRB ordering is assumed
   }
 
-  // Init Power
-  //power();
-
   // Preferences
   preferences.begin(NAME);
   option = preferences.getUInt("option", 2);
   brightness = preferences.getUInt("brightness", 64);
 
   // Bin Loader
-  //binLoader();
+  binLoader();
 
   // Wifi
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);

@@ -12,7 +12,7 @@
 #include <FS.h>
 #include <SPIFFS.h>
 #include <M5Unified.h>
-#include "BluetoothSerial.h"
+#include <BluetoothSerial.h>
 #include <M5StackUpdater.h>
 
 #define BT 1
