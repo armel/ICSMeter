@@ -207,7 +207,7 @@ void value(String valString, uint8_t x = 160, uint8_t y = 180)
 }
 
 // Print sub value
-void subValue(String valString, uint8_t x = 160, uint8_t y = 205)
+void subValue(String valString, uint8_t x = 160, uint8_t y = 207)
 {
   if (valString != subValStringOld)
   {
@@ -953,18 +953,23 @@ boolean checkConnection()
       http.end(); // Free the resources
     }
 
-    if (message != "" && screensaverMode == false)
+    if (message != "")
     {
-      M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFont(&stencilie16pt7b);
-      M5.Lcd.setTextPadding(194);
-      M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
-      M5.Lcd.drawString(message, 160, 180);
-      vTaskDelay(500);
-      M5.Lcd.drawString("", 160, 180);
-      vTaskDelay(100);
-      frequencyOld = "";
-      return false;
+      if(screensaverMode == false) {
+        M5.Lcd.setTextDatum(CC_DATUM);
+        M5.Lcd.setFont(&stencilie16pt7b);
+        M5.Lcd.setTextPadding(194);
+        M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
+        M5.Lcd.drawString(message, 160, 180);
+        vTaskDelay(500);
+        M5.Lcd.drawString("", 160, 180);
+        vTaskDelay(100);
+        frequencyOld = "";
+        return false;
+      }
+      else {
+        vTaskDelay(1000);
+      }
     }
   }
 
