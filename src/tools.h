@@ -3,12 +3,6 @@
 
 int btnA, btnB, btnC, btnL, btnM, btnR;
 
-// Power init
-void power()
-{
-  M5.Power.begin();
-}
-
 // Get Battery level
 int8_t getBatteryLevel(bool type)
 {

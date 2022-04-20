@@ -724,8 +724,9 @@ void getScreenshot()
                 if(M5.getBoard() == m5::board_t::board_M5Stack) {
                   httpClient.write_P(index_m5stack_html, sizeof(index_m5stack_html));
                 }
-                else if(M5.getBoard() == m5::board_t::board_M5StackCore2)
+                else if(M5.getBoard() == m5::board_t::board_M5StackCore2) {
                   httpClient.write_P(index_core2_html, sizeof(index_core2_html));
+                }
                 break;
               }
               case GET_screenshot:

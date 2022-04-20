@@ -31,10 +31,6 @@
 #define TFT_NEDDLE_1 M5.Lcd.color565(241, 120, 100)
 #define TFT_NEDDLE_2 M5.Lcd.color565(241, 170, 170)
 
-// Optimize SPI Speed
-//#undef SPI_READ_FREQUENCY
-//#define SPI_READ_FREQUENCY 40000000
-
 // Web site Screen Capture stuff
 #define GET_unknown 0
 #define GET_index_page  1
