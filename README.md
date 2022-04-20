@@ -75,27 +75,6 @@ As I said, an excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_c
 
 ### File `src/settings.h`
 
-#### Model of M5Stack
-
-Line 5, check that the constant `BOARD` corresponds to your M5Stack model (by default, the constant is initialized to `BASIC`). So, indicate : 
-
-- `BASIC` if you have an M5Stack BASIC
-
-```
-#define BOARD BASIC
-```
-
-- `GREY` if you have an M5Stack GREY
-
-```
-#define BOARD GREY
-```
-
-- `CORE2` if you have an M5Stack CORE2
-
-```
-#define BOARD CORE2
-```
 #### IC Transceiver Model
 
 Line 8, the constant `IC_MODEL` set your Transceiver model.
@@ -191,24 +170,6 @@ Note that if the connection between your M5Stack and the Transceiver has been es
 | PROXY_URL | "http://192.168.1.32" |
 | PROXY_PORT | 1234 |    
 
-### File `platformio.ini`
-
-If and only if __you are using the M5Stack Core2__, edit the `platformio.ini` file and modify the lines,
-
-```
-default_envs = m5stack-basic-grey
-;default_envs = m5stack-core2
-```
-
-By,
-
-```
-;default_envs = m5stack-basic-grey
-default_envs = m5stack-core2
-```
-
-This is the same as changing the target platform, the semicolon being a comment.
-
 ## Compiling and flashing the M5Stack
 
 Compile and upload the project to your M5Stack. You are done !
@@ -255,10 +216,7 @@ That's it, you have compiled the ICSMeter and ICMultiMeter application? It's per
 
 Each compilation has produced a binary. It is this binary that is sent / flashed to your M5Stack, via the USB connection.
 
-Go to the root of the ICSMeter folder, which contains the whole project. And go to the :
-
-- `.pio/build/m5stack-basic-grey`, if you compiled for a GREY or BASIC M5Stack
-- `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
+Go to the root of the ICSMeter folder, which contains the whole project. And go to the directory `.pio/build/m5stack`.
 
 You will find a `firmware.bin` file there. Now, there are 2 solutions...
 
@@ -278,10 +236,7 @@ Copy `firmware.bin` in the `data` directory at the root of the ICSMeter folder. 
 
 > If the `data` folder does not exist, create it.
 
-Do the same with the ICMultiMeter application. Go to the root of the ICMultiMeter folder, which contains the whole project. And go to the directory :
-
-- `.pio/build/m5stack-basic-grey`, if you have compiled for a M5Stack GREY or BASIC
-- `.pio/build/m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
+Do the same with the ICMultiMeter application. Go to the root of the ICMultiMeter folder, which contains the whole project. And go to the directory `.pio/build/m5stack`.
 
 You will also find a `firmware.bin` file. Copy it, too, in the `data` directory at the __root of the ICSMeter folder__. And take the opportunity to rename it to, for example, `ICMultiMeter.bin`.
 
@@ -293,10 +248,7 @@ So let's move on to what is probably the most complicated step. Open the ICSMete
 
 ![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_1.png)
 
-Step 1, click on the Platformio icon (the icon with an ant's head...). Step 2, unroll the section :
-
-- `m5stack-basic-grey`, if you have compiled for an M5Stack GREY or BASIC
-- `m5stack-core2`, if you compiled for M5Stack CORE2 or AWS
+Step 1, click on the Platformio icon (the icon with an ant's head...). Step 2, unroll the section `m5stack`.
 
 ![Capture](https://github.com/armel/RRFRemote/blob/main/img/flash_2.png)
 
@@ -335,8 +287,7 @@ Many thanks to...
 
 # Donations
 
-Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson
-and Tadeusz Pater for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater and Frederic Ulmer for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 
