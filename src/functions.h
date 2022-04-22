@@ -55,7 +55,7 @@ void viewBattery() {
       M5.Lcd.drawJpg(smeterTop, sizeof(smeterTop), 0, 0, 320, 20);
 
       // Settings
-      M5.Lcd.setFreeFont(0);
+      M5.Lcd.setFont(0);
       M5.Lcd.setTextDatum(CC_DATUM);
 
       M5.Lcd.fillRoundRect(4, 4, 56, 13, 2, TFT_MODE_BACK);
@@ -78,14 +78,14 @@ void viewBattery() {
         
       if(batteryCharging) {
         M5.Lcd.setTextColor(TFT_BLACK);
-        M5.Lcd.setFreeFont(0);
+        M5.Lcd.setFont(0);
         M5.Lcd.setTextDatum(CC_DATUM);
         M5.Lcd.setTextPadding(0);
         M5.Lcd.drawString("+", 290, 11);
       }
       else {
         M5.Lcd.setTextColor(TFT_BLACK);
-        M5.Lcd.setFreeFont(0);
+        M5.Lcd.setFont(0);
         M5.Lcd.setTextDatum(CR_DATUM);
         M5.Lcd.setTextPadding(0);
         M5.Lcd.drawString(String(getBatteryLevel(1)) + "%", 290, 11);
@@ -198,8 +198,7 @@ void value(String valString, uint8_t x = 160, uint8_t y = 180)
     valStringOld = valString;
 
     M5.Lcd.setTextDatum(CC_DATUM);
-    M5.Lcd.setFreeFont(&stencilie16pt7b);
-    // M5.Lcd.setFreeFont(&YELLOWCRE8pt7b);
+    M5.Lcd.setFont(&stencilie16pt7b);
     M5.Lcd.setTextPadding(190);
     M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
     valString.replace(".", ",");
@@ -208,15 +207,14 @@ void value(String valString, uint8_t x = 160, uint8_t y = 180)
 }
 
 // Print sub value
-void subValue(String valString, uint8_t x = 160, uint8_t y = 205)
+void subValue(String valString, uint8_t x = 160, uint8_t y = 207)
 {
   if (valString != subValStringOld)
   {
     subValStringOld = valString;
 
     M5.Lcd.setTextDatum(CC_DATUM);
-    // M5.Lcd.setFreeFont(&stencilie16pt7b);
-    M5.Lcd.setFreeFont(&YELLOWCRE8pt7b);
+    M5.Lcd.setFont(&YELLOWCRE8pt7b);
     M5.Lcd.setTextPadding(140);
     M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
     // valString.replace(".", ",");
@@ -234,7 +232,7 @@ void viewMenu()
     optionOld = option;
 
     M5.Lcd.setTextDatum(CC_DATUM);
-    M5.Lcd.setFreeFont(&YELLOWCRE8pt7b);
+    M5.Lcd.setFont(&YELLOWCRE8pt7b);
     M5.Lcd.setTextPadding(0);
 
     for (j = 0; j <= 2; j++)
@@ -261,7 +259,7 @@ void viewBaseline(uint8_t alternance)
   if(btnL || btnR)
   {
     M5.Lcd.setTextDatum(CC_DATUM);
-    M5.Lcd.setFreeFont(0);
+    M5.Lcd.setFont(0);
     M5.Lcd.setTextPadding(160);
     M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BACK);
     M5.Lcd.drawString("Brightness " + String(map(brightness, 1, 254, 1, 100)) + "%", 160, 160);
@@ -270,7 +268,7 @@ void viewBaseline(uint8_t alternance)
     if (alternance > 20 && WiFi.status() == WL_CONNECTED)
     {
       M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFreeFont(0);
+      M5.Lcd.setFont(0);
       M5.Lcd.setTextPadding(160);
       M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BACK);
       M5.Lcd.drawString(String(WiFi.localIP().toString().c_str()), 160, 160);
@@ -278,7 +276,7 @@ void viewBaseline(uint8_t alternance)
     else
     {
       M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFreeFont(0);
+      M5.Lcd.setFont(0);
       M5.Lcd.setTextPadding(160);
       M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BACK);
       M5.Lcd.drawString(String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR), 160, 160);
@@ -353,8 +351,8 @@ void binLoader()
   root = SPIFFS.open("/");
   getBinaryList(root, "SP");
 
-
-  if (SD.begin()) {
+  if (SD.begin(GPIO_NUM_4, SPI, 25000000)) 
+  {
     root = SD.open("/");
     getBinaryList(root, "SD");
   }
@@ -723,7 +721,12 @@ void getScreenshot()
                 httpClient.println("HTTP/1.1 200 OK");
                 httpClient.println("Content-type:text/html");
                 httpClient.println();
-                httpClient.write_P(index_html, sizeof(index_html));
+                if(M5.getBoard() == m5::board_t::board_M5Stack) {
+                  httpClient.write_P(index_m5stack_html, sizeof(index_m5stack_html));
+                }
+                else if(M5.getBoard() == m5::board_t::board_M5StackCore2) {
+                  httpClient.write_P(index_core2_html, sizeof(index_core2_html));
+                }
                 break;
               }
               case GET_screenshot:
@@ -950,19 +953,23 @@ boolean checkConnection()
       http.end(); // Free the resources
     }
 
-    if (message != "" && screensaverMode == false)
+    if (message != "")
     {
-      M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFreeFont(&stencilie16pt7b);
-      // M5.Lcd.setFreeFont(&YELLOWCRE8pt7b);
-      M5.Lcd.setTextPadding(190);
-      M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
-      M5.Lcd.drawString(message, 160, 180);
-      vTaskDelay(500);
-      M5.Lcd.drawString("", 160, 180);
-      vTaskDelay(100);
-      frequencyOld = "";
-      return false;
+      if(screensaverMode == false) {
+        M5.Lcd.setTextDatum(CC_DATUM);
+        M5.Lcd.setFont(&stencilie16pt7b);
+        M5.Lcd.setTextPadding(194);
+        M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
+        M5.Lcd.drawString(message, 160, 180);
+        vTaskDelay(500);
+        M5.Lcd.drawString("", 160, 180);
+        vTaskDelay(100);
+        frequencyOld = "";
+        return false;
+      }
+      else {
+        vTaskDelay(1000);
+      }
     }
   }
 

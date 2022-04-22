@@ -1,50 +1,25 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#include "settings.h"
+#define VERSION "0.0.4"
+#define AUTHOR "F4HWN"
+#define NAME "ICSMeter"
 
-#define BASIC 1
-#define GREY 2
-#define CORE2 3
+#include <Preferences.h>
+#include <FastLED.h>
+#include <HTTPClient.h>
+#include <SD.h>
+#include <FS.h>
+#include <SPIFFS.h>
+#include <M5Unified.h>
+#include <BluetoothSerial.h>
+#include <M5StackUpdater.h>
 
 #define BT 1
 #define USB 2
 
 #define TIMEOUT_BIN_LOADER 3 // 3 sec
-#define DEBUG false
-
-#if BOARD == BASIC
-  #define LED_PIN 15
-  #include <M5Stack.h>
-  #include "BasicAndGrey.h"
-  #include "WebIndexBasicAndGrey.h"
-#elif BOARD == GREY
-  #define LED_PIN 15
-  #include <M5Stack.h>
-  #include "BasicAndGrey.h"
-  #include "WebIndexBasicAndGrey.h"
-#elif BOARD == CORE2
-  #define LED_PIN 25
-  #include <M5Core2.h>
-  #include "Core2.h"
-  #include "WebIndexCore2.h"
-#endif
-
-#include <Preferences.h>
-#include <FastLED.h>
-#include <HTTPClient.h>
-#include "BluetoothSerial.h"
-#include <font.h>
-#include "FS.h"
-#include "SPIFFS.h"
-#include <M5StackUpdater.h>
-
-#define VERSION "0.0.3"
-#define AUTHOR "F4HWN"
-#define NAME "ICSMeter"
-
-#define FASTLED_INTERNAL // To disable pragma messages on compile
-#define STEP 2
+#define DEBUG 0
 
 // Color
 #define TFT_MODE_BORDER M5.Lcd.color565(115, 135, 159)
@@ -55,6 +30,16 @@
 #define TFT_MODE M5.Lcd.color565(84, 103, 143)
 #define TFT_NEDDLE_1 M5.Lcd.color565(241, 120, 100)
 #define TFT_NEDDLE_2 M5.Lcd.color565(241, 170, 170)
+
+// Web site Screen Capture stuff
+#define GET_unknown 0
+#define GET_index_page  1
+#define GET_screenshot  2
+
+// LED
+#define FASTLED_INTERNAL // To disable pragma messages on compile
+#define NUM_LEDS 10
+CRGB leds[NUM_LEDS];
 
 // Bluetooth connector
 BluetoothSerial CAT;
@@ -99,15 +84,6 @@ char dataMode = 0;
 
 const char *menu[] = {"PWR", "S", "SWR"};
 
-// LED
-#define NUM_LEDS 10
-CRGB leds[NUM_LEDS];
-
-// Web site Screen Capture stuff
-#define GET_unknown 0
-#define GET_index_page  1
-#define GET_screenshot  2
-
 // Flags for button presses via Web site Screen Capture
 bool buttonLeftPressed = false;
 bool buttonCenterPressed = false;
@@ -117,7 +93,3 @@ bool buttonRightPressed = false;
 File root;
 String binFilename[128];
 uint8_t binIndex = 0;
-
-// Optimize SPI Speed
-#undef SPI_READ_FREQUENCY
-#define SPI_READ_FREQUENCY 40000000

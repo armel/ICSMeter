@@ -4,9 +4,11 @@
 // Get Button
 void button(void *pvParameters)
 {
+  uint8_t optionOld = 1;
+  uint8_t brightnessOld = 64;
+
   for (;;)
   {
-
     // Get screenshot
     getScreenshot();
 
@@ -15,6 +17,8 @@ void button(void *pvParameters)
         
     if(btnA || btnB || btnC) {
       screensaver = millis();
+      optionOld = preferences.getUInt("option");
+      brightnessOld = preferences.getUInt("brightness");
     }
 
     if(screensaverMode == false)
@@ -23,19 +27,22 @@ void button(void *pvParameters)
       {
         option = 0;
         buttonLeftPressed = 0;
-        preferences.putUInt("option", option);
+        if(optionOld != option)
+          preferences.putUInt("option", option);
       }
       else if (btnB == 1 || buttonCenterPressed == 1)
       {
         option = 1;
         buttonCenterPressed = 0;
-        preferences.putUInt("option", option);
+        if(optionOld != option)
+          preferences.putUInt("option", option);
       }
       else if (btnC == 1 || buttonRightPressed == 1)
       {
         option = 2;
         buttonRightPressed = 0;
-        preferences.putUInt("option", option);
+        if(optionOld != option)
+          preferences.putUInt("option", option);
       }
       else if (btnL == 1) {
         brightness -= 1;
@@ -43,8 +50,8 @@ void button(void *pvParameters)
           brightness = 1;
         }
         setBrightness(brightness);
-        Serial.println(brightness);
-        preferences.putUInt("brightness", brightness);
+        if(brightnessOld != brightness)
+          preferences.putUInt("brightness", brightness);
         vTaskDelay(pdMS_TO_TICKS(50));
       }
       else if (btnM == 1) {
@@ -56,8 +63,8 @@ void button(void *pvParameters)
           brightness = 254;
         }
         setBrightness(brightness);
-        Serial.println(brightness);
-        preferences.putUInt("brightness", brightness);
+        if(brightnessOld != brightness)
+          preferences.putUInt("brightness", brightness);
         vTaskDelay(pdMS_TO_TICKS(50));
       }
     }

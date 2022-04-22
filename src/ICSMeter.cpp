@@ -1,8 +1,12 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#include <ICSMeter.h>
-#include <image.h>
+#include "settings.h"
+#include "ICSMeter.h"
+#include "font.h"
+#include "image.h"
+#include "tools.h"
+#include "webIndex.h"
 #include "functions.h"
 #include "command.h"
 #include "tasks.h"
@@ -12,17 +16,17 @@ void setup()
 {
   uint8_t loop = 0;
 
-  // Debug
-  Serial.begin(115200);
-
   // Init M5
-  M5.begin(true, true, false, false);
+  auto cfg = M5.config();
+  M5.begin(cfg);
 
   // Init Led
-  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);  // GRB ordering is assumed
-
-  // Init Power
-  power();
+  if(M5.getBoard() == m5::board_t::board_M5Stack) {
+    FastLED.addLeds<NEOPIXEL, 15>(leds, NUM_LEDS);  // GRB ordering is assumed
+  }
+  else if(M5.getBoard() == m5::board_t::board_M5StackCore2) {
+    FastLED.addLeds<NEOPIXEL, 25>(leds, NUM_LEDS);  // GRB ordering is assumed
+  }
 
   // Preferences
   preferences.begin(NAME);
@@ -37,17 +41,12 @@ void setup()
   
   while (WiFi.status() != WL_CONNECTED && loop <= 10)
   {
-    delay(250);
+    vTaskDelay(250);
     loop += 1;
   }
 
   // Start server (for Web site Screen Capture)
   httpServer.begin();
-
-// Let's go
-#if BOARD == CORE2
-  M5.Axp.SetLed(0);
-#endif
 
   setBrightness(brightness);
   M5.Lcd.setRotation(1);
@@ -58,7 +57,7 @@ void setup()
   if(IC_MODEL == 705 && IC_CONNECT == BT)
   {
     CAT.register_callback(callbackBT);
-
+    
     if (!CAT.begin(NAME))
     {
       Serial.println("An error occurred initializing Bluetooth");

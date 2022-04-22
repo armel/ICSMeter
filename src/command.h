@@ -312,7 +312,7 @@ void getMode()
 
   sendCommand(request, n, buffer, 5);
 
-  M5.Lcd.setFreeFont(0);
+  M5.Lcd.setFont(0);
   M5.Lcd.setTextPadding(24);
   M5.Lcd.setTextColor(TFT_WHITE);
   M5.Lcd.setTextDatum(CC_DATUM);
@@ -365,95 +365,4 @@ uint8_t getTX()
   }
 
   return value;
-}
-
-void getDebug()
-{
-  String valString;
-
-  uint8_t val0 = 60;
-  float_t val1 = 0;
-  float_t val2 = 0;
-  static uint8_t val3 = 0;
-
-  float_t angle = 0;
-
-  uint8_t btnA;
-  uint8_t btnC;
-
-  while (true)
-  {
-    M5.update();
-    btnA = M5.BtnA.read();
-    btnC = M5.BtnC.read();
-
-    if (btnA == 1)
-    {
-      val0 -= 1;
-      btnA = 0;
-    }
-    if (btnC == 1)
-    {
-      val0 += 1;
-      btnC = 0;
-    }
-
-    vTaskDelay(100);
-
-    if (val0 != val3 || reset == true)
-    {
-      val3 = val0;
-      reset = false;
-
-      if (val0 <= 13)
-      {
-        angle = mapFloat(val0, 0, 13, 42.0f, 30.50f);
-        val1 = mapFloat(val0, 0, 13, 0, 0.5);
-      }
-      else if (val0 <= 26)
-      {
-        angle = mapFloat(val0, 14, 26, 30.50f, 23.50f);
-        val1 = mapFloat(val0, 14, 26, 0.5, 1.0);
-      }
-      else if (val0 <= 51)
-      {
-        angle = mapFloat(val0, 27, 51, 23.50f, 14.50f);
-        val1 = mapFloat(val0, 27, 51, 1.0, 2.0);
-      }
-      else if (val0 <= 127)
-      {
-        angle = mapFloat(val0, 52, 127, 14.50f, -6.50f);
-        val1 = mapFloat(val0, 52, 127, 2.0, 5.0);
-      }
-      else if (val0 <= 179)
-      {
-        angle = mapFloat(val0, 128, 179, -6.50f, -17.50f);
-        val1 = mapFloat(val0, 128, 179, 5.0, 7.0);
-      }
-      else
-      {
-        angle = mapFloat(val0, 180, 255, -17.50f, -30.50f);
-        val1 = mapFloat(val0, 180, 255, 7.0, 10.0);
-      }
-
-      val2 = round(val1 * 10);
-      valString = "PWR " + String((val2 / 10)) + " W";
-
-      // Debug trace
-      if (DEBUG)
-      {
-        Serial.print(val0);
-        Serial.print(" ");
-        Serial.print(val1);
-        Serial.print(" ");
-        Serial.println(angle);
-      }
-      
-      // Draw line
-      needle(angle);
-
-      // Write Value
-      value(valString);
-    }
-  }
 }
