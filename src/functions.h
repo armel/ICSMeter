@@ -207,7 +207,7 @@ void value(String valString, uint8_t x = 160, uint8_t y = 180)
 }
 
 // Print sub value
-void subValue(String valString, uint8_t x = 160, uint8_t y = 207)
+void subValue(String valString, uint8_t x = 160, uint8_t y = 206)
 {
   if (valString != subValStringOld)
   {

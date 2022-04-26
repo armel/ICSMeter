@@ -294,6 +294,7 @@ void getFrequency()
 
   valString = String(frequency);
   lenght = valString.length();
+  
   if(lenght <= 9) {
     val0 = valString.substring(lenght - 3, lenght);
     val1 = valString.substring(lenght - 6, lenght - 3);
@@ -303,7 +304,7 @@ void getFrequency()
   else {
     val0 = valString.substring(lenght - 3, lenght);
     val1 = valString.substring(lenght - 6, lenght - 3);
-    val1 = valString.substring(lenght - 9, lenght - 6);
+    val2 = valString.substring(lenght - 9, lenght - 6);
     val3 = valString.substring(0, lenght - 9);
     subValue(val3 + "." + val2 + "." + val1 + "." + val0);    
   }
@@ -332,8 +333,8 @@ void getMode()
   if (valString != filterOld)
   {
     filterOld = valString;
-    M5.Lcd.fillRoundRect(44, 198, 44, 15, 2, TFT_MODE_BACK);
-    M5.Lcd.drawRoundRect(44, 198, 44, 15, 2, TFT_MODE_BORDER);
+    M5.Lcd.fillRoundRect(46, 198, 40, 15, 2, TFT_MODE_BACK);
+    M5.Lcd.drawRoundRect(46, 198, 40, 15, 2, TFT_MODE_BORDER);
     M5.Lcd.drawString(valString, 66, 206);
   }
 
@@ -348,8 +349,8 @@ void getMode()
   if (valString != modeOld)
   {
     modeOld = valString;
-    M5.Lcd.fillRoundRect(232, 198, 44, 15, 2, TFT_MODE_BACK);
-    M5.Lcd.drawRoundRect(232, 198, 44, 15, 2, TFT_MODE_BORDER);
+    M5.Lcd.fillRoundRect(234, 198, 40, 15, 2, TFT_MODE_BACK);
+    M5.Lcd.drawRoundRect(234, 198, 40, 15, 2, TFT_MODE_BORDER);
     M5.Lcd.drawString(valString, 254, 206);
   }
 }
