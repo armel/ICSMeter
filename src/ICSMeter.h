@@ -24,7 +24,7 @@
 // Color
 #define TFT_MODE_BORDER M5.Lcd.color565(115, 135, 159)
 #define TFT_MODE_BACK M5.Lcd.color565(24, 57, 92)
-#define TFT_MENU_BACK M5.Lcd.color565(92, 92, 92)
+#define TFT_MENU_BACK M5.Lcd.color565(64, 64, 64)
 
 // Needle
 #define TFT_BACK M5.Lcd.color565(255, 248, 236)
