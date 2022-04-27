@@ -290,7 +290,7 @@ void getFrequency()
     frequency += (buffer[9 - i] & 0x0F) * decMulti[(i - 2) * 2 + 1];
   }
 
-  if(transverter == 0)
+  if(transverter == 1)
     frequency += TRANSVERTER_LO;
 
   valString = String(frequency);

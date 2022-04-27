@@ -112,6 +112,8 @@ void loop()
         FastLED.show();
       }
      
+      settingLock = true;
+
       viewMeasure();
       viewBattery();
 
@@ -132,6 +134,9 @@ void loop()
         getSWR();
         break;
       }
+
+      settingLock = false;
+
     }
   }
 

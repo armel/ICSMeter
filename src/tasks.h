@@ -25,11 +25,18 @@ void button(void *pvParameters)
       transverterOld = preferences.getUInt("transverter");
     }
 
+    // Enter settings
     if(settingsMode == false && btnB) {
+      settingsMode = true;
+      while(settingLock == true) {
+        vTaskDelay(10);
+      }
       viewMenu();
       viewOption(settingsChoice, settingsSelect);
-      settingsMode = true;
+      vTaskDelay(500);
     }
+
+    // Select settings
     else if(settingsMode == true && settingsSelect == false) {
       if(btnA || btnC) {
         if(btnA) {
@@ -58,21 +65,20 @@ void button(void *pvParameters)
         else if(settingsString == "Exit") {
           clearData();
           viewGUI();
-          settingsMode = false;
           settingsSelect = false;
+          settingsMode = false;
         }
-
-        vTaskDelay(pdMS_TO_TICKS(200));
       }
+      vTaskDelay(pdMS_TO_TICKS(100));
     }
     
+    // Manage settings
     else if(settingsMode == true && settingsSelect == true) {
       String settingsString = String(settings[settingsChoice]);
 
       M5.Lcd.setTextDatum(CC_DATUM);
       M5.Lcd.setFont(&YELLOWCRE8pt7b);
       M5.Lcd.setTextPadding(188);
-      //M5.Lcd.setTextColor(TFT_WHITE, TFT_MODE_BACK);
 
       // Measured Values
       if(settingsString == "Measured Values")
@@ -98,10 +104,10 @@ void button(void *pvParameters)
             preferences.putUInt("measure", measure);
           clearData();
           viewGUI();
-          settingsMode = false;
           settingsSelect = false;
+          settingsMode = false;
         }
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(150));
       }
 
       // Brightness
@@ -128,10 +134,11 @@ void button(void *pvParameters)
             preferences.putUInt("brightness", brightness);
           clearData();
           viewGUI();
-          settingsMode = false;
           settingsSelect = false;
+          settingsMode = false;
         }
         setBrightness(brightness);
+        vTaskDelay(pdMS_TO_TICKS(25));
       }
 
       // Transverter
@@ -158,10 +165,10 @@ void button(void *pvParameters)
             preferences.putUInt("transverter", transverter);
           clearData();
           viewGUI();
-          settingsMode = false;
           settingsSelect = false;
+          settingsMode = false;
         }
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(150));
       }
 
       // IP Address
@@ -172,12 +179,17 @@ void button(void *pvParameters)
         if(btnB == 1) {
           clearData();
           viewGUI();
-          settingsMode = false;
           settingsSelect = false;
+          settingsMode = false;
         }
         vTaskDelay(pdMS_TO_TICKS(50));
       }
     }
-    vTaskDelay(pdMS_TO_TICKS(100));
+
+    // Else waiting 
+    else
+    {
+      vTaskDelay(pdMS_TO_TICKS(100));      
+    }
   }
 }

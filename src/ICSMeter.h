@@ -24,6 +24,7 @@
 // Color
 #define TFT_MODE_BORDER M5.Lcd.color565(115, 135, 159)
 #define TFT_MODE_BACK M5.Lcd.color565(24, 57, 92)
+#define TFT_MENU_BACK M5.Lcd.color565(92, 92, 92)
 
 // Needle
 #define TFT_BACK M5.Lcd.color565(255, 248, 236)
@@ -64,6 +65,7 @@ boolean reset = true;
 boolean screenshot = false;
 boolean screensaverMode = false;
 boolean settingsMode = false;
+boolean settingLock = true;
 boolean btConnected = false;
 boolean wifiConnected = false;
 boolean proxyConnected = false;
@@ -71,7 +73,7 @@ boolean txConnected = true;
 boolean startup = true;
 boolean batteryCharginglOld = true;
 
-int8_t measureOld =0;
+int8_t measureOld = 5;
 uint8_t sOld = 255;
 uint8_t SWROld = 255;
 uint8_t powerOld = 255;
@@ -99,4 +101,4 @@ uint8_t binIndex = 0;
 const char *settings[] = {"Measured Values", "Brightness", "Transverter Mode", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
-const char *choiceTransverter[] = {"ON", "OFF"};
+const char *choiceTransverter[] = {"OFF", "ON"};

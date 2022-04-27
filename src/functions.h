@@ -67,6 +67,13 @@ void viewBattery() {
       else
         M5.Lcd.drawString(String(IC_MODEL) + " USB", 32, 11);
 
+      if (transverter == 1) {
+        M5.Lcd.fillRoundRect(62, 4, 24, 13, 2, TFT_MODE_BACK);
+        M5.Lcd.drawRoundRect(62, 4, 24, 13, 2, TFT_MODE_BORDER);
+        M5.Lcd.setTextColor(TFT_WHITE);
+        M5.Lcd.drawString("LO", 74, 11);
+      }
+
       //M5.Lcd.drawFastHLine(0, 20, 320, TFT_BLACK);
 
       batteryLevelOld = batteryLevel;
