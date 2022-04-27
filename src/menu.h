@@ -17,8 +17,9 @@ void viewMenu(uint8_t x, uint8_t y, uint16_t w, uint8_t h) {
     M5.Lcd.setTextColor(TFT_BACK);
     M5.Lcd.drawString(String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR), 160, 28 + y);
 
-    M5.Lcd.drawFastHLine(x + 1, 36 + y, w - 2, TFT_WHITE);
-    M5.Lcd.drawFastHLine(x + 1, (y + h) - 24, w - 2, TFT_WHITE);
+    M5.Lcd.drawFastHLine(120, 3, 80, TFT_BACK);
+    M5.Lcd.drawFastHLine(x + 1, 36 + y, w - 2, TFT_BACK);
+    M5.Lcd.drawFastHLine(x + 1, (y + h) - 24, w - 2, TFT_BACK);
 }
 
 void viewOption(int8_t settingsChoice, boolean settingsSelect, uint8_t x, uint8_t y, uint16_t w) {
