@@ -1,12 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-void viewMenu() {
-    uint8_t x = 44;
-    uint8_t y = 4;
-    uint8_t w = 320 - (x * 2);
-    uint8_t h = 190;
-
+void viewMenu(uint8_t x, uint8_t y, uint16_t w, uint8_t h) {
     M5.Lcd.fillRoundRect(x, y, w, h, 8, TFT_MENU_BACK);
     M5.Lcd.drawRoundRect(x, y, w, h, 8, TFT_MODE_BORDER);
 
@@ -25,11 +20,7 @@ void viewMenu() {
     M5.Lcd.drawFastHLine(x, 42 + y, w, TFT_WHITE);
 }
 
-void viewOption(int8_t settingsChoice, boolean settingsSelect) {
-    uint8_t x = 44;
-    uint8_t y = 4;
-    uint8_t w = 320 - (x * 2);
-
+void viewOption(int8_t settingsChoice, boolean settingsSelect, uint8_t x, uint8_t y, uint16_t w) {
     M5.Lcd.setTextDatum(CC_DATUM);
     M5.Lcd.setFont(&tahoma8pt7b);
     M5.Lcd.setTextPadding(w - 2);

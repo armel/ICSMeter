@@ -10,6 +10,11 @@ void button(void *pvParameters)
   static int8_t settingsChoice = 0;
   static boolean settingsSelect = false;
 
+  uint8_t x = 44;
+  uint8_t y = 4;
+  uint16_t w = 320 - (x * 2);
+  uint8_t h = 190;
+
   for (;;)
   {
     // Get screenshot
@@ -31,8 +36,8 @@ void button(void *pvParameters)
       while(settingLock == true) {
         vTaskDelay(10);
       }
-      viewMenu();
-      viewOption(settingsChoice, settingsSelect);
+      viewMenu(x, y, w, h);
+      viewOption(settingsChoice, settingsSelect, x, y, w);
       vTaskDelay(500);
     }
 
@@ -52,11 +57,11 @@ void button(void *pvParameters)
         settingsChoice = (settingsChoice < 0) ? stop : settingsChoice;
         settingsChoice = (settingsChoice > stop) ? 0 : settingsChoice;
 
-        viewOption(settingsChoice, settingsSelect);
+        viewOption(settingsChoice, settingsSelect, x, y, w);
       }
       else if(btnB) {
         settingsSelect = true;
-        viewOption(settingsChoice, settingsSelect);
+        viewOption(settingsChoice, settingsSelect, x, y, w);
 
         String settingsString = String(settings[settingsChoice]);
         if(settingsString == "Shutdown") {
@@ -78,12 +83,12 @@ void button(void *pvParameters)
 
       M5.Lcd.setTextDatum(CC_DATUM);
       M5.Lcd.setFont(&YELLOWCRE8pt7b);
-      M5.Lcd.setTextPadding(188);
+      M5.Lcd.setTextPadding(w - 2);
 
       // Measured Values
       if(settingsString == "Measured Values")
       {
-        M5.Lcd.drawString(String(choiceMeasures[measure]), 160, 180);
+        M5.Lcd.drawString(String(choiceMeasures[measure]), 160, h - 6);
 
         if(btnA || btnC) {
           if(btnA == 1) {
@@ -113,7 +118,7 @@ void button(void *pvParameters)
       // Brightness
       else if(settingsString == "Brightness")
       {
-        M5.Lcd.drawString(String(choiceBrightness[0]) + " " + String(map(brightness, 1, 254, 1, 100)) + "%", 160, 184);
+        M5.Lcd.drawString(String(choiceBrightness[0]) + " " + String(map(brightness, 1, 254, 1, 100)) + "%", 160, h - 6);
 
         if(btnA || btnC) {
           if(btnA == 1) {
@@ -144,7 +149,7 @@ void button(void *pvParameters)
       // Transverter
       else if(settingsString == "Transverter Mode")
       {
-        M5.Lcd.drawString(String(choiceTransverter[transverter]), 160, 184);
+        M5.Lcd.drawString(String(choiceTransverter[transverter]), 160, h - 6);
 
         if(btnA || btnC) {
           if(btnA == 1) {
@@ -174,7 +179,7 @@ void button(void *pvParameters)
       // IP Address
       else if(settingsString == "IP Address")
       {
-        M5.Lcd.drawString(String(WiFi.localIP().toString().c_str()), 160, 184);
+        M5.Lcd.drawString(String(WiFi.localIP().toString().c_str()), 160, h - 6);
 
         if(btnB == 1) {
           clearData();

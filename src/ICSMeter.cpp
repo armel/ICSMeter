@@ -136,7 +136,6 @@ void loop()
       }
 
       settingLock = false;
-
     }
   }
 
