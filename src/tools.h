@@ -26,27 +26,12 @@ void getButton()
   btnM = M5.BtnB.pressedFor(2000);
   btnR = M5.BtnC.pressedFor(2000);
 
-  if (btnL)
-  {
-    btnA = 0;
-    //Serial.println("Left");
-  }
-  else if (btnM)
-  {
-    btnB = 0;
-    //Serial.println("Middle");
-  }
-  else if (btnR)
-  {
-    btnC = 0;
-    //Serial.println("Right");
-  }
-
   /*
   Serial.print(btnA);
   Serial.print(btnB);
   Serial.print(btnC);
   Serial.print(btnL);
+  Serial.print(btnM);
   Serial.println(btnR);
   */
 }

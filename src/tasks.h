@@ -4,8 +4,11 @@
 // Get Button
 void button(void *pvParameters)
 {
-  uint8_t optionOld = 1;
+  int8_t measureOld = 1;
+  int8_t transverterOld = 0;
   uint8_t brightnessOld = 64;
+  static int8_t settingsChoice = 0;
+  static boolean settingsSelect = false;
 
   for (;;)
   {
@@ -14,61 +17,167 @@ void button(void *pvParameters)
 
     // Get button
     getButton();
-        
+            
     if(btnA || btnB || btnC) {
       screensaver = millis();
-      optionOld = preferences.getUInt("option");
+      measureOld = preferences.getUInt("measure");
       brightnessOld = preferences.getUInt("brightness");
+      transverterOld = preferences.getUInt("transverter");
     }
 
-    if(screensaverMode == false)
-    {
-      if (btnA == 1 || buttonLeftPressed == 1)
-      {
-        option = 0;
-        buttonLeftPressed = 0;
-        if(optionOld != option)
-          preferences.putUInt("option", option);
-      }
-      else if (btnB == 1 || buttonCenterPressed == 1)
-      {
-        option = 1;
-        buttonCenterPressed = 0;
-        if(optionOld != option)
-          preferences.putUInt("option", option);
-      }
-      else if (btnC == 1 || buttonRightPressed == 1)
-      {
-        option = 2;
-        buttonRightPressed = 0;
-        if(optionOld != option)
-          preferences.putUInt("option", option);
-      }
-      else if (btnL == 1) {
-        brightness -= 1;
-        if(brightness < 1) {
-          brightness = 1;
+    if(settingsMode == false && btnB) {
+      viewMenu();
+      viewOption(settingsChoice, settingsSelect);
+      settingsMode = true;
+    }
+    else if(settingsMode == true && settingsSelect == false) {
+      if(btnA || btnC) {
+        if(btnA) {
+          settingsChoice--;
         }
-        setBrightness(brightness);
-        if(brightnessOld != brightness)
-          preferences.putUInt("brightness", brightness);
+        else if(btnC) {
+          settingsChoice++;
+        }
+
+        size_t stop = sizeof(settings) / sizeof(settings[0]);
+        stop--;
+
+        settingsChoice = (settingsChoice < 0) ? stop : settingsChoice;
+        settingsChoice = (settingsChoice > stop) ? 0 : settingsChoice;
+
+        viewOption(settingsChoice, settingsSelect);
+      }
+      else if(btnB) {
+        settingsSelect = true;
+        viewOption(settingsChoice, settingsSelect);
+
+        String settingsString = String(settings[settingsChoice]);
+        if(settingsString == "Shutdown") {
+          shutdown();
+        }
+        else if(settingsString == "Exit") {
+          clearData();
+          viewGUI();
+          settingsMode = false;
+          settingsSelect = false;
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(200));
+      }
+    }
+    
+    else if(settingsMode == true && settingsSelect == true) {
+      String settingsString = String(settings[settingsChoice]);
+
+      M5.Lcd.setTextDatum(CC_DATUM);
+      M5.Lcd.setFont(&YELLOWCRE8pt7b);
+      M5.Lcd.setTextPadding(188);
+      //M5.Lcd.setTextColor(TFT_WHITE, TFT_MODE_BACK);
+
+      // Measured Values
+      if(settingsString == "Measured Values")
+      {
+        M5.Lcd.drawString(String(choiceMeasures[measure]), 160, 180);
+
+        if(btnA || btnC) {
+          if(btnA == 1) {
+            measure -= 1;
+            if(measure < 0) {
+              measure = 2;
+            }
+          }
+          else if(btnC == 1) {
+            measure += 1;
+            if(measure > 2) {
+              measure = 0;
+            }
+          }
+        }
+        else if(btnB == 1) {
+          if(measureOld != measure)
+            preferences.putUInt("measure", measure);
+          clearData();
+          viewGUI();
+          settingsMode = false;
+          settingsSelect = false;
+        }
         vTaskDelay(pdMS_TO_TICKS(50));
       }
-      else if (btnM == 1) {
-        shutdown();
-      }
-      else if (btnR == 1) {
-        brightness += 1;
-        if(brightness > 254) {
-          brightness = 254;
+
+      // Brightness
+      else if(settingsString == "Brightness")
+      {
+        M5.Lcd.drawString(String(choiceBrightness[0]) + " " + String(map(brightness, 1, 254, 1, 100)) + "%", 160, 184);
+
+        if(btnA || btnC) {
+          if(btnA == 1) {
+            brightness -= 1;
+            if(brightness < 1) {
+              brightness = 1;
+            }
+          }
+          else if(btnC == 1) {
+            brightness += 1;
+            if(brightness > 254) {
+              brightness = 254;
+            }
+          }
+        }
+        else if(btnB == 1) {
+          if(brightnessOld != brightness)
+            preferences.putUInt("brightness", brightness);
+          clearData();
+          viewGUI();
+          settingsMode = false;
+          settingsSelect = false;
         }
         setBrightness(brightness);
-        if(brightnessOld != brightness)
-          preferences.putUInt("brightness", brightness);
+      }
+
+      // Transverter
+      else if(settingsString == "Transverter Mode")
+      {
+        M5.Lcd.drawString(String(choiceTransverter[transverter]), 160, 184);
+
+        if(btnA || btnC) {
+          if(btnA == 1) {
+            transverter -= 1;
+            if(transverter < 0) {
+              transverter = 1;
+            }
+          }
+          else if(btnC == 1) {
+            transverter += 1;
+            if(transverter > 1) {
+              transverter = 0;
+            }
+          }
+        }
+        else if(btnB == 1) {
+          if(transverterOld != transverter)
+            preferences.putUInt("transverter", transverter);
+          clearData();
+          viewGUI();
+          settingsMode = false;
+          settingsSelect = false;
+        }
+        vTaskDelay(pdMS_TO_TICKS(50));
+      }
+
+      // IP Address
+      else if(settingsString == "IP Address")
+      {
+        M5.Lcd.drawString(String(WiFi.localIP().toString().c_str()), 160, 184);
+
+        if(btnB == 1) {
+          clearData();
+          viewGUI();
+          settingsMode = false;
+          settingsSelect = false;
+        }
         vTaskDelay(pdMS_TO_TICKS(50));
       }
     }
-
-    vTaskDelay(pdMS_TO_TICKS(50));
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }

@@ -50,10 +50,11 @@ Preferences preferences;
 // Global Variables
 WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
-uint8_t htmlGetRequest;
-uint8_t option = 2;
+
+int8_t measure = 1;
+int8_t transverter = 0;
 uint8_t brightness = 64;
-uint8_t optionOld = 5;
+uint8_t htmlGetRequest;
 
 uint32_t screensaver;
 
@@ -62,6 +63,7 @@ float angleOld = 0;
 boolean reset = true;
 boolean screenshot = false;
 boolean screensaverMode = false;
+boolean settingsMode = false;
 boolean btConnected = false;
 boolean wifiConnected = false;
 boolean proxyConnected = false;
@@ -69,6 +71,7 @@ boolean txConnected = true;
 boolean startup = true;
 boolean batteryCharginglOld = true;
 
+int8_t measureOld =0;
 uint8_t sOld = 255;
 uint8_t SWROld = 255;
 uint8_t powerOld = 255;
@@ -82,8 +85,6 @@ String subValStringOld = "";
 
 char dataMode = 0;
 
-const char *menu[] = {"PWR", "S", "SWR"};
-
 // Flags for button presses via Web site Screen Capture
 bool buttonLeftPressed = false;
 bool buttonCenterPressed = false;
@@ -93,3 +94,9 @@ bool buttonRightPressed = false;
 File root;
 String binFilename[128];
 uint8_t binIndex = 0;
+
+// Menu
+const char *settings[] = {"Measured Values", "Brightness", "Transverter Mode", "IP Address", "Shutdown", "Exit"};
+const char *choiceMeasures[] = {"PWR", "S", "SWR"};
+const char *choiceBrightness[] = {"BRIGHTNESS"};
+const char *choiceTransverter[] = {"ON", "OFF"};
