@@ -72,6 +72,7 @@ void button(void *pvParameters)
           viewGUI();
           settingsSelect = false;
           settingsMode = false;
+          vTaskDelay(pdMS_TO_TICKS(150));
         }
       }
       vTaskDelay(pdMS_TO_TICKS(150));
@@ -111,6 +112,7 @@ void button(void *pvParameters)
           viewGUI();
           settingsSelect = false;
           settingsMode = false;
+          vTaskDelay(pdMS_TO_TICKS(150));
         }
         vTaskDelay(pdMS_TO_TICKS(150));
       }
@@ -141,6 +143,7 @@ void button(void *pvParameters)
           viewGUI();
           settingsSelect = false;
           settingsMode = false;
+          vTaskDelay(pdMS_TO_TICKS(150));
         }
         setBrightness(brightness);
         vTaskDelay(pdMS_TO_TICKS(25));
@@ -172,6 +175,7 @@ void button(void *pvParameters)
           viewGUI();
           settingsSelect = false;
           settingsMode = false;
+          vTaskDelay(pdMS_TO_TICKS(150));
         }
         vTaskDelay(pdMS_TO_TICKS(150));
       }
@@ -186,8 +190,9 @@ void button(void *pvParameters)
           viewGUI();
           settingsSelect = false;
           settingsMode = false;
+          vTaskDelay(pdMS_TO_TICKS(150));
         }
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(150));
       }
     }
 
