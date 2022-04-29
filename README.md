@@ -27,6 +27,8 @@ The ICSMeter project allows to equip the IC-705, IC-7300 and IC-9700 produced by
 
 ![ICSMeter SWR](https://github.com/armel/ICSMeter/blob/main/img/SWR.png)
 
+![ICSMeter Settings](https://github.com/armel/ICSMeter/blob/main/img/Settings.png)
+
 # Technical architecture
 
 ## Quick overview
