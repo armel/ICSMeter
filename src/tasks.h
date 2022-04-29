@@ -85,6 +85,7 @@ void button(void *pvParameters)
       M5.Lcd.setTextDatum(CC_DATUM);
       M5.Lcd.setFont(&YELLOWCRE8pt7b);
       M5.Lcd.setTextPadding(w - 2);
+      M5.Lcd.setTextColor(TFT_MENU_SELECT, TFT_MENU_BACK);
 
       // Measured Values
       if(settingsString == "Measured Values")

@@ -797,6 +797,7 @@ void wakeAndSleep()
 
   if (screensaverMode == false && millis() - screensaver > TIMEOUT_SCREENSAVER)
   {
+    settingsMode = false;
     screensaverMode = true;
     screensaver = 0;
     M5.Lcd.fillScreen(TFT_BLACK);
@@ -807,6 +808,7 @@ void wakeAndSleep()
     clearData();
     viewGUI();
     screensaverMode = false;
+    settingsMode = false;
 
     vTaskDelay(100);
   }
@@ -936,23 +938,24 @@ boolean checkConnection()
 
     if (message != "")
     {
-      if(screensaverMode == false && settingsMode == false) {
+      if(screensaverMode == false && settingsMode == false)
+      {
         M5.Lcd.setTextDatum(CC_DATUM);
         M5.Lcd.setFont(&stencilie16pt7b);
         M5.Lcd.setTextPadding(194);
         M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
         M5.Lcd.drawString(message, 160, 180);
-        vTaskDelay(500);
+        vTaskDelay(750);
         M5.Lcd.drawString("", 160, 180);
-        vTaskDelay(100);
+        vTaskDelay(250);
         frequencyOld = "";
         return false;
       }
       else {
         vTaskDelay(1000);
+        return false;
       }
     }
   }
-
   return true;
 }
