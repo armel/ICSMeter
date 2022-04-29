@@ -206,14 +206,14 @@ If you click on the middle button, you enter the settings menu. Use the right an
 
 The following options are available :
 
-| Settings             | Value                         | 
-| -------------------- |:-----------------------------:| 
-| Measured Values      | Set PWR, S or SWR             | 
-| Brightness           | Set Brightness from 0 to 100% | 
-| Transverter Mode     | Set ON or ON                  | 
-| IP Address           | Display your IP               |
-| Shutdown             | Shutdown your M5Stack         |
-| Exit                 | Menu Exit                     |
+| Settings             | Value                                     | 
+| -------------------- |:-----------------------------------------:| 
+| Measured Values      | Set Measured Values (PWR, S or SWR)       | 
+| Brightness           | Set Brightness (0 ~ 100%)                 | 
+| Transverter Mode     | Set Transverter Mode (OFF ~ ON)           | 
+| IP Address           | Display your IP                           |
+| Shutdown             | Shutdown your M5Stack (even if in charge) |
+| Exit                 | Menu Exit                                 |
  
 > Measured Values, Brightness and Transverter Mode are preserved at the next restart.
 
