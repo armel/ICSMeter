@@ -11,9 +11,13 @@
 ![version](https://img.shields.io/github/v/release/armel/ICSMeter)
 ![activity](https://img.shields.io/github/commit-activity/y/armel/ICSMeter)
 
-**An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by [@HamRadioDude](https://twitter.com/HamRadioDude) about the installation of the IC705SMeter project. It can help you ! This is the same approach here. 
-For Germans, take a look at this other excellent [video](https://www.youtube.com/watch?v=DrcMoVNwG_8) released by [@ManuelLausmann](https://twitter.com/ManuelLausmann).
-Many thanks to them 🙏🏻** 
+**An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by [@HamRadioDude](https://twitter.com/HamRadioDude) about the installation of the IC705SMeter project. It can help you ! This is the same approach here.**
+
+**Another excellent [video](https://www.youtube.com/watch?v=_UbwZrT2O8w) was published by [@TechMindsYT](https://twitter.com/TechMindsYT) about the installation of the ICMultiMeter.  It can help you too !** 
+
+**For Germans, take a look at this other excellent [video](https://www.youtube.com/watch?v=DrcMoVNwG_8) released by [@ManuelLausmann](https://twitter.com/ManuelLausmann).**
+
+**Many thanks to them and all my [donors](#donations)🙏🏻** 
 
 The ICSMeter project allows to equip the IC-705, IC-7300 and IC-9700 produced by ICOM, with a needle S-Meter ! The S-Meter allows to measure the S signal, the Po power and the SWR. It also displays the current frequency, mode and filter.
 
@@ -22,6 +26,8 @@ The ICSMeter project allows to equip the IC-705, IC-7300 and IC-9700 produced by
 ![ICSMeter PWR](https://github.com/armel/ICSMeter/blob/main/img/PWR.png)
 
 ![ICSMeter SWR](https://github.com/armel/ICSMeter/blob/main/img/SWR.png)
+
+![ICSMeter Settings](https://github.com/armel/ICSMeter/blob/main/img/Settings.png)
 
 # Technical architecture
 
@@ -124,13 +130,17 @@ Line 20 and 21, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port 
 
 > About Proxy, the idea is to use a PC or a nano computer (like a Raspberry Pi) to connect the IC-7300 or IC-9700 transceiver via the USB cable (USB type A to USB type B). The M5Stack will talk to this PC by Wifi and the PC will talk to the transceiver by the USB cable. By this way, the M5Stack keeps the big advantage of being wireless.
 
+#### Transverter Configuration
+
+If you are using a Transverter, you can configure a Local Oscillator frequency, line 24. For example, if you are on 28500000 Hz and the constant `TRANSVERTER_LO` is set to 116000000, your M5Stack will display 144.500.000 (not 28.500.000). This can be useful. Of course, default value is 0. Change the constant `TRANSVERTER_LO` only if you need.
+
 #### TFT image retention
 
 To avoid TFT image retention (also called _Burn In_), there is a kind of screen saver. If there is no action on the buttons or PTT, after a delay of 60 minutes, the screen will show the Icom logo. 
 
-You can change the constant `TIMEOUT_SCREENSAVER` to set the delay, line 24. 
+You can change the constant `TIMEOUT_SCREENSAVER` to set the delay, line 27. 
 
-If the screen saver is active and you press a button or the PTT to transmit, the ICMultiMeter screen will come back.
+If the screen saver is active and you press a button or the PTT to transmit, the ICSMeter screen will come back.
 
 Note that if the connection between your M5Stack and the Transceiver has been established and you turn off your Transceiver (or disconnect the Bluetooth link, with IC-705), the screen will go completely into _sleep mode_. The screen will come back as soon as the connection is established again after you turn on your Transceiver. 
 
@@ -148,7 +158,7 @@ Next, in `settings.h` ...
 
 ##### IC-705, BT
 
-| settings        | value           | 
+| Settings        | Value           | 
 | ------------- |:-------------:| 
 | IC_MODEL      | 705 | 
 | IC_CONNECT      | BT      | 
@@ -156,7 +166,7 @@ Next, in `settings.h` ...
 
 ##### IC-705, USB
 
-| settings        | value           | 
+| Settings        | Value           | 
 | ------------- |:-------------:| 
 | IC_MODEL      | 705 | 
 | IC_CONNECT      | USB      | 
@@ -170,7 +180,7 @@ Next, in `settings.h` ...
 
 ##### IC-7300, USB
 
-| settings        | value           | 
+| Settings        | Value           | 
 | ------------- |:-------------:| 
 | IC_MODEL      | 7300 | 
 | IC_CONNECT      | USB      | 
@@ -194,21 +204,20 @@ If you're using USB with [ICUSBProxy](https://github.com/armel/ICUSBProxy), plug
 
 `./ICUSBProxy.py`
 
-With the buttons, you can change the measurement:
+If you click on the middle button, you enter the settings menu. Use the right and left buttons to select a menu option and confirm with the middle button. If necessary, use the right and left buttons again to select the sub-options and the middle button to confirm. 
 
-- left: Po or PWR power
-- middle : S signal
-- right : SWR
+The following options are available :
 
-> Caution: the SWR measurement is reliable up to 3. Beyond that, the documentation provided by Icom is too inaccurate...
-
-In addition :
-
-- a long press on the left button allows to decrease the brightness, 
-- a long press on the central button allows to switch off the M5Stack,
-- a long press on the right button allows to increase the brightness.
-
-> The value of the brightness is preserved at the next restart.
+| Settings             | Value                                     | 
+| -------------------- |:-----------------------------------------:| 
+| Measured Values      | Set Measured Values (PWR, S or SWR)       | 
+| Brightness           | Set Brightness (0 ~ 100%)                 | 
+| Transverter Mode     | Set Transverter Mode (OFF ~ ON)           | 
+| IP Address           | Display your IP                           |
+| Shutdown             | Shutdown your M5Stack (even if in charge) |
+| Exit                 | Menu Exit                                 |
+ 
+> Measured Values, Brightness and Transverter Mode are preserved at the next restart.
 
 # Using the Bin Loader (power user only...)
 
@@ -270,7 +279,7 @@ Wait ! It's coffee time (or beer) :) The contents of the `data` directory will b
 
 ## Usage
 
-Start your M5Stack. You should see a black screen, followed by 1, 2 and 3 small dots at the top of the screen. This is the famous Bin Loader ;)
+Start your M5Stack. You should see a black screen with a QR code, followed by 1, 2 and 3 small dots at the top of the screen. This is the famous Bin Loader ;)
 
 As soon as the first little dot appears, you can :
 
@@ -299,7 +308,7 @@ Many thanks to...
 
 # Donations
 
-Special thanks to Rolf Schroeder, Brian Garber, Matt B-Wilkinson, Robert Agnew, Meinhard Frank Günther, Johan Hansson, Tadeusz Pater, Frederic Ulmer, Joshua Murray, Mark Hammond and Angel Mateu Muzzio for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder DL8BAG, Brian Garber WB8AM, Matt B-Wilkinson M6VWM, Robert Agnew KD0TVP, Meinhard Frank Günther DL0CN, Johan Hansson SM0TSC, Tadeusz Pater VA7CPM, Frederic Ulmer F4ESO, Joshua Murray M0JMO, Mark Hammond N8MH, Angel Mateu Muzzio EA4GIG, Hiroshi Sasaki JL7KGW and Robert John Williams VK3IE for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 

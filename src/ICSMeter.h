@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.0.5"
+#define VERSION "0.1.0"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -24,6 +24,10 @@
 // Color
 #define TFT_MODE_BORDER M5.Lcd.color565(115, 135, 159)
 #define TFT_MODE_BACK M5.Lcd.color565(24, 57, 92)
+
+#define TFT_MENU_BORDER M5.Lcd.color565(115, 135, 159)
+#define TFT_MENU_BACK M5.Lcd.color565(24, 57, 92)
+#define TFT_MENU_SELECT M5.Lcd.color565(255, 255, 255)
 
 // Needle
 #define TFT_BACK M5.Lcd.color565(255, 248, 236)
@@ -50,10 +54,11 @@ Preferences preferences;
 // Global Variables
 WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
-uint8_t htmlGetRequest;
-uint8_t option = 2;
+
+int8_t measure = 1;
+int8_t transverter = 0;
 uint8_t brightness = 64;
-uint8_t optionOld = 5;
+uint8_t htmlGetRequest;
 
 uint32_t screensaver;
 
@@ -62,6 +67,8 @@ float angleOld = 0;
 boolean reset = true;
 boolean screenshot = false;
 boolean screensaverMode = false;
+boolean settingsMode = false;
+boolean settingLock = true;
 boolean btConnected = false;
 boolean wifiConnected = false;
 boolean proxyConnected = false;
@@ -69,6 +76,7 @@ boolean txConnected = true;
 boolean startup = true;
 boolean batteryCharginglOld = true;
 
+int8_t measureOld = 5;
 uint8_t sOld = 255;
 uint8_t SWROld = 255;
 uint8_t powerOld = 255;
@@ -82,8 +90,6 @@ String subValStringOld = "";
 
 char dataMode = 0;
 
-const char *menu[] = {"PWR", "S", "SWR"};
-
 // Flags for button presses via Web site Screen Capture
 bool buttonLeftPressed = false;
 bool buttonCenterPressed = false;
@@ -93,3 +99,9 @@ bool buttonRightPressed = false;
 File root;
 String binFilename[128];
 uint8_t binIndex = 0;
+
+// Menu
+const char *settings[] = {"Measured Values", "Brightness", "Transverter Mode", "IP Address", "Shutdown", "Exit"};
+const char *choiceMeasures[] = {"PWR", "S", "SWR"};
+const char *choiceBrightness[] = {"BRIGHTNESS"};
+const char *choiceTransverter[] = {"OFF", "ON"};

@@ -45,7 +45,7 @@ void viewBattery() {
   uint8_t batteryLevel;
   boolean batteryCharging;
 
-  if(screensaverMode == false) {
+  if(screensaverMode == false && settingsMode == false) {
     // On left, view battery level
     batteryLevel = map(getBatteryLevel(1), 0, 100, 0, 16);
     batteryCharging = isCharging();
@@ -66,6 +66,13 @@ void viewBattery() {
         M5.Lcd.drawString(String(IC_MODEL) + " BT", 32, 11);
       else
         M5.Lcd.drawString(String(IC_MODEL) + " USB", 32, 11);
+
+      if (transverter == 1) {
+        M5.Lcd.fillRoundRect(62, 4, 24, 13, 2, TFT_MODE_BACK);
+        M5.Lcd.drawRoundRect(62, 4, 24, 13, 2, TFT_MODE_BORDER);
+        M5.Lcd.setTextColor(TFT_WHITE);
+        M5.Lcd.drawString("LO", 74, 11);
+      }
 
       //M5.Lcd.drawFastHLine(0, 20, 320, TFT_BLACK);
 
@@ -110,7 +117,6 @@ void clearData()
   angleOld = 0;
 
   batteryLevelOld = 0;
-  optionOld = 5;
   sOld = 255;
   SWROld = 255;
   powerOld = 255;
@@ -121,6 +127,8 @@ void clearData()
   subValStringOld = "";
 
   batteryCharginglOld = true;
+
+  measureOld = 5;
 }
 
 // Manage rotation
@@ -207,7 +215,7 @@ void value(String valString, uint8_t x = 160, uint8_t y = 180)
 }
 
 // Print sub value
-void subValue(String valString, uint8_t x = 160, uint8_t y = 207)
+void subValue(String valString, uint8_t x = 160, uint8_t y = 206)
 {
   if (valString != subValStringOld)
   {
@@ -222,14 +230,14 @@ void subValue(String valString, uint8_t x = 160, uint8_t y = 207)
   }
 }
 
-// Print option
-void viewMenu()
+// Print Measure
+void viewMeasure()
 {
   uint16_t i = 65;
   uint8_t j;
 
-  if(option != optionOld) {
-    optionOld = option;
+  if(measure != measureOld) {
+    measureOld = measure;
 
     M5.Lcd.setTextDatum(CC_DATUM);
     M5.Lcd.setFont(&YELLOWCRE8pt7b);
@@ -237,7 +245,7 @@ void viewMenu()
 
     for (j = 0; j <= 2; j++)
     {
-      if (option == j)
+      if (measure == j)
       {
         M5.Lcd.setTextColor(TFT_BLACK);
         reset = true;
@@ -247,39 +255,8 @@ void viewMenu()
         M5.Lcd.setTextColor(TFT_DARKGREY);
       }
 
-      M5.Lcd.drawString(menu[j], i, 230);
+      M5.Lcd.drawString(choiceMeasures[j], i, 230);
       i += 95;
-    }
-  }
-}
-
-// Print baseline
-void viewBaseline(uint8_t alternance)
-{
-  if(btnL || btnR)
-  {
-    M5.Lcd.setTextDatum(CC_DATUM);
-    M5.Lcd.setFont(0);
-    M5.Lcd.setTextPadding(160);
-    M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BACK);
-    M5.Lcd.drawString("Brightness " + String(map(brightness, 1, 254, 1, 100)) + "%", 160, 160);
-  }
-  else {
-    if (alternance > 20 && WiFi.status() == WL_CONNECTED)
-    {
-      M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFont(0);
-      M5.Lcd.setTextPadding(160);
-      M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BACK);
-      M5.Lcd.drawString(String(WiFi.localIP().toString().c_str()), 160, 160);
-    }
-    else
-    {
-      M5.Lcd.setTextDatum(CC_DATUM);
-      M5.Lcd.setFont(0);
-      M5.Lcd.setTextPadding(160);
-      M5.Lcd.setTextColor(TFT_DARKGREY, TFT_BACK);
-      M5.Lcd.drawString(String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR), 160, 160);
     }
   }
 }
@@ -359,6 +336,9 @@ void binLoader()
 
   if (binIndex != 0)
   {
+    // QRCode
+    M5.Lcd.qrcode("https://github.com/armel/ICSMeter", 90, 80, 140, 6);
+
     M5.Lcd.setTextFont(1);
     M5.Lcd.setTextSize(1);
 
@@ -383,6 +363,7 @@ void binLoader()
       else if (btnB)
       {
         click = 1;
+        M5.Lcd.fillRect(0, 0, 320, 240, TFT_BLACK);
         break;
       }
 
@@ -816,6 +797,7 @@ void wakeAndSleep()
 
   if (screensaverMode == false && millis() - screensaver > TIMEOUT_SCREENSAVER)
   {
+    settingsMode = false;
     screensaverMode = true;
     screensaver = 0;
     M5.Lcd.fillScreen(TFT_BLACK);
@@ -826,6 +808,7 @@ void wakeAndSleep()
     clearData();
     viewGUI();
     screensaverMode = false;
+    settingsMode = false;
 
     vTaskDelay(100);
   }
@@ -955,23 +938,24 @@ boolean checkConnection()
 
     if (message != "")
     {
-      if(screensaverMode == false) {
+      if(screensaverMode == false && settingsMode == false)
+      {
         M5.Lcd.setTextDatum(CC_DATUM);
         M5.Lcd.setFont(&stencilie16pt7b);
         M5.Lcd.setTextPadding(194);
         M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
         M5.Lcd.drawString(message, 160, 180);
-        vTaskDelay(500);
+        vTaskDelay(750);
         M5.Lcd.drawString("", 160, 180);
-        vTaskDelay(100);
+        vTaskDelay(250);
         frequencyOld = "";
         return false;
       }
       else {
         vTaskDelay(1000);
+        return false;
       }
     }
   }
-
   return true;
 }

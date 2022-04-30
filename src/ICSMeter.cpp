@@ -9,6 +9,7 @@
 #include "webIndex.h"
 #include "functions.h"
 #include "command.h"
+#include "menu.h"
 #include "tasks.h"
 
 // Setup
@@ -30,8 +31,9 @@ void setup()
 
   // Preferences
   preferences.begin(NAME);
-  option = preferences.getUInt("option", 2);
+  measure = preferences.getUInt("measure", 1);
   brightness = preferences.getUInt("brightness", 64);
+  transverter = preferences.getUInt("transverter", 0);
 
   // Bin Loader
   binLoader();
@@ -93,7 +95,7 @@ void loop()
     tx = getTX();
     if(tx != 0) screensaver = millis();   // If transmit, refresh tempo
 
-    if (screensaverMode == false && screenshot == false) {
+    if (screensaverMode == false && screenshot == false && settingsMode == false) {
 
       if(tx == 0) {
         for(uint8_t i = 0; i <= 9; i++){
@@ -110,14 +112,15 @@ void loop()
         FastLED.show();
       }
      
-      viewMenu();
+      settingLock = true;
+
+      viewMeasure();
       viewBattery();
-      viewBaseline(alternance);
 
       getMode();
       getFrequency();
 
-      switch (option)
+      switch (measure)
       {
       case 0:
         getPower();
@@ -131,6 +134,8 @@ void loop()
         getSWR();
         break;
       }
+
+      settingLock = false;
     }
   }
 
