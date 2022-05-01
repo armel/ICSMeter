@@ -96,7 +96,9 @@ void loop()
     tx = getTX();
     if(tx != 0) screensaver = millis();   // If transmit, refresh tempo
 
-    if (screensaverMode == false && screenshot == false && settingsMode == false) {
+    if (screensaverMode == false && screenshot == false && settingsMode == false)
+    {
+      settingLock = true;
 
       if(tx == 0) {
         for(uint8_t i = 0; i <= 9; i++){
@@ -113,8 +115,6 @@ void loop()
         FastLED.show();
       }
      
-      settingLock = true;
-
       viewMeasure();
       viewBattery();
 
@@ -140,7 +140,7 @@ void loop()
     }
   }
 
-  alternance = (alternance++ < 30) ? alternance : 0;
+  alternance = (alternance++ < 2) ? alternance : 0;
 
   // Manage Screen Saver
   wakeAndSleep();

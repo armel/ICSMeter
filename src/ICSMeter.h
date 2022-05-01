@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.1"
+#define VERSION "0.1.2"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -102,8 +102,8 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Measured Values", "Brightness", "Transverter Mode", "IP Address", "Beep", "Shutdown", "Exit"};
+const char *settings[] = {"Measured Values", "Transverter Mode", "Brightness", "Beep", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceTransverter[] = {"OFF", "ON"};
-const char *choiceBeep[] = {"OFF", "ON"};
+const char *choiceBeep[] = {"BEEP LEVEL"};
