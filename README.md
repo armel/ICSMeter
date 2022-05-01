@@ -211,14 +211,14 @@ The following options are available :
 | Settings             | Value                                     | 
 | -------------------- |:-----------------------------------------:| 
 | Measured Values      | Set Measured Values (PWR, S or SWR)       | 
-| Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Transverter Mode     | Set Transverter Mode (OFF ~ ON)           | 
+| Brightness           | Set Brightness (0 ~ 100%)                 | 
+| Beep                 | Set Beep (0 ~ 100%)                       |
 | IP Address           | Display your IP                           |
-| Beep                 | Set Beep (0 ~ 100%)                        |
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
  
-> Measured Values, Brightness, Beep and Transverter Mode are preserved at the next restart.
+> Measured Values, Transverter Mode, Brightness and Beep are preserved at the next restart.
 
 # Using the Bin Loader (power user only...)
 

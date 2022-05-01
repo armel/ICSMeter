@@ -102,7 +102,7 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Measured Values", "Brightness", "Transverter Mode", "IP Address", "Beep", "Shutdown", "Exit"};
+const char *settings[] = {"Measured Values", "Transverter Mode", "Brightness", "Beep", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceTransverter[] = {"OFF", "ON"};
