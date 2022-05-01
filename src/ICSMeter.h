@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.0"
+#define VERSION "0.1.1"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -56,6 +56,7 @@ WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
 
 int8_t measure = 1;
+int8_t beep = 0;
 int8_t transverter = 0;
 uint8_t brightness = 64;
 uint8_t htmlGetRequest;
@@ -101,7 +102,8 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Measured Values", "Brightness", "Transverter Mode", "IP Address", "Shutdown", "Exit"};
+const char *settings[] = {"Measured Values", "Brightness", "Transverter Mode", "IP Address", "Beep", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceTransverter[] = {"OFF", "ON"};
+const char *choiceBeep[] = {"OFF", "ON"};
