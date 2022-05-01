@@ -877,6 +877,9 @@ boolean checkConnection()
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
 
   char s[4];
+
+  settingLock = false;
+
   for (uint8_t i = 0; i < 6; i++)
   {
     sprintf(s, "%02x,", request[i]);
@@ -936,6 +939,8 @@ boolean checkConnection()
       http.end(); // Free the resources
     }
 
+    settingLock = true;
+
     if (message != "")
     {
       if(screensaverMode == false && settingsMode == false)
@@ -952,6 +957,7 @@ boolean checkConnection()
         return false;
       }
       else {
+        settingLock = false;
         vTaskDelay(1000);
         return false;
       }
