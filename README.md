@@ -134,16 +134,6 @@ Line 20 and 21, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port 
 
 If you are using a Transverter, you can configure a Local Oscillator frequency, line 24. For example, if you are on 28500000 Hz and the constant `TRANSVERTER_LO` is set to 116000000, your M5Stack will display 144.500.000 (not 28.500.000). This can be useful. Of course, default value is 0. Change the constant `TRANSVERTER_LO` only if you need.
 
-#### TFT image retention
-
-To avoid TFT image retention (also called _Burn In_), there is a kind of screen saver. If there is no action on the buttons or PTT, after a delay of 60 minutes, the screen will show the Icom logo. 
-
-You can change the constant `TIMEOUT_SCREENSAVER` to set the delay, line 27. 
-
-If the screen saver is active and you press a button or the PTT to transmit, the ICSMeter screen will come back.
-
-Note that if the connection between your M5Stack and the Transceiver has been established and you turn off your Transceiver (or disconnect the Bluetooth link, with IC-705), the screen will go completely into _sleep mode_. The screen will come back as soon as the connection is established again after you turn on your Transceiver. 
-
 #### Examples of settings
 
 First of all, here is a part of my transceiver settings, on IC-7300 :
@@ -214,6 +204,7 @@ The following options are available :
 | Transverter Mode     | Set Transverter Mode (OFF ~ ON)           | 
 | Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Beep                 | Set Beep (0 ~ 100%)                       |
+| Screensaver          | Set Screensaver TimeOut (1 ~ 60 min)      |
 | IP Address           | Display your IP                           |
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
