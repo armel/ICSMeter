@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.2"
+#define VERSION "0.1.3"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -58,10 +58,11 @@ WiFiClient httpClient, civClient;
 int8_t measure = 1;
 int8_t beep = 0;
 int8_t transverter = 0;
+int8_t screensaver = 0;
 uint8_t brightness = 64;
 uint8_t htmlGetRequest;
 
-uint32_t screensaver;
+uint32_t screensaverTimer;
 
 float angleOld = 0;
 
@@ -102,8 +103,9 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Measured Values", "Transverter Mode", "Brightness", "Beep", "IP Address", "Shutdown", "Exit"};
+const char *settings[] = {"Measured Values", "Transverter Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceTransverter[] = {"OFF", "ON"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
+const char *choiceScreensaver[] = {"TIMEOUT"};
