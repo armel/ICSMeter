@@ -209,7 +209,7 @@ The following options are available :
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
  
-> Measured Values, Transverter Mode, Brightness and Beep are preserved at the next restart.
+> Measured Values, Transverter Mode, Brightness, Beep and Screensaver are preserved at the next restart.
 
 # Using the Bin Loader (power user only...)
 
