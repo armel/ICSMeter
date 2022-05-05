@@ -223,7 +223,8 @@ void subValue(String valString, uint8_t x = 160, uint8_t y = 206)
 
     M5.Lcd.setTextDatum(CC_DATUM);
     M5.Lcd.setFont(&YELLOWCRE8pt7b);
-    M5.Lcd.setTextPadding(140);
+    M5.Lcd.setTextPadding(160);
+    //M5.Lcd.setTextColor(TFT_BLACK, TFT_RED);
     M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
     // valString.replace(".", ",");
     M5.Lcd.drawString(valString, x, y);

@@ -109,7 +109,7 @@ const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
 const char *choiceScreensaver[] = {"TIMEOUT"};
-const u32_t choiceTransverter[] = {
+const double choiceTransverter[] = {
     0,
     TRANSVERTER_LO_1,
     TRANSVERTER_LO_2,
