@@ -76,6 +76,7 @@ boolean wifiConnected = false;
 boolean proxyConnected = false;
 boolean txConnected = true;
 boolean startup = true;
+boolean wakeup = true;
 boolean batteryCharginglOld = true;
 
 int8_t measureOld = 5;
@@ -106,6 +107,13 @@ uint8_t binIndex = 0;
 const char *settings[] = {"Measured Values", "Transverter Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
-const char *choiceTransverter[] = {"OFF", "ON"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
 const char *choiceScreensaver[] = {"TIMEOUT"};
+const u32_t choiceTransverter[] = {
+    0,
+    TRANSVERTER_LO_1,
+    TRANSVERTER_LO_2,
+    TRANSVERTER_LO_3,
+    TRANSVERTER_LO_4,
+    TRANSVERTER_LO_5
+};

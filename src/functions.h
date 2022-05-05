@@ -6,38 +6,30 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
   if (event == ESP_SPP_SRV_OPEN_EVT)
   {
-    screensaverTimer = millis();
-    M5.Lcd.wakeup();
     Serial.println("BT Client Connected");
-    frequencyOld = "";
     btConnected = true;
   }
   if (event == ESP_SPP_CLOSE_EVT)
   {
-    M5.Lcd.sleep();
     Serial.println("BT Client disconnected");
     btConnected = false;
   }
 }
 
+// Wifi callback On
+void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
+{
+  Serial.println("Wifi Client Connected");
+  wifiConnected = true;
+}
+
 // Wifi callback Off
 void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-  //M5.Lcd.sleep();
   Serial.println("Wifi Client disconnected");
   wifiConnected = false;
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-}
-
-// Wifi callback On
-void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-  screensaverTimer = millis();
-  //M5.Lcd.wakeup();
-  Serial.println("Wifi Client Connected");
-  frequencyOld = "";
-  wifiConnected = true;
 }
 
 // Print battery
@@ -67,11 +59,11 @@ void viewBattery() {
       else
         M5.Lcd.drawString(String(IC_MODEL) + " USB", 32, 11);
 
-      if (transverter == 1) {
-        M5.Lcd.fillRoundRect(62, 4, 24, 13, 2, TFT_MODE_BACK);
-        M5.Lcd.drawRoundRect(62, 4, 24, 13, 2, TFT_MODE_BORDER);
+      if (transverter > 0) {
+        M5.Lcd.fillRoundRect(62, 4, 26, 13, 2, TFT_MODE_BACK);
+        M5.Lcd.drawRoundRect(62, 4, 26, 13, 2, TFT_MODE_BORDER);
         M5.Lcd.setTextColor(TFT_WHITE);
-        M5.Lcd.drawString("LO", 74, 11);
+        M5.Lcd.drawString("LO" + String(transverter), 76, 11);
       }
 
       //M5.Lcd.drawFastHLine(0, 20, 320, TFT_BLACK);
@@ -782,27 +774,14 @@ boolean checkConnection()
 
         if (response != "")
         {
-          if(startup == false)
-          {
-            if(screensaverMode == true) {
-              clearData();
-              screensaverTimer = millis();
-            }
-            M5.Lcd.wakeup();
-            Serial.println("TX connected");
-          }
-
+          Serial.println("TX connected");
           txConnected = true;
           message = "";
         }
         else
         {
-          if(startup == false)
-          {
-            M5.Lcd.sleep();
-            Serial.println("TX disconnected");
-          }
-
+          Serial.println("TX disconnected");
+          txConnected = false;
           message = "Check TX";
         }
       }
@@ -812,6 +791,27 @@ boolean checkConnection()
       }
       http.end();
     }
+
+    // Shutdown screen if no TX connexion
+    if(wakeup == true && startup == false) {
+       if ((IC_CONNECT == BT && btConnected == false) || (IC_CONNECT == USB && txConnected == false))
+       {
+          M5.Lcd.sleep();
+          wakeup = false;
+       }
+    }
+    else if(wakeup == false && startup == false) {
+       if ((IC_CONNECT == BT && btConnected == true) || (IC_CONNECT == USB && txConnected == true))
+       {
+          clearData();
+          viewGUI();
+          M5.Lcd.wakeup();
+          wakeup = true;
+          screensaverTimer = millis();
+       }
+    }
+
+    // View message
 
     if (message != "")
     {

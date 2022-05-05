@@ -396,7 +396,7 @@ void getDataMode()
 // Get Frequency
 void getFrequency()
 {
-  String valString;
+  String frequency;
 
   static char buffer[8];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
@@ -406,7 +406,7 @@ void getFrequency()
   String val2;
   String val3;
 
-  uint32_t frequency; // Current frequency in Hz
+  uint32_t freq; // Current frequency in Hz
   const uint32_t decMulti[] = {1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
 
   uint8_t lenght = 0;
@@ -415,31 +415,37 @@ void getFrequency()
 
   sendCommand(request, n, buffer, 8);
 
-  frequency = 0;
+  freq = 0;
   for (uint8_t i = 2; i < 7; i++)
   {
-    frequency += (buffer[9 - i] >> 4) * decMulti[(i - 2) * 2];
-    frequency += (buffer[9 - i] & 0x0F) * decMulti[(i - 2) * 2 + 1];
+    freq += (buffer[9 - i] >> 4) * decMulti[(i - 2) * 2];
+    freq += (buffer[9 - i] & 0x0F) * decMulti[(i - 2) * 2 + 1];
   }
 
-  if(transverter == 1)
-    frequency += TRANSVERTER_LO;
+  if(transverter > 0)
+    freq += int(choiceTransverter[transverter]);
 
-  valString = String(frequency);
-  lenght = valString.length();
-  
-  if(lenght <= 9) {
-    val0 = valString.substring(lenght - 3, lenght);
-    val1 = valString.substring(lenght - 6, lenght - 3);
-    val2 = valString.substring(0, lenght - 6);
-    subValue(val2 + "." + val1 + "." + val0);
+  frequency = String(freq);
+  lenght = frequency.length();
+
+  if(frequency != "0")
+  {
+    if(lenght <= 9) {
+      val0 = frequency.substring(lenght - 3, lenght);
+      val1 = frequency.substring(lenght - 6, lenght - 3);
+      val2 = frequency.substring(0, lenght - 6);
+      subValue(val2 + "." + val1 + "." + val0);
+    }
+    else {
+      val0 = frequency.substring(lenght - 3, lenght);
+      val1 = frequency.substring(lenght - 6, lenght - 3);
+      val2 = frequency.substring(lenght - 9, lenght - 6);
+      val3 = frequency.substring(0, lenght - 9);
+      subValue(val3 + "." + val2 + "." + val1 + "." + val0);    
+    }
   }
   else {
-    val0 = valString.substring(lenght - 3, lenght);
-    val1 = valString.substring(lenght - 6, lenght - 3);
-    val2 = valString.substring(lenght - 9, lenght - 6);
-    val3 = valString.substring(0, lenght - 9);
-    subValue(val3 + "." + val2 + "." + val1 + "." + val0);    
+    subValue("-");    
   }
 }
 
