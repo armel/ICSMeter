@@ -6,28 +6,30 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
   if (event == ESP_SPP_SRV_OPEN_EVT)
   {
-    Serial.println("BT Client Connected");
     btConnected = true;
+    Serial.println("BT Client Connected");
   }
   if (event == ESP_SPP_CLOSE_EVT)
   {
-    Serial.println("BT Client disconnected");
+    M5.Lcd.sleep();
+    wakeup = false;
     btConnected = false;
+    Serial.println("BT Client disconnected");
   }
 }
 
 // Wifi callback On
 void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-  Serial.println("Wifi Client Connected");
   wifiConnected = true;
+  Serial.println("Wifi Client Connected");
 }
 
 // Wifi callback Off
 void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-  Serial.println("Wifi Client disconnected");
   wifiConnected = false;
+  Serial.println("Wifi Client disconnected");
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 }
