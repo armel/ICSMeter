@@ -41,6 +41,7 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
         }
       }
     }
+    startup = false;
   }
   // Serial.println(" Ok");
 }
