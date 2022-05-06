@@ -143,7 +143,6 @@ void getSmeter()
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x02, 0xFD};
   char str[2];
 
-  uint8_t limit;
   uint8_t val0 = 0;
   float_t val1 = 0;
   static uint8_t val2 = 0;
@@ -208,7 +207,8 @@ void getSmeter()
     value(valString);
 
     // If led strip...
-    limit = map(val0, 0, 241, 0, NUM_LEDS_STRIP);
+    /*
+    uint8_t limit = map(val0, 0, 241, 0, NUM_LEDS_STRIP);
 
     for (uint8_t i = 0; i < limit; i++)
     {
@@ -227,6 +227,7 @@ void getSmeter()
       strip[i] = CRGB::White;
     }
     FastLED.show();
+    */
   }
 }
 

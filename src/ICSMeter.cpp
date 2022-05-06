@@ -30,9 +30,11 @@ void setup()
   }
 
   // If led strip...
+  /*
   FastLED.addLeds<WS2811,Neopixel_PIN,GRB>(strip, NUM_LEDS_STRIP).setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(32);
-
+  */
+ 
   // Preferences
   preferences.begin(NAME);
   measure = preferences.getUInt("measure", 1);
