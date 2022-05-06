@@ -6,51 +6,48 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
   if (event == ESP_SPP_SRV_OPEN_EVT)
   {
-    screensaverTimer = millis();
-    M5.Lcd.wakeup();
-    Serial.println("BT Client Connected");
-    frequencyOld = "";
     btConnected = true;
+    Serial.println("BT Client Connected");
   }
   if (event == ESP_SPP_CLOSE_EVT)
   {
     M5.Lcd.sleep();
-    Serial.println("BT Client disconnected");
+    wakeup = false;
     btConnected = false;
+    Serial.println("BT Client disconnected");
   }
-}
-
-// Wifi callback Off
-void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-  //M5.Lcd.sleep();
-  Serial.println("Wifi Client disconnected");
-  wifiConnected = false;
-
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 }
 
 // Wifi callback On
 void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-  screensaverTimer = millis();
-  //M5.Lcd.wakeup();
-  Serial.println("Wifi Client Connected");
-  frequencyOld = "";
   wifiConnected = true;
+  Serial.println("Wifi Client Connected");
+}
+
+// Wifi callback Off
+void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
+{
+  wifiConnected = false;
+  Serial.println("Wifi Client disconnected");
+
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 }
 
 // Print battery
-void viewBattery() {
+void viewBattery()
+{
   uint8_t batteryLevel;
   boolean batteryCharging;
 
-  if(screensaverMode == false && settingsMode == false) {
+  if (screensaverMode == false && settingsMode == false)
+  {
     // On left, view battery level
     batteryLevel = map(getBatteryLevel(1), 0, 100, 0, 16);
     batteryCharging = isCharging();
 
-    if(batteryLevel != batteryLevelOld || batteryCharging != batteryCharginglOld) {
+    if (batteryLevel != batteryLevelOld || batteryCharging != batteryCharginglOld)
+    {
 
       M5.Lcd.drawJpg(smeterTop, sizeof(smeterTop), 0, 0, 320, 20);
 
@@ -67,30 +64,33 @@ void viewBattery() {
       else
         M5.Lcd.drawString(String(IC_MODEL) + " USB", 32, 11);
 
-      if (transverter == 1) {
-        M5.Lcd.fillRoundRect(62, 4, 24, 13, 2, TFT_MODE_BACK);
-        M5.Lcd.drawRoundRect(62, 4, 24, 13, 2, TFT_MODE_BORDER);
+      if (transverter > 0)
+      {
+        M5.Lcd.fillRoundRect(62, 4, 26, 13, 2, TFT_MODE_BACK);
+        M5.Lcd.drawRoundRect(62, 4, 26, 13, 2, TFT_MODE_BORDER);
         M5.Lcd.setTextColor(TFT_WHITE);
-        M5.Lcd.drawString("LO", 74, 11);
+        M5.Lcd.drawString("LO" + String(transverter), 76, 11);
       }
 
-      //M5.Lcd.drawFastHLine(0, 20, 320, TFT_BLACK);
+      // M5.Lcd.drawFastHLine(0, 20, 320, TFT_BLACK);
 
       batteryLevelOld = batteryLevel;
       batteryCharginglOld = batteryCharging;
-      
+
       M5.Lcd.drawRect(294, 4, 20, 12, TFT_BLACK);
       M5.Lcd.drawRect(313, 7, 4, 6, TFT_BLACK);
       M5.Lcd.fillRect(296, 6, batteryLevel, 8, TFT_BLACK);
-        
-      if(batteryCharging) {
+
+      if (batteryCharging)
+      {
         M5.Lcd.setTextColor(TFT_BLACK);
         M5.Lcd.setFont(0);
         M5.Lcd.setTextDatum(CC_DATUM);
         M5.Lcd.setTextPadding(0);
         M5.Lcd.drawString("+", 290, 11);
       }
-      else {
+      else
+      {
         M5.Lcd.setTextColor(TFT_BLACK);
         M5.Lcd.setFont(0);
         M5.Lcd.setTextDatum(CR_DATUM);
@@ -105,14 +105,14 @@ void viewBattery() {
 void viewGUI()
 {
   M5.Lcd.drawJpg(smeterTop, sizeof(smeterTop), 0, 0, 320, 20);
-  if(IC_MODEL == 705)
+  if (IC_MODEL == 705)
     M5.Lcd.drawJpg(smeterMiddle10, sizeof(smeterMiddle10), 0, 20, 320, 140);
   else
     M5.Lcd.drawJpg(smeterMiddle100, sizeof(smeterMiddle100), 0, 20, 320, 140);
   M5.Lcd.drawJpg(smeterBottom, sizeof(smeterBottom), 0, 160, 320, 80);
 }
 
-void clearData() 
+void clearData()
 {
   angleOld = 0;
 
@@ -181,10 +181,10 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uin
     c = 160 + x;
     d = 220 - y;
 
-  if(IC_MODEL == 705)
-    M5.Lcd.drawJpg(smeterMiddle10, sizeof(smeterMiddle10), 0, 20, 320, 130);
-  else
-    M5.Lcd.drawJpg(smeterMiddle100, sizeof(smeterMiddle100), 0, 20, 320, 130);
+    if (IC_MODEL == 705)
+      M5.Lcd.drawJpg(smeterMiddle10, sizeof(smeterMiddle10), 0, 20, 320, 130);
+    else
+      M5.Lcd.drawJpg(smeterMiddle100, sizeof(smeterMiddle100), 0, 20, 320, 130);
 
     // M5.Lcd.drawFastHLine(0, 150, 320, TFT_BLACK);
 
@@ -223,7 +223,8 @@ void subValue(String valString, uint8_t x = 160, uint8_t y = 206)
 
     M5.Lcd.setTextDatum(CC_DATUM);
     M5.Lcd.setFont(&YELLOWCRE8pt7b);
-    M5.Lcd.setTextPadding(140);
+    M5.Lcd.setTextPadding(160);
+    //M5.Lcd.setTextColor(TFT_BLACK, TFT_RED);
     M5.Lcd.setTextColor(TFT_BLACK, TFT_BACK);
     // valString.replace(".", ",");
     M5.Lcd.drawString(valString, x, y);
@@ -236,7 +237,8 @@ void viewMeasure()
   uint16_t i = 65;
   uint8_t j;
 
-  if(measure != measureOld) {
+  if (measure != measureOld)
+  {
     measureOld = measure;
 
     M5.Lcd.setTextDatum(CC_DATUM);
@@ -274,8 +276,8 @@ void getBinaryList(File dir, String type)
     }
 
     if (strstr(entry.name(), "/.") == NULL && strstr(entry.name(), ".bin") != NULL)
-    { 
-      //Serial.println(type + "_" + entry.name());     
+    {
+      // Serial.println(type + "_" + entry.name());
       binFilename[binIndex] = type + "_" + entry.name();
       binIndex++;
     }
@@ -328,7 +330,7 @@ void binLoader()
   root = SPIFFS.open("/");
   getBinaryList(root, "SP");
 
-  if (SD.begin(GPIO_NUM_4, SPI, 25000000)) 
+  if (SD.begin(GPIO_NUM_4, SPI, 25000000))
   {
     root = SD.open("/");
     getBinaryList(root, "SD");
@@ -398,10 +400,12 @@ void binLoader()
     }
     else if (btnB)
     {
-      if(binFilename[cursor].substring(0, 4) == "SP_/") {
+      if (binFilename[cursor].substring(0, 4) == "SP_/")
+      {
         updateFromFS(SPIFFS, binFilename[cursor].substring(3));
       }
-      else {
+      else
+      {
         updateFromFS(SD, binFilename[cursor].substring(3));
       }
       ESP.restart();
@@ -413,7 +417,7 @@ void binLoader()
     start = cursor / limit;
 
     stop = (start * limit) + limit;
-    
+
     /*
     Serial.print(cursor);
     Serial.print("-");
@@ -437,11 +441,13 @@ void binLoader()
         {
           tmpName = ">> " + tmpName + " <<";
 
-          if(binFilename[cursor].substring(0, 4) == "SP_/") {
+          if (binFilename[cursor].substring(0, 4) == "SP_/")
+          {
             M5.Lcd.setTextSize(1);
             M5.Lcd.drawString("SPI Flash File Storage", 160, 50);
           }
-          else {
+          else
+          {
             M5.Lcd.setTextSize(1);
             M5.Lcd.drawString("SD Card Storage", 160, 50);
           }
@@ -570,10 +576,12 @@ void getScreenshot()
                 httpClient.println("HTTP/1.1 200 OK");
                 httpClient.println("Content-type:text/html");
                 httpClient.println();
-                if(M5.getBoard() == m5::board_t::board_M5Stack) {
+                if (M5.getBoard() == m5::board_t::board_M5Stack)
+                {
                   httpClient.write_P(index_m5stack_html, sizeof(index_m5stack_html));
                 }
-                else if(M5.getBoard() == m5::board_t::board_M5StackCore2) {
+                else if (M5.getBoard() == m5::board_t::board_M5StackCore2)
+                {
                   httpClient.write_P(index_core2_html, sizeof(index_core2_html));
                 }
                 break;
@@ -680,40 +688,47 @@ void wakeAndSleep()
 
     vTaskDelay(100);
   }
-  else if (screensaverMode == true) {
-  
+  else if (screensaverMode == true)
+  {
+
     M5.Lcd.fillRect(x, y, 44, 22, TFT_BLACK);
 
-    if(xDir)
+    if (xDir)
     {
       x += 1;
     }
-    else {
+    else
+    {
       x -= 1;
     }
 
-    if(yDir)
+    if (yDir)
     {
       y += 1;
     }
-    else {
+    else
+    {
       y -= 1;
     }
 
-    if(x < 44) {
+    if (x < 44)
+    {
       xDir = true;
       x = 44;
     }
-    else if(x > 232) {
+    else if (x > 232)
+    {
       xDir = false;
       x = 232;
     }
 
-    if(y < 22) {
+    if (y < 22)
+    {
       yDir = true;
       y = 22;
     }
-    else if(y > 196) {
+    else if (y > 196)
+    {
       yDir = false;
       y = 196;
     }
@@ -782,25 +797,14 @@ boolean checkConnection()
 
         if (response != "")
         {
-          if(startup == false)
-          {
-            clearData();
-            screensaverTimer = millis();
-            M5.Lcd.wakeup();
-            Serial.println("TX connected");
-          }
-
+          Serial.println("TX connected");
           txConnected = true;
           message = "";
         }
         else
         {
-          if(startup == false)
-          {
-            M5.Lcd.sleep();
-            Serial.println("TX disconnected");
-          }
-
+          Serial.println("TX disconnected");
+          txConnected = false;
           message = "Check TX";
         }
       }
@@ -811,11 +815,34 @@ boolean checkConnection()
       http.end();
     }
 
+    // Shutdown screen if no TX connexion
+    if (wakeup == true && startup == false)
+    {
+      if ((IC_CONNECT == BT && btConnected == false) || (IC_CONNECT == USB && txConnected == false))
+      {
+        M5.Lcd.sleep();
+        wakeup = false;
+      }
+    }
+    else if (wakeup == false && startup == false)
+    {
+      if ((IC_CONNECT == BT && btConnected == true) || (IC_CONNECT == USB && txConnected == true))
+      {
+        clearData();
+        viewGUI();
+        M5.Lcd.wakeup();
+        wakeup = true;
+        screensaverTimer = millis();
+      }
+    }
+
+    // View message
+
     if (message != "")
     {
       settingLock = true;
 
-      if(screensaverMode == false && settingsMode == false)
+      if (screensaverMode == false && settingsMode == false)
       {
         M5.Lcd.setTextDatum(CC_DATUM);
         M5.Lcd.setFont(&stencilie16pt7b);
@@ -829,7 +856,8 @@ boolean checkConnection()
         vTaskDelay(250);
         return false;
       }
-      else {
+      else
+      {
         settingLock = false;
         vTaskDelay(1000);
         return false;

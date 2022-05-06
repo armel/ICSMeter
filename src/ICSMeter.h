@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.3"
+#define VERSION "0.1.4"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -45,6 +45,10 @@
 #define NUM_LEDS 10
 CRGB leds[NUM_LEDS];
 
+#define Neopixel_PIN 32 // 21
+#define NUM_LEDS_STRIP 30
+CRGB strip[NUM_LEDS_STRIP];
+
 // Bluetooth connector
 BluetoothSerial CAT;
 
@@ -76,6 +80,7 @@ boolean wifiConnected = false;
 boolean proxyConnected = false;
 boolean txConnected = true;
 boolean startup = true;
+boolean wakeup = true;
 boolean batteryCharginglOld = true;
 
 int8_t measureOld = 5;
@@ -106,6 +111,13 @@ uint8_t binIndex = 0;
 const char *settings[] = {"Measured Values", "Transverter Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
-const char *choiceTransverter[] = {"OFF", "ON"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
 const char *choiceScreensaver[] = {"TIMEOUT"};
+const double choiceTransverter[] = {
+    0,
+    TRANSVERTER_LO_1,
+    TRANSVERTER_LO_2,
+    TRANSVERTER_LO_3,
+    TRANSVERTER_LO_4,
+    TRANSVERTER_LO_5
+};

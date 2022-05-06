@@ -132,7 +132,7 @@ Line 20 and 21, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port 
 
 #### Transverter Configuration
 
-If you are using a Transverter, you can configure a Local Oscillator frequency, line 24. For example, if you are on 28500000 Hz and the constant `TRANSVERTER_LO` is set to 116000000, your M5Stack will display 144.500.000 (not 28.500.000). This can be useful. Of course, default value is 0. Change the constant `TRANSVERTER_LO` only if you need.
+If you are using a Transverter, you can configure up to 5 Local Oscillator frequencies, lines 24 ~ 28. For example, if you are on 28500000 Hz and the constant `TRANSVERTER_LO_1` is set to 116000000 (default value), your M5Stack will display 144.500.000 (not 28.500.000), if you select this option in the settings menu. This can be useful. Change theses constants only if you need.
 
 #### Examples of settings
 
@@ -201,7 +201,7 @@ The following options are available :
 | Settings             | Value                                     | 
 | -------------------- |:-----------------------------------------:| 
 | Measured Values      | Set Measured Values (PWR, S or SWR)       | 
-| Transverter Mode     | Set Transverter Mode (OFF ~ ON)           | 
+| Transverter Mode     | Set Transverter Mode (OFF, LO1 ~ LO5)     | 
 | Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Beep                 | Set Beep (0 ~ 100%)                       |
 | Screensaver          | Set Screensaver TimeOut (1 ~ 60 min)      |
@@ -298,9 +298,11 @@ Many thanks to...
 | M5Stack-SD-Updater  | [Tobozo](https://twitter.com/TobozoTagada)            | https://github.com/tobozo/M5Stack-SD-Updater |
 | FastLED             | FastLED                                               | https://github.com/FastLED/FastLED           |
 
+Icom and the Icom logo are registered trademarks of Icom Incorporated (Japan) in Japan, the United States, the United Kingdom, Germany, France, Spain, Russia, Australia, New Zealand, and/or other countries.
+
 # Donations
 
-Special thanks to Rolf Schroeder DL8BAG, Brian Garber WB8AM, Matt B-Wilkinson M6VWM, Robert Agnew KD0TVP, Meinhard Frank Günther DL0CN, Johan Hansson SM0TSC, Tadeusz Pater VA7CPM, Frederic Ulmer F4ESO, Joshua Murray M0JMO, Mark Hammond N8MH, Angel Mateu Muzzio EA4GIG, Hiroshi Sasaki JL7KGW, Robert John Williams VK3IE and Mark Bumstead M0IAX for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder DL8BAG, Brian Garber WB8AM, Matt B-Wilkinson M6VWM, Robert Agnew KD0TVP, Meinhard Frank Günther DL0CN, Johan Hansson SM0TSC, Tadeusz Pater VA7CPM, Frederic Ulmer F4ESO, Joshua Murray M0JMO, Mark Hammond N8MH, Angel Mateu Muzzio EA4GIG, Hiroshi Sasaki JL7KGW, Robert John Williams VK3IE, Mark Bumstead M0IAX and Félix Symann F1VEO for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 
