@@ -81,7 +81,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
     response = http.getString(); // Get data
     response.trim();
     response = response.substring(4);
-    
+
     if (response == "")
     {
       txConnected = false;
@@ -183,7 +183,7 @@ void getSmeter()
     else
     {
       angle = mapFloat(val0, 121, 241, -6.50f, -43.0f);
-      if(int(round(val1) < 10))
+      if (int(round(val1) < 10))
         valString = "S 9 + 0" + String(int(round(val1))) + " dB";
       else
         valString = "S 9 + " + String(int(round(val1))) + " dB";
@@ -199,12 +199,33 @@ void getSmeter()
       Serial.print(" ");
       Serial.println(angle);
     }
-   
+
     // Draw line
     needle(angle);
 
     // Write Value
     value(valString);
+
+    // If led strip...
+    uint8_t limit = map(val0, 0, 241, 0, NUM_LEDS_STRIP);
+
+    for (uint8_t i = 0; i < limit; i++)
+    {
+      if (i < NUM_LEDS_STRIP / 2)
+      {
+        strip[i] = CRGB::Blue;
+      }
+      else
+      {
+        strip[i] = CRGB::Red;
+      }
+    }
+
+    for (uint8_t i = limit; i < NUM_LEDS_STRIP; i++)
+    {
+      strip[i] = CRGB::White;
+    }
+    FastLED.show();
   }
 }
 
@@ -357,7 +378,7 @@ void getPower()
     }
 
     val2 = round(val1 * 10);
-    if(IC_MODEL == 705)
+    if (IC_MODEL == 705)
       valString = "PWR " + String((val2 / 10)) + " W";
     else
       valString = "PWR " + String(val2) + " W";
@@ -419,33 +440,34 @@ void getFrequency()
     freq += (buffer[9 - i] & 0x0F) * decMulti[(i - 2) * 2 + 1];
   }
 
-  if(transverter > 0)
+  if (transverter > 0)
     freq += double(choiceTransverter[transverter]);
 
   frequency = String(freq);
   lenght = frequency.length();
 
-  if(frequency != "0")
+  if (frequency != "0")
   {
     int8_t i;
 
-    for(i = lenght - 6; i >= 0; i -= 3) 
+    for (i = lenght - 6; i >= 0; i -= 3)
     {
       frequencyNew = "." + frequency.substring(i, i + 3) + frequencyNew;
     }
 
-    if(i == -3) 
+    if (i == -3)
     {
       frequencyNew = frequencyNew.substring(1, frequencyNew.length());
     }
-    else 
+    else
     {
       frequencyNew = frequency.substring(0, i + 3) + frequencyNew;
     }
-    subValue(frequencyNew);    
+    subValue(frequencyNew);
   }
-  else {
-    subValue("-");    
+  else
+  {
+    subValue("-");
   }
 }
 

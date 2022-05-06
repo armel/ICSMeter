@@ -45,6 +45,10 @@
 #define NUM_LEDS 10
 CRGB leds[NUM_LEDS];
 
+#define Neopixel_PIN 32 // 21
+#define NUM_LEDS_STRIP 30
+CRGB strip[NUM_LEDS_STRIP];
+
 // Bluetooth connector
 BluetoothSerial CAT;
 
