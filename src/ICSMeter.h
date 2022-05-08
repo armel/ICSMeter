@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.4"
+#define VERSION "0.1.5"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -22,6 +22,22 @@
 #define DEBUG 0
 
 // Color
+typedef struct __attribute__((__packed__))
+{
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
+} colorType;
+
+uint16_t TFT_BACK   = 0x0000;
+uint16_t TFT_FRONT  = 0x0000;
+
+const colorType TFT_BACK_CLASSIC = {255, 248, 236};
+const colorType TFT_FRONT_CLASSIC = {0, 0, 0};
+
+const colorType TFT_BACK_DARK = {0, 0, 0};
+const colorType TFT_FRONT_DARK = {255, 255, 255};
+
 #define TFT_MODE_BORDER M5.Lcd.color565(115, 135, 159)
 #define TFT_MODE_BACK M5.Lcd.color565(24, 57, 92)
 
@@ -30,10 +46,8 @@
 #define TFT_MENU_SELECT M5.Lcd.color565(255, 255, 255)
 
 // Needle
-#define TFT_BACK M5.Lcd.color565(255, 248, 236)
-#define TFT_MODE M5.Lcd.color565(84, 103, 143)
 #define TFT_NEDDLE_1 M5.Lcd.color565(241, 120, 100)
-#define TFT_NEDDLE_2 M5.Lcd.color565(241, 170, 170)
+#define TFT_NEDDLE_2 M5.Lcd.color565(241, 140, 120)
 
 // Web site Screen Capture stuff
 #define GET_unknown 0
@@ -63,6 +77,7 @@ int8_t measure = 1;
 int8_t beep = 0;
 int8_t transverter = 0;
 int8_t screensaver = 0;
+int8_t theme = 0;
 uint8_t brightness = 64;
 uint8_t htmlGetRequest;
 
@@ -108,8 +123,9 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Measured Values", "Transverter Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
+const char *settings[] = {"Measured Values", "Transverter Mode", "Themes", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
+const char *choiceThemes[] = {"CLASSIC", "DARK"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
 const char *choiceScreensaver[] = {"TIMEOUT"};

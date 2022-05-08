@@ -8,6 +8,7 @@ void button(void *pvParameters)
   int8_t transverterOld = 0;
   int8_t screensaverOld = 0;
   uint8_t brightnessOld = 64;
+  uint8_t themeOld = 0;
   static int8_t settingsChoice = 0;
   static boolean settingsSelect = false;
 
@@ -48,6 +49,7 @@ void button(void *pvParameters)
       brightnessOld = preferences.getUInt("brightness");
       transverterOld = preferences.getUInt("transverter");
       screensaverOld = preferences.getUInt("screensaver");
+      themeOld = preferences.getUInt("theme");
     }
 
     if(settingsMode == false)
@@ -133,6 +135,37 @@ void button(void *pvParameters)
           else if(btnB == 1) {
             if(measureOld != measure)
               preferences.putUInt("measure", measure);
+            clearData();
+            viewGUI();
+            settingsSelect = false;
+            settingsMode = false;
+            vTaskDelay(pdMS_TO_TICKS(150));
+          }
+          vTaskDelay(pdMS_TO_TICKS(150));
+        }
+
+        // Themes
+        if(settingsString == "Themes")
+        {
+          M5.Lcd.drawString(String(choiceThemes[theme]), 160, h - 6);
+
+          if(btnA || btnC) {
+            if(btnA == 1) {
+              theme -= 1;
+              if(theme < 0) {
+                theme = 1;
+              }
+            }
+            else if(btnC == 1) {
+              theme += 1;
+              if(theme > 1) {
+                theme = 0;
+              }
+            }
+          }
+          else if(btnB == 1) {
+            if(themeOld != theme)
+              preferences.putUInt("theme", theme);
             clearData();
             viewGUI();
             settingsSelect = false;

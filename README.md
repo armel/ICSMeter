@@ -21,7 +21,9 @@
 
 The ICSMeter project allows to equip the IC-705, IC-7300 and IC-9700 produced by ICOM, with a needle S-Meter ! The S-Meter allows to measure the S signal, the Po power and the SWR. It also displays the current frequency, mode and filter.
 
-![ICSMeter S](https://github.com/armel/ICSMeter/blob/main/img/S.png)
+![ICSMeter S](https://github.com/armel/ICSMeter/blob/main/img/S_Classic.png)
+
+![ICSMeter S](https://github.com/armel/ICSMeter/blob/main/img/S_Dark.png)
 
 ![ICSMeter PWR](https://github.com/armel/ICSMeter/blob/main/img/PWR.png)
 
@@ -202,6 +204,7 @@ The following options are available :
 | -------------------- |:-----------------------------------------:| 
 | Measured Values      | Set Measured Values (PWR, S or SWR)       | 
 | Transverter Mode     | Set Transverter Mode (OFF, LO1 ~ LO5)     | 
+| Themes               | Set Themes (CLASSIC ~ DARK)               | 
 | Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Beep                 | Set Beep (0 ~ 100%)                       |
 | Screensaver          | Set Screensaver TimeOut (1 ~ 60 min)      |
@@ -209,7 +212,7 @@ The following options are available :
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
  
-> Measured Values, Transverter Mode, Brightness, Beep and Screensaver are preserved at the next restart.
+> Measured Values, Transverter Mode, Themes, Brightness, Beep and Screensaver are preserved at the next restart.
 
 # Using the Bin Loader (power user only...)
 
@@ -302,7 +305,7 @@ Icom and the Icom logo are registered trademarks of Icom Incorporated (Japan) in
 
 # Donations
 
-Special thanks to Rolf Schroeder DL8BAG, Brian Garber WB8AM, Matt B-Wilkinson M6VWM, Robert Agnew KD0TVP, Meinhard Frank Günther DL0CN, Johan Hansson SM0TSC, Tadeusz Pater VA7CPM, Frederic Ulmer F4ESO, Joshua Murray M0JMO, Mark Hammond N8MH, Angel Mateu Muzzio EA4GIG, Hiroshi Sasaki JL7KGW, Robert John Williams VK3IE, Mark Bumstead M0IAX and Félix Symann F1VEO for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder DL8BAG, Brian Garber WB8AM, Matt B-Wilkinson M6VWM, Robert Agnew KD0TVP, Meinhard Frank Günther DL0CN, Johan Hansson SM0TSC, Tadeusz Pater VA7CPM, Frederic Ulmer F4ESO, Joshua Murray M0JMO, Mark Hammond N8MH, Angel Mateu Muzzio EA4GIG, Hiroshi Sasaki JL7KGW, Robert John Williams VK3IE, Mark Bumstead M0IAX, Félix Symann F1VEO and Patrick Ruhl DG2YRP for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 
