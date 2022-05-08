@@ -21,7 +21,9 @@
 
 The ICSMeter project allows to equip the IC-705, IC-7300 and IC-9700 produced by ICOM, with a needle S-Meter ! The S-Meter allows to measure the S signal, the Po power and the SWR. It also displays the current frequency, mode and filter.
 
-![ICSMeter S](https://github.com/armel/ICSMeter/blob/main/img/S.png)
+![ICSMeter S](https://github.com/armel/ICSMeter/blob/main/img/S_Classic.png)
+
+![ICSMeter S](https://github.com/armel/ICSMeter/blob/main/img/S_Dark.png)
 
 ![ICSMeter PWR](https://github.com/armel/ICSMeter/blob/main/img/PWR.png)
 
@@ -202,6 +204,7 @@ The following options are available :
 | -------------------- |:-----------------------------------------:| 
 | Measured Values      | Set Measured Values (PWR, S or SWR)       | 
 | Transverter Mode     | Set Transverter Mode (OFF, LO1 ~ LO5)     | 
+| Themes               | Set Themes (CLASSIC ~ DARK)               | 
 | Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Beep                 | Set Beep (0 ~ 100%)                       |
 | Screensaver          | Set Screensaver TimeOut (1 ~ 60 min)      |
@@ -209,7 +212,7 @@ The following options are available :
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
  
-> Measured Values, Transverter Mode, Brightness, Beep and Screensaver are preserved at the next restart.
+> Measured Values, Transverter Mode, Themes, Brightness, Beep and Screensaver are preserved at the next restart.
 
 # Using the Bin Loader (power user only...)
 

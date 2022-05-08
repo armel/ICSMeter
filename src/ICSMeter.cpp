@@ -42,6 +42,7 @@ void setup()
   transverter = preferences.getUInt("transverter", 0);
   beep = preferences.getUInt("beep", 0);
   screensaver = preferences.getUInt("screensaver", 60);
+  theme = preferences.getUInt("theme", 0);
 
   // Bin Loader
   binLoader();
@@ -60,8 +61,6 @@ void setup()
 
   setBrightness(map(brightness, 1, 100, 1, 254));
   M5.Lcd.setRotation(1);
-  M5.Lcd.fillScreen(TFT_BACK);
-
   viewGUI();
 
   if(IC_MODEL == 705 && IC_CONNECT == BT)
