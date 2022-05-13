@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.5"
+#define VERSION "0.1.6"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -38,21 +38,24 @@ const colorType TFT_FRONT_CLASSIC = {0, 0, 0};
 const colorType TFT_BACK_DARK = {0, 0, 0};
 const colorType TFT_FRONT_DARK = {255, 255, 255};
 
-#define TFT_MODE_BORDER M5.Lcd.color565(115, 135, 159)
-#define TFT_MODE_BACK M5.Lcd.color565(24, 57, 92)
+#define TFT_MODE_BORDER display.color565(115, 135, 159)
+#define TFT_MODE_BACK display.color565(24, 57, 92)
 
-#define TFT_MENU_BORDER M5.Lcd.color565(115, 135, 159)
-#define TFT_MENU_BACK M5.Lcd.color565(24, 57, 92)
-#define TFT_MENU_SELECT M5.Lcd.color565(255, 255, 255)
+#define TFT_MENU_BORDER display.color565(115, 135, 159)
+#define TFT_MENU_BACK display.color565(24, 57, 92)
+#define TFT_MENU_SELECT display.color565(255, 255, 255)
 
 // Needle
-#define TFT_NEDDLE_1 M5.Lcd.color565(241, 120, 100)
-#define TFT_NEDDLE_2 M5.Lcd.color565(241, 140, 120)
+#define TFT_NEDDLE_1 display.color565(241, 120, 100)
+#define TFT_NEDDLE_2 display.color565(241, 140, 120)
 
 // Web site Screen Capture stuff
 #define GET_unknown 0
 #define GET_index_page  1
 #define GET_screenshot  2
+
+// Display
+M5GFX &display(M5.Lcd);
 
 // LED
 #define FASTLED_INTERNAL // To disable pragma messages on compile

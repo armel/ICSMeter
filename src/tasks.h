@@ -108,15 +108,15 @@ void button(void *pvParameters)
       else if(settingsSelect == true) {
         String settingsString = String(settings[settingsChoice]);
 
-        M5.Lcd.setTextDatum(CC_DATUM);
-        M5.Lcd.setFont(&YELLOWCRE8pt7b);
-        M5.Lcd.setTextPadding(w - 2);
-        M5.Lcd.setTextColor(TFT_MENU_SELECT, TFT_MENU_BACK);
+        display.setTextDatum(CC_DATUM);
+        display.setFont(&YELLOWCRE8pt7b);
+        display.setTextPadding(w - 2);
+        display.setTextColor(TFT_MENU_SELECT, TFT_MENU_BACK);
 
         // Measured Values
         if(settingsString == "Measured Values")
         {
-          M5.Lcd.drawString(String(choiceMeasures[measure]), 160, h - 6);
+          display.drawString(String(choiceMeasures[measure]), 160, h - 6);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -147,7 +147,7 @@ void button(void *pvParameters)
         // Themes
         if(settingsString == "Themes")
         {
-          M5.Lcd.drawString(String(choiceThemes[theme]), 160, h - 6);
+          display.drawString(String(choiceThemes[theme]), 160, h - 6);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -178,7 +178,7 @@ void button(void *pvParameters)
         // Brightness
         if(settingsString == "Brightness")
         {
-          M5.Lcd.drawString(String(choiceBrightness[0]) + " " + String(brightness) + "%", 160, h - 6);
+          display.drawString(String(choiceBrightness[0]) + " " + String(brightness) + "%", 160, h - 6);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -212,7 +212,7 @@ void button(void *pvParameters)
         {
           if(transverter == 0)
           {
-            M5.Lcd.drawString("OFF", 160, h - 6);
+            display.drawString("OFF", 160, h - 6);
           }
           else
           {
@@ -235,7 +235,7 @@ void button(void *pvParameters)
               transverterStringNew = transverterStringOld.substring(0, i + 3) + transverterStringNew;
             }
 
-            M5.Lcd.drawString(transverterStringNew, 160, h - 6);
+            display.drawString(transverterStringNew, 160, h - 6);
           }
 
           size_t stop = sizeof(choiceTransverter) / sizeof(choiceTransverter[0]);
@@ -270,7 +270,7 @@ void button(void *pvParameters)
         // Beep
         else if(settingsString == "Beep")
         {
-          M5.Lcd.drawString(String(choiceBeep[0]) + " " + String(beep) + "%", 160, h - 6);
+          display.drawString(String(choiceBeep[0]) + " " + String(beep) + "%", 160, h - 6);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -301,7 +301,7 @@ void button(void *pvParameters)
         // Screensaver
         else if(settingsString == "Screensaver")
         {
-          M5.Lcd.drawString(String(choiceScreensaver[0]) + " " + String(screensaver) + " MIN", 160, h - 6);
+          display.drawString(String(choiceScreensaver[0]) + " " + String(screensaver) + " MIN", 160, h - 6);
 
           if(btnA || btnC) {
             if(btnA == 1) {
@@ -332,7 +332,7 @@ void button(void *pvParameters)
         // IP Address
         else if(settingsString == "IP Address")
         {
-          M5.Lcd.drawString(String(WiFi.localIP().toString().c_str()), 160, h - 6);
+          display.drawString(String(WiFi.localIP().toString().c_str()), 160, h - 6);
 
           if(btnB == 1) {
             clearData();
