@@ -21,6 +21,9 @@ void setup()
   auto cfg = M5.config();
   M5.begin(cfg);
 
+  // Init Display
+  display.begin();
+
   // Init Led
   if(M5.getBoard() == m5::board_t::board_M5Stack) {
     FastLED.addLeds<NEOPIXEL, 15>(leds, NUM_LEDS);  // GRB ordering is assumed
@@ -60,7 +63,7 @@ void setup()
   httpServer.begin();
 
   setBrightness(map(brightness, 1, 100, 1, 254));
-  M5.Lcd.setRotation(1);
+  display.setRotation(1);
   viewGUI();
 
   if(IC_MODEL == 705 && IC_CONNECT == BT)

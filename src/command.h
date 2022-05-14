@@ -487,18 +487,18 @@ void getMode()
 
   sendCommand(request, n, buffer, 5);
 
-  M5.Lcd.setFont(0);
-  M5.Lcd.setTextPadding(24);
-  M5.Lcd.setTextColor(TFT_WHITE);
-  M5.Lcd.setTextDatum(CC_DATUM);
+  display.setFont(0);
+  display.setTextPadding(24);
+  display.setTextColor(TFT_WHITE);
+  display.setTextDatum(CC_DATUM);
 
   valString = "FIL" + String(uint8_t(buffer[4]));
   if (valString != filterOld)
   {
     filterOld = valString;
-    M5.Lcd.fillRoundRect(40, 198, 40, 15, 2, TFT_MODE_BACK);
-    M5.Lcd.drawRoundRect(40, 198, 40, 15, 2, TFT_MODE_BORDER);
-    M5.Lcd.drawString(valString, 60, 206);
+    display.fillRoundRect(40, 198, 40, 15, 2, TFT_MODE_BACK);
+    display.drawRoundRect(40, 198, 40, 15, 2, TFT_MODE_BORDER);
+    display.drawString(valString, 60, 206);
   }
 
   valString = String(mode[(uint8_t)buffer[3]]);
@@ -512,9 +512,9 @@ void getMode()
   if (valString != modeOld)
   {
     modeOld = valString;
-    M5.Lcd.fillRoundRect(240, 198, 40, 15, 2, TFT_MODE_BACK);
-    M5.Lcd.drawRoundRect(240, 198, 40, 15, 2, TFT_MODE_BORDER);
-    M5.Lcd.drawString(valString, 260, 206);
+    display.fillRoundRect(240, 198, 40, 15, 2, TFT_MODE_BACK);
+    display.drawRoundRect(240, 198, 40, 15, 2, TFT_MODE_BORDER);
+    display.drawString(valString, 260, 206);
   }
 }
 
