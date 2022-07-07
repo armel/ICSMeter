@@ -18,30 +18,23 @@ bool isCharging()
 // Get button
 void getButton()
 {
-  M5.update();
+  if (M5.getBoard() == m5::board_t::board_M5ATOM)
+  {
+    M5.update();
+    btnB = M5.BtnA.isPressed();
+    btnA = 0;
+    btnC = 0;
+    if(digitalRead(32) == 0) btnA = 1;
+    else if(digitalRead(26) == 0) btnC = 1;
+  }
+  else
+  {
+    M5.update();
 
-  btnA = M5.BtnA.isPressed();
-  btnB = M5.BtnB.isPressed();
-  btnC = M5.BtnC.isPressed();
-  
-  btnL = M5.BtnA.pressedFor(2000);
-  btnM = M5.BtnB.pressedFor(2000);
-  btnR = M5.BtnC.pressedFor(2000);
-
-  /*
-  Serial.print(btnA);
-  Serial.print(btnB);
-  Serial.print(btnC);
-  Serial.print(btnL);
-  Serial.print(btnM);
-  Serial.println(btnR);
-  */
-}
-
-// Manage brightness
-void setBrightness(uint8_t value)
-{
-  display.setBrightness(value);
+    btnA = M5.BtnA.isPressed();
+    btnB = M5.BtnB.isPressed();
+    btnC = M5.BtnC.isPressed();
+  }
 }
 
 // Shutdown

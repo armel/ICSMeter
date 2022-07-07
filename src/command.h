@@ -496,9 +496,9 @@ void getMode()
   if (valString != filterOld)
   {
     filterOld = valString;
-    display.fillRoundRect(40, 198, 40, 15, 2, TFT_MODE_BACK);
-    display.drawRoundRect(40, 198, 40, 15, 2, TFT_MODE_BORDER);
-    display.drawString(valString, 60, 206);
+    display.fillRoundRect(40 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BACK);
+    display.drawRoundRect(40 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BORDER);
+    display.drawString(valString, 60 + offsetX, 206 + offsetY);
   }
 
   valString = String(mode[(uint8_t)buffer[3]]);
@@ -512,9 +512,9 @@ void getMode()
   if (valString != modeOld)
   {
     modeOld = valString;
-    display.fillRoundRect(240, 198, 40, 15, 2, TFT_MODE_BACK);
-    display.drawRoundRect(240, 198, 40, 15, 2, TFT_MODE_BORDER);
-    display.drawString(valString, 260, 206);
+    display.fillRoundRect(240 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BACK);
+    display.drawRoundRect(240 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BORDER);
+    display.drawString(valString, 260 + offsetX, 206 + offsetY);
   }
 }
 
