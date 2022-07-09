@@ -51,6 +51,31 @@ void resetColor()
   }
 }
 
+// Print settings
+void viewSettings()
+{
+  // Settings
+  display.setFont(0);
+  display.setTextDatum(CC_DATUM);
+
+  display.fillRoundRect(4 + offsetX, 4 + offsetY, 56, 13, 2, TFT_MODE_BACK);
+  display.drawRoundRect(4 + offsetX, 4 + offsetY, 56, 13, 2, TFT_MODE_BORDER);
+  display.setTextColor(TFT_WHITE);
+
+  if (IC_CONNECT == BT)
+    display.drawString(String(IC_MODEL) + " BT", 32 + offsetX, 11 + offsetY);
+  else
+    display.drawString(String(IC_MODEL) + " USB", 32 + offsetX, 11 + offsetY);
+
+  if (transverter > 0)
+  {
+    display.fillRoundRect(62 + offsetX, 4 + offsetY, 26, 13, 2, TFT_MODE_BACK);
+    display.drawRoundRect(62 + offsetX, 4 + offsetY, 26, 13, 2, TFT_MODE_BORDER);
+    display.setTextColor(TFT_WHITE);
+    display.drawString("LO" + String(transverter), 76 + offsetX, 11 + offsetY);
+  }
+}
+
 // Print battery
 void viewBattery()
 {
@@ -65,7 +90,6 @@ void viewBattery()
 
     if (batteryLevel != batteryLevelOld || batteryCharging != batteryCharginglOld)
     {
-
       if(theme == 0)
       {
         display.drawJpg(smeterTopClassic, sizeof(smeterTopClassic), 0, 0, 320, 20);
@@ -74,26 +98,8 @@ void viewBattery()
       {
         display.drawJpg(smeterTopDark, sizeof(smeterTopDark), 0, 0, 320, 20);
       }
-      // Settings
-      display.setFont(0);
-      display.setTextDatum(CC_DATUM);
-
-      display.fillRoundRect(4, 4, 56, 13, 2, TFT_MODE_BACK);
-      display.drawRoundRect(4, 4, 56, 13, 2, TFT_MODE_BORDER);
-      display.setTextColor(TFT_WHITE);
-
-      if (IC_CONNECT == BT)
-        display.drawString(String(IC_MODEL) + " BT", 32, 11);
-      else
-        display.drawString(String(IC_MODEL) + " USB", 32, 11);
-
-      if (transverter > 0)
-      {
-        display.fillRoundRect(62, 4, 26, 13, 2, TFT_MODE_BACK);
-        display.drawRoundRect(62, 4, 26, 13, 2, TFT_MODE_BORDER);
-        display.setTextColor(TFT_WHITE);
-        display.drawString("LO" + String(transverter), 76, 11);
-      }
+      
+      viewSettings();
 
       // display.drawFastHLine(0, 20, 320, TFT_BLACK);
 
@@ -130,26 +136,30 @@ void viewGUI()
 
   resetColor();
 
-  display.fillScreen(TFT_BACK);
+  display.fillScreen(TFT_BLACK);
 
   if(theme == 0) 
   {
-    display.drawJpg(smeterTopClassic, sizeof(smeterTopClassic), 0, 0, 320, 20);
+    display.drawJpg(smeterTopClassic, sizeof(smeterTopClassic), 0 + offsetX, 0 + offsetY, 320, 20);
+
     if (IC_MODEL == 705)
-      display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0, 20, 320, 140);
+      display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 140);
     else
-      display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0, 20, 320, 140);
-    display.drawJpg(smeterBottomClassic, sizeof(smeterBottomClassic), 0, 160, 320, 80);
+      display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 140);
+    display.drawJpg(smeterBottomClassic, sizeof(smeterBottomClassic), 0 + offsetX, 160 + offsetY, 320, 80);
   }
   else
   {
-    display.drawJpg(smeterTopDark, sizeof(smeterTopDark), 0, 0, 320, 20);
+    display.drawJpg(smeterTopDark, sizeof(smeterTopDark), 0 + offsetX, 0 + offsetY, 320, 20);
+
     if (IC_MODEL == 705)
-      display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0, 20, 320, 140);
+      display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 140);
     else
-      display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0, 20, 320, 140);
-    display.drawJpg(smeterBottomDark, sizeof(smeterBottomDark), 0, 160, 320, 80);
+      display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 140);
+    display.drawJpg(smeterBottomDark, sizeof(smeterBottomDark), 0 + offsetX, 160 + offsetY, 320, 80);
   }
+
+  viewSettings();
 }
 
 void clearData()
@@ -225,27 +235,27 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uin
     if(theme == 0) 
     {
       if (IC_MODEL == 705)
-        display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0, 20, 320, 130);
+        display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 130);
       else
-        display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0, 20, 320, 130);
+        display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 130);
     }
     else
     {
       if (IC_MODEL == 705)
-        display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0, 20, 320, 130);
+        display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 130);
       else
-        display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0, 20, 320, 130);
+        display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 130);
     }
 
     // display.drawFastHLine(0, 150, 320, TFT_BLACK);
 
-    display.drawLine(a + 2, b, c + 3, d, TFT_NEDDLE_2);
-    display.drawLine(a + 2, b, c + 2, d, TFT_NEDDLE_1);
-    display.drawLine(a + 1, b, c + 1, d, TFT_RED);
-    display.drawLine(a, b, c, d, TFT_RED);
-    display.drawLine(a - 1, b, c - 1, d, TFT_RED);
-    display.drawLine(a - 2, b, c - 2, d, TFT_NEDDLE_1);
-    display.drawLine(a - 2, b, c - 3, d, TFT_NEDDLE_2);
+    display.drawLine(a + 2 + offsetX, b + offsetY, c + 3 + offsetX, d + offsetY, TFT_NEDDLE_2);
+    display.drawLine(a + 2 + offsetX, b + offsetY, c + 2 + offsetX, d + offsetY, TFT_NEDDLE_1);
+    display.drawLine(a + 1 + offsetX, b + offsetY, c + 1 + offsetX, d + offsetY, TFT_RED);
+    display.drawLine(a + offsetX, b + offsetY, c + offsetX, d + offsetY, TFT_RED);
+    display.drawLine(a - 1 + offsetX, b + offsetY, c - 1 + offsetX, d + offsetY, TFT_RED);
+    display.drawLine(a - 2 + offsetX, b + offsetY, c - 2 + offsetX, d + offsetY, TFT_NEDDLE_1);
+    display.drawLine(a - 2 + offsetX, b + offsetY, c - 3 + offsetX, d + offsetY, TFT_NEDDLE_2);
   }
 }
 
@@ -262,7 +272,7 @@ void value(String valString, uint8_t x = 160, uint8_t y = 180)
     //display.setFont(&YELLOWCRE8pt7b);
     display.setTextPadding(190);
     display.setTextColor(TFT_FRONT, TFT_BACK);
-    display.drawString(valString, x, y);
+    display.drawString(valString, x + offsetX, y + offsetY);
   }
 }
 
@@ -279,7 +289,7 @@ void subValue(String valString, uint8_t x = 160, uint8_t y = 206)
     //display.setTextColor(TFT_BLACK, TFT_RED);
     display.setTextColor(TFT_FRONT, TFT_BACK);
     // valString.replace(".", ",");
-    display.drawString(valString, x, y);
+    display.drawString(valString, x + offsetX, y + offsetY);
   }
 }
 
@@ -309,7 +319,7 @@ void viewMeasure()
         display.setTextColor(TFT_DARKGREY);
       }
 
-      display.drawString(choiceMeasures[j], i, 230);
+      display.drawString(choiceMeasures[j], i + offsetX, 230 + offsetY);
       i += 95;
     }
   }
@@ -785,7 +795,7 @@ void wakeAndSleep()
       y = 196;
     }
 
-    display.drawJpg(logo, sizeof(logo), x, y, 44, 22);
+    display.drawJpg(logo, sizeof(logo), x + offsetX, y + offsetY, 44, 22);
 
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       vTaskDelay(75);
@@ -900,9 +910,9 @@ boolean checkConnection()
         display.setFont(&stencilie16pt7b);
         display.setTextPadding(194);
         display.setTextColor(TFT_FRONT, TFT_BACK);
-        display.drawString(message, 160, 180);
+        display.drawString(message, 160 + offsetX, 180 + offsetY);
         vTaskDelay(750);
-        display.drawString("", 160, 180);
+        display.drawString("", 160 + offsetX, 180 + offsetY);
         frequencyOld = "";
         settingLock = false;
         vTaskDelay(250);

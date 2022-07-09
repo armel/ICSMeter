@@ -21,8 +21,14 @@ void setup()
   auto cfg = M5.config();
   M5.begin(cfg);
 
+  pinMode(32, INPUT_PULLUP);
+  pinMode(26, INPUT_PULLUP);
+
   // Init Display
   display.begin();
+
+  offsetX = (display.width() - 320) / 2; 
+  offsetY = (display.height() - 240) / 2;
 
   // Init Led
   if(M5.getBoard() == m5::board_t::board_M5Stack) {
@@ -62,8 +68,9 @@ void setup()
   // Start server (for Web site Screen Capture)
   httpServer.begin();
 
-  setBrightness(map(brightness, 1, 100, 1, 254));
+  display.setBrightness(map(brightness, 1, 100, 1, 254));
   display.setRotation(1);
+
   viewGUI();
 
   if(IC_MODEL == 705 && IC_CONNECT == BT)
@@ -102,7 +109,10 @@ void loop()
   static uint8_t tx = 0;
 
   if(checkConnection()) {
-    tx = getTX();
+    if(alternance == 0) getFrequency();
+    if(alternance == 4) getMode();
+    if(alternance == 8) tx = getTX();
+
     if(tx != 0) screensaverTimer = millis();   // If transmit, refresh tempo
 
     if (screensaverMode == false && screenshot == false && settingsMode == false)
@@ -124,12 +134,6 @@ void loop()
         FastLED.show();
       }
      
-      viewMeasure();
-      viewBattery();
-
-      getMode();
-      getFrequency();
-
       switch (measure)
       {
       case 0:
@@ -145,11 +149,14 @@ void loop()
         break;
       }
 
+      viewMeasure();
+      viewBattery();
+
       settingLock = false;
     }
   }
 
-  alternance = (alternance++ < 2) ? alternance : 0;
+  alternance = (alternance++ < 12) ? alternance : 0;
 
   // Manage Screen Saver
   wakeAndSleep();
