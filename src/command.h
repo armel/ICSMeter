@@ -14,7 +14,7 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
       CAT.write(request[i]);
     }
 
-    vTaskDelay(100);
+    vTaskDelay(50);
 
     while (CAT.available())
     {

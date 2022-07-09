@@ -109,7 +109,10 @@ void loop()
   static uint8_t tx = 0;
 
   if(checkConnection()) {
-    tx = getTX();
+    if(alternance == 0) getFrequency();
+    if(alternance == 4) getMode();
+    if(alternance == 8) tx = getTX();
+
     if(tx != 0) screensaverTimer = millis();   // If transmit, refresh tempo
 
     if (screensaverMode == false && screenshot == false && settingsMode == false)
@@ -131,12 +134,6 @@ void loop()
         FastLED.show();
       }
      
-      viewMeasure();
-      viewBattery();
-
-      getMode();
-      getFrequency();
-
       switch (measure)
       {
       case 0:
@@ -152,11 +149,14 @@ void loop()
         break;
       }
 
+      viewMeasure();
+      viewBattery();
+
       settingLock = false;
     }
   }
 
-  alternance = (alternance++ < 2) ? alternance : 0;
+  alternance = (alternance++ < 12) ? alternance : 0;
 
   // Manage Screen Saver
   wakeAndSleep();
