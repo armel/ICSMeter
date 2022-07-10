@@ -165,7 +165,24 @@ void button(void *pvParameters)
           }
           else if(btnB == 1) {
             if(themeOld != theme)
+            {
               preferences.putUInt("theme", theme);
+
+              if(theme == 0) 
+              {
+                if (IC_MODEL == 705)
+                  needleSprite.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0, 0, 320, 130);
+                else
+                  needleSprite.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0, 0, 320, 130);
+              }
+              else
+              {
+                if (IC_MODEL == 705)
+                  needleSprite.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0, 0, 320, 130);
+                else
+                  needleSprite.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0, 0, 320, 130);
+              }
+            }
             clearData();
             viewGUI();
             settingsSelect = false;

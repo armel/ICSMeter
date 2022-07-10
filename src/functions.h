@@ -232,24 +232,13 @@ void needleLeft(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0,
     cc = 160 + x;
     dd = 220 - y;
 
-    Serial.printf("--> %f %d %d %d %d\n", shift, aa, bb, cc, dd);
-
-    if(theme == 0) 
+    // Debug trace
+    if (DEBUG)
     {
-      if (IC_MODEL == 705)
-        display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 130);
-      else
-        display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 130);
-    }
-    else
-    {
-      if (IC_MODEL == 705)
-        display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 130);
-      else
-        display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 130);
+      Serial.printf("--> %f %d %d %d %d\n", shift, aa, bb, cc, dd);
     }
 
-    // display.drawFastHLine(0, 150, 320, TFT_BLACK);
+    needleSprite.pushSprite(0 + offsetX, 20 + offsetY, TFT_TRANSPARENT);
 
     display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
     display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
@@ -287,24 +276,13 @@ void needleRight(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0
     cc = 160 + x;
     dd = 220 - y;
 
-    Serial.printf("++> %f %d %d %d %d\n", shift, aa, bb, cc, dd);
-
-    if(theme == 0) 
+    // Debug trace
+    if (DEBUG)
     {
-      if (IC_MODEL == 705)
-        display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 130);
-      else
-        display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 130);
-    }
-    else
-    {
-      if (IC_MODEL == 705)
-        display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 130);
-      else
-        display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 130);
+      Serial.printf("++> %f %d %d %d %d\n", shift, aa, bb, cc, dd);
     }
 
-    // display.drawFastHLine(0, 150, 320, TFT_BLACK);
+    needleSprite.pushSprite(0 + offsetX, 20 + offsetY, TFT_TRANSPARENT);
 
     display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
     display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);

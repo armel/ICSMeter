@@ -5,7 +5,7 @@
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
-#define DEBUG 0
+#define DEBUG 1
 #define ATOM atom
 #define WIDTH displayWidth
 #define HEIGHT displayHeight
@@ -76,6 +76,9 @@ uint16_t offsetY = 0;
 #else
   M5AtomDisplay display(WIDTH, HEIGHT);
 #endif
+
+// Sprite
+LGFX_Sprite needleSprite(&M5.Lcd);
 
 // LED
 #define FASTLED_INTERNAL // To disable pragma messages on compile
