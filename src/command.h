@@ -172,17 +172,17 @@ void getSmeter()
 
     if (val0 <= 13)
     {
-      angle = 42.50f;
+      angle = -42.50f;
       valString = "S " + String(int(round(val1)));
     }
     else if (val0 <= 120)
     {
-      angle = mapFloat(val0, 14, 120, 42.50f, -6.50f); // SMeter image start at S1 so S0 is out of image on the left...
+      angle = mapFloat(val0, 14, 120, -42.50f, 6.50f); // SMeter image start at S1 so S0 is out of image on the left...
       valString = "S " + String(int(round(val1)));
     }
     else
     {
-      angle = mapFloat(val0, 121, 241, -6.50f, -43.0f);
+      angle = mapFloat(val0, 121, 241, 6.50f, 43.0f);
       if (int(round(val1) < 10))
         valString = "S 9 + 0" + String(int(round(val1))) + " dB";
       else
@@ -192,12 +192,7 @@ void getSmeter()
     // Debug trace
     if (DEBUG)
     {
-      Serial.print("Get S");
-      Serial.print(val0);
-      Serial.print(" ");
-      Serial.print(val1);
-      Serial.print(" ");
-      Serial.println(angle);
+      Serial.printf("%s %d %f %f \n", valString.c_str(), val0, val1, angle);
     }
 
     // Draw line
@@ -260,37 +255,37 @@ void getSWR()
 
     if (val0 <= 48)
     {
-      angle = mapFloat(val0, 0, 48, 42.50f, 32.50f);
+      angle = mapFloat(val0, 0, 48, -42.50f, -32.50f);
       val1 = mapFloat(val0, 0, 48, 1.0, 1.5);
     }
     else if (val0 <= 80)
     {
-      angle = mapFloat(val0, 49, 80, 32.50f, 24.0f);
+      angle = mapFloat(val0, 49, 80, -32.50f, -24.0f);
       val1 = mapFloat(val0, 49, 80, 1.5, 2.0);
     }
     else if (val0 <= 120)
     {
-      angle = mapFloat(val0, 81, 120, 24.0f, 10.0f);
+      angle = mapFloat(val0, 81, 120, -24.0f, -10.0f);
       val1 = mapFloat(val0, 81, 120, 2.0, 3.0);
     }
     else if (val0 <= 155)
     {
-      angle = mapFloat(val0, 121, 155, 10.0f, 0.0f);
+      angle = mapFloat(val0, 121, 155, -10.0f, 0.0f);
       val1 = mapFloat(val0, 121, 155, 3.0, 4.0);
     }
     else if (val0 <= 175)
     {
-      angle = mapFloat(val0, 156, 175, 0.0f, -7.0f);
+      angle = mapFloat(val0, 156, 175, 0.0f, 7.0f);
       val1 = mapFloat(val0, 156, 175, 4.0, 5.0);
     }
     else if (val0 <= 225)
     {
-      angle = mapFloat(val0, 176, 225, -7.0f, -19.0f);
+      angle = mapFloat(val0, 176, 225, 7.0f, 19.0f);
       val1 = mapFloat(val0, 176, 225, 5.0, 10.0);
     }
     else
     {
-      angle = mapFloat(val0, 226, 255, -19.0f, -30.50f);
+      angle = mapFloat(val0, 226, 255, 19.0f, 30.50f);
       val1 = mapFloat(val0, 226, 255, 10.0, 50.0);
     }
 
@@ -299,12 +294,7 @@ void getSWR()
     // Debug trace
     if (DEBUG)
     {
-      Serial.print("Get SWR");
-      Serial.print(val0);
-      Serial.print(" ");
-      Serial.print(val1);
-      Serial.print(" ");
-      Serial.println(angle);
+      Serial.printf("%s %d %f %f \n", valString.c_str(), val0, val1, angle);
     }
 
     // Draw line
@@ -345,37 +335,37 @@ void getPower()
 
     if (val0 <= 27)
     {
-      angle = mapFloat(val0, 0, 27, 42.50f, 30.50f);
+      angle = mapFloat(val0, 0, 27, -42.50f, -30.50f);
       val1 = mapFloat(val0, 0, 27, 0, 0.5);
     }
     else if (val0 <= 49)
     {
-      angle = mapFloat(val0, 28, 49, 30.50f, 23.50f);
+      angle = mapFloat(val0, 28, 49, -30.50f, -23.50f);
       val1 = mapFloat(val0, 28, 49, 0.5, 1.0);
     }
     else if (val0 <= 78)
     {
-      angle = mapFloat(val0, 50, 78, 23.50f, 14.50f);
+      angle = mapFloat(val0, 50, 78, -23.50f, -14.50f);
       val1 = mapFloat(val0, 50, 78, 1.0, 2.0);
     }
     else if (val0 <= 104)
     {
-      angle = mapFloat(val0, 79, 104, 14.50f, 6.30f);
+      angle = mapFloat(val0, 79, 104, -14.50f, -6.30f);
       val1 = mapFloat(val0, 79, 104, 2.0, 3.0);
     }
     else if (val0 <= 143)
     {
-      angle = mapFloat(val0, 105, 143, 6.30f, -6.50f);
+      angle = mapFloat(val0, 105, 143, -6.30f, 6.50f);
       val1 = mapFloat(val0, 105, 143, 3.0, 5.0);
     }
     else if (val0 <= 175)
     {
-      angle = mapFloat(val0, 144, 175, -6.50f, -17.50f);
+      angle = mapFloat(val0, 144, 175, 6.50f, 17.50f);
       val1 = mapFloat(val0, 144, 175, 5.0, 7.0);
     }
     else
     {
-      angle = mapFloat(val0, 176, 226, -17.50f, -30.50f);
+      angle = mapFloat(val0, 176, 226, 17.50f, 30.50f);
       val1 = mapFloat(val0, 176, 226, 7.0, 10.0);
     }
 
@@ -388,12 +378,7 @@ void getPower()
     // Debug trace
     if (DEBUG)
     {
-      Serial.print("Get PWR");
-      Serial.print(val0);
-      Serial.print(" ");
-      Serial.print(val1);
-      Serial.print(" ");
-      Serial.println(angle);
+      Serial.printf("%s %d %f %f \n", valString.c_str(), val0, val1, angle);
     }
 
     // Draw line

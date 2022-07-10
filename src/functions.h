@@ -193,8 +193,8 @@ void rotate(uint16_t *x, uint16_t *y, float angle)
 
   angle = angle * PI / 180;
 
-  xNew = *x * cos(angle) - *y * sin(angle);
-  yNew = *x * sin(angle) + *y * cos(angle);
+  xNew = *x * cos(angle) + *y * sin(angle);
+  yNew = -*x * sin(angle) + *y * cos(angle);
 
   *x = xNew;
   *y = yNew;
@@ -207,30 +207,32 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
 }
 
 // Print needle
-void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uint16_t d = 100)
+void needleLeft(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uint16_t d = 100)
 {
   uint16_t x, y;
+  uint16_t aa, bb, cc, dd;
 
-  if (angle != angleOld)
+  float shift;
+
+  for(shift = angleOld; shift > angle; shift-=2)
   {
-    angleOld = angle;
-
     x = a;
     y = b;
 
-    rotate(&x, &y, angle);
+    rotate(&x, &y, shift);
 
-    a = 160 + x;
-    b = 220 - y;
+    aa = 160 + x;
+    bb = 220 - y;
 
     x = c;
     y = d;
 
-    rotate(&x, &y, angle);
+    rotate(&x, &y, shift);
 
-    c = 160 + x;
-    d = 220 - y;
+    cc = 160 + x;
+    dd = 220 - y;
 
+    Serial.printf("--> %f %d %d %d %d\n", shift, aa, bb, cc, dd);
 
     if(theme == 0) 
     {
@@ -249,13 +251,83 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uin
 
     // display.drawFastHLine(0, 150, 320, TFT_BLACK);
 
-    display.drawLine(a + 2 + offsetX, b + offsetY, c + 3 + offsetX, d + offsetY, TFT_NEDDLE_2);
-    display.drawLine(a + 2 + offsetX, b + offsetY, c + 2 + offsetX, d + offsetY, TFT_NEDDLE_1);
-    display.drawLine(a + 1 + offsetX, b + offsetY, c + 1 + offsetX, d + offsetY, TFT_RED);
-    display.drawLine(a + offsetX, b + offsetY, c + offsetX, d + offsetY, TFT_RED);
-    display.drawLine(a - 1 + offsetX, b + offsetY, c - 1 + offsetX, d + offsetY, TFT_RED);
-    display.drawLine(a - 2 + offsetX, b + offsetY, c - 2 + offsetX, d + offsetY, TFT_NEDDLE_1);
-    display.drawLine(a - 2 + offsetX, b + offsetY, c - 3 + offsetX, d + offsetY, TFT_NEDDLE_2);
+    display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+    display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    display.drawLine(aa + 1 + offsetX, bb + offsetY, cc + 1 + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa + offsetX, bb + offsetY, cc + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa - 1 + offsetX, bb + offsetY, cc - 1 + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+  }
+}
+
+// Print needle
+void needleRight(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uint16_t d = 100)
+{
+  uint16_t x, y;
+  uint16_t aa, bb, cc, dd;
+
+  float shift;
+
+  for(shift = angleOld; shift < angle; shift+=2)
+  {
+    x = a;
+    y = b;
+
+    rotate(&x, &y, shift);
+
+    aa = 160 + x;
+    bb = 220 - y;
+
+    x = c;
+    y = d;
+
+    rotate(&x, &y, shift);
+
+    cc = 160 + x;
+    dd = 220 - y;
+
+    Serial.printf("++> %f %d %d %d %d\n", shift, aa, bb, cc, dd);
+
+    if(theme == 0) 
+    {
+      if (IC_MODEL == 705)
+        display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 130);
+      else
+        display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 130);
+    }
+    else
+    {
+      if (IC_MODEL == 705)
+        display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 130);
+      else
+        display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 130);
+    }
+
+    // display.drawFastHLine(0, 150, 320, TFT_BLACK);
+
+    display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+    display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    display.drawLine(aa + 1 + offsetX, bb + offsetY, cc + 1 + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa + offsetX, bb + offsetY, cc + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa - 1 + offsetX, bb + offsetY, cc - 1 + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+  }
+}
+
+// Print needle
+void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uint16_t d = 100)
+{
+  if (angle != angleOld)
+  {
+
+    if(angle > angleOld)
+      needleRight(angle, a, b, c, d);
+    else
+      needleLeft(angle, a, b, c, d);
+
+    angleOld = angle;
   }
 }
 
