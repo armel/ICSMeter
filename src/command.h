@@ -32,7 +32,7 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
           counter++;
           if (counter > limit)
           {
-            if (DEBUG)
+            if (DEBUG == 1)
             {
               Serial.print(" Overflow");
             }
@@ -96,7 +96,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
         buffer[i] = strtol(response.substring(i * 2, (i * 2) + 2).c_str(), NULL, 16);
       }
 
-      if (DEBUG)
+      if (DEBUG == 1)
       {
         Serial.println("-----");
         Serial.print(response);
@@ -149,12 +149,17 @@ void getSmeter()
 
   float_t angle = 0;
 
-  size_t n = sizeof(request) / sizeof(request[0]);
+  if(DEBUG == 2) {
+    val0 = debugEncoder();
+  }
+  else
+  {
+    size_t n = sizeof(request) / sizeof(request[0]);
+    sendCommand(request, n, buffer, 6);
 
-  sendCommand(request, n, buffer, 6);
-
-  sprintf(str, "%02x%02x", buffer[4], buffer[5]);
-  val0 = atoi(str);
+    sprintf(str, "%02x%02x", buffer[4], buffer[5]);
+    val0 = atoi(str);
+  }
 
   if (val0 <= 120)
   { // 120 = S9 = 9 * (40/3)
@@ -172,17 +177,17 @@ void getSmeter()
 
     if (val0 <= 13)
     {
-      angle = -42.50f;
+      angle = -38.60f;
       valString = "S " + String(int(round(val1)));
     }
     else if (val0 <= 120)
     {
-      angle = mapFloat(val0, 14, 120, -42.50f, 6.50f); // SMeter image start at S1 so S0 is out of image on the left...
+      angle = mapFloat(val0, 14, 120, -38.60f, 6.50f); // SMeter image start at S1 so S0 is out of image on the left...
       valString = "S " + String(int(round(val1)));
     }
     else
     {
-      angle = mapFloat(val0, 121, 241, 6.50f, 43.0f);
+      angle = mapFloat(val0, 121, 240, 6.50f, 39.40f);
       if (int(round(val1) < 10))
         valString = "S 9 + 0" + String(int(round(val1))) + " dB";
       else
@@ -190,7 +195,7 @@ void getSmeter()
     }
 
     // Debug trace
-    if (DEBUG)
+    if (DEBUG == 1)
     {
       Serial.printf("%s %d %f %f \n", valString.c_str(), val0, val1, angle);
     }
@@ -241,12 +246,17 @@ void getSWR()
 
   float_t angle = 0;
 
-  size_t n = sizeof(request) / sizeof(request[0]);
+  if(DEBUG == 2) {
+    val0 = debugEncoder();
+  }
+  else
+  {
+    size_t n = sizeof(request) / sizeof(request[0]);
+    sendCommand(request, n, buffer, 6);
 
-  sendCommand(request, n, buffer, 6);
-
-  sprintf(str, "%02x%02x", buffer[4], buffer[5]);
-  val0 = atoi(str);
+    sprintf(str, "%02x%02x", buffer[4], buffer[5]);
+    val0 = atoi(str);
+  }
 
   if (val0 != val3 || reset == true)
   {
@@ -255,27 +265,37 @@ void getSWR()
 
     if (val0 <= 48)
     {
-      angle = mapFloat(val0, 0, 48, -42.50f, -32.50f);
+      angle = mapFloat(val0, 0, 48, -38.00f, -29.00f);
       val1 = mapFloat(val0, 0, 48, 1.0, 1.5);
     }
     else if (val0 <= 80)
     {
-      angle = mapFloat(val0, 49, 80, -32.50f, -24.0f);
+      angle = mapFloat(val0, 49, 80, -29.00f, -22.0f);
       val1 = mapFloat(val0, 49, 80, 1.5, 2.0);
+    }
+    else if (val0 <= 110)
+    {
+      angle = mapFloat(val0, 81, 110, -22.0f, -13.00f);
+      val1 = mapFloat(val0, 81, 110, 2.0, 2.5);
     }
     else if (val0 <= 120)
     {
-      angle = mapFloat(val0, 81, 120, -24.0f, -10.0f);
-      val1 = mapFloat(val0, 81, 120, 2.0, 3.0);
+      angle = mapFloat(val0, 110, 120, -13.00f, -8.50f);
+      val1 = mapFloat(val0, 110, 120, 2.5, 3.0);
+    }
+    else if (val0 <= 146)
+    {
+      angle = mapFloat(val0, 81, 120, -8.50f, -2.50f);
+      val1 = mapFloat(val0, 81, 120, 3.0, 3.5);
     }
     else if (val0 <= 155)
     {
-      angle = mapFloat(val0, 121, 155, -10.0f, 0.0f);
-      val1 = mapFloat(val0, 121, 155, 3.0, 4.0);
+      angle = mapFloat(val0, 121, 155, -2.50f, 0.8f);
+      val1 = mapFloat(val0, 121, 155, 3.5, 4.0);
     }
     else if (val0 <= 175)
     {
-      angle = mapFloat(val0, 156, 175, 0.0f, 7.0f);
+      angle = mapFloat(val0, 156, 175, 0.8f, 7.0f);
       val1 = mapFloat(val0, 156, 175, 4.0, 5.0);
     }
     else if (val0 <= 225)
@@ -292,7 +312,7 @@ void getSWR()
     valString = "SWR " + String(val1);
 
     // Debug trace
-    if (DEBUG)
+    if (DEBUG == 1)
     {
       Serial.printf("%s %d %f %f \n", valString.c_str(), val0, val1, angle);
     }
@@ -321,12 +341,19 @@ void getPower()
 
   float_t angle = 0;
 
-  size_t n = sizeof(request) / sizeof(request[0]);
+  if(DEBUG == 2) {
+    val0 = debugEncoder();
+  }
+  else
+  {
+    size_t n = sizeof(request) / sizeof(request[0]);
+    sendCommand(request, n, buffer, 6);
 
-  sendCommand(request, n, buffer, 6);
+    sprintf(str, "%02x%02x", buffer[4], buffer[5]);
+    val0 = atoi(str);
 
-  sprintf(str, "%02x%02x", buffer[4], buffer[5]);
-  val0 = atoi(str);
+    Serial.printf("%d\n", val0);
+  }
 
   if (val0 != val3 || reset == true)
   {
@@ -335,38 +362,38 @@ void getPower()
 
     if (val0 <= 27)
     {
-      angle = mapFloat(val0, 0, 27, -42.50f, -30.50f);
-      val1 = mapFloat(val0, 0, 27, 0, 0.5);
+      angle = mapFloat(val0, 0, 27, -38.60f, -27.25f);
+      val1 = mapFloat(val0, 0, 27, 0, 5.0);
     }
-    else if (val0 <= 49)
+    else if (val0 <= 51)
     {
-      angle = mapFloat(val0, 28, 49, -30.50f, -23.50f);
-      val1 = mapFloat(val0, 28, 49, 0.5, 1.0);
+      angle = mapFloat(val0, 28, 51, -27.25f, -21.25f);
+      val1 = mapFloat(val0, 28, 51, 0.5, 1.0);
     }
-    else if (val0 <= 78)
+    else if (val0 <= 80)
     {
-      angle = mapFloat(val0, 50, 78, -23.50f, -14.50f);
-      val1 = mapFloat(val0, 50, 78, 1.0, 2.0);
+      angle = mapFloat(val0, 51, 80, -21.25f, -13.00f);
+      val1 = mapFloat(val0, 51, 80, 1.0, 2.0);
     }
-    else if (val0 <= 104)
+    else if (val0 <= 106)
     {
-      angle = mapFloat(val0, 79, 104, -14.50f, -6.30f);
-      val1 = mapFloat(val0, 79, 104, 2.0, 3.0);
+      angle = mapFloat(val0, 80, 106, -13.00f, -6.50f);
+      val1 = mapFloat(val0, 80, 106, 2.0, 3.0);
     }
-    else if (val0 <= 143)
+    else if (val0 <= 124)
     {
-      angle = mapFloat(val0, 105, 143, -6.30f, 6.50f);
-      val1 = mapFloat(val0, 105, 143, 3.0, 5.0);
+      angle = mapFloat(val0, 106, 124, -6.50f, 0.0f);
+      val1 = mapFloat(val0, 106, 124, 3.0, 4.0);
     }
-    else if (val0 <= 175)
+    else if (val0 <= 144)
     {
-      angle = mapFloat(val0, 144, 175, 6.50f, 17.50f);
-      val1 = mapFloat(val0, 144, 175, 5.0, 7.0);
+      angle = mapFloat(val0, 124, 144, 0.0f, 6.00f);
+      val1 = mapFloat(val0, 124, 144, 4.00, 5.0);
     }
     else
     {
-      angle = mapFloat(val0, 176, 226, 17.50f, 30.50f);
-      val1 = mapFloat(val0, 176, 226, 7.0, 10.0);
+      angle = mapFloat(val0, 144, 226, 6.00f, 28.50f);
+      val1 = mapFloat(val0, 144, 226, 5.0, 10.0);
     }
 
     val2 = round(val1 * 10);
@@ -376,7 +403,7 @@ void getPower()
       valString = "PWR " + String(val2) + " W";
 
     // Debug trace
-    if (DEBUG)
+    if (DEBUG == 1)
     {
       Serial.printf("%s %d %f %f \n", valString.c_str(), val0, val1, angle);
     }

@@ -3,6 +3,7 @@
 
 #include "settings.h"
 #include "ICSMeter.h"
+#include "debug.h"
 #include "font.h"
 #include "image.h"
 #include "tools.h"
@@ -23,6 +24,12 @@ void setup()
 
   pinMode(32, INPUT_PULLUP);
   pinMode(26, INPUT_PULLUP);
+
+  // Init Encoder
+  if(DEBUG == 2)
+  {
+    sensor.begin();
+  }
 
   // Init Display
   display.begin();
@@ -126,7 +133,7 @@ void loop()
 {
   static uint8_t alternance = 0;
   static uint8_t tx = 0;
-
+  
   if(checkConnection()) {
     if(alternance == 0) getFrequency();
     if(alternance == 4) getMode();
@@ -180,12 +187,8 @@ void loop()
   // Manage Screen Saver
   wakeAndSleep();
 
-  if(DEBUG)
+  if(DEBUG == 1)
   {
-    Serial.print(screensaverMode);
-    Serial.print(" ");
-    Serial.print(millis() - screensaverTimer);
-    Serial.print(" ");
-    Serial.println(screensaver * 60 * 1000);
+    Serial.printf("%d %ld %ld\n", screensaverMode, millis() - screensaverTimer, long(screensaver * 60 * 1000));
   }
 }
