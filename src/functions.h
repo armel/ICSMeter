@@ -257,9 +257,10 @@ void needleCalc(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0,
 // Print needle
 void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 120)
 {
-  float stop, start, shift, speed, quick, slow; 
-
-  Serial.printf("Init> %f %f\n", angle, angleOld);
+  int8_t sign = 1;
+  int8_t speedStart = 4;
+  float speedStop = 0.1;
+  float stop, start, shift, speed;
 
   if (angle != angleOld)
   {
@@ -267,43 +268,41 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uin
     {
       start = angleOld;
       stop = angle;
-      quick = 2;
-      slow = 0.1;
+      sign = 1;
     }
     else
     {
       start = angleOld;
       stop = angle;
-      quick = -2;
-      slow = -0.1;
+      sign = -1;
     }
 
-    // Move quick
-    speed = quick;
-    for(shift = start; abs(abs(shift) - abs(stop)) >= abs(speed); shift+=speed)
+    if(modeOld == "CW" || modeOld == "CW-R")
     {
-      needleCalc(shift, a, b, c, d);
-
-      // Debug trace
-      if (DEBUG == 1)
-      {
-        Serial.printf("--> %f %f %f %f\n", shift, angle, angleOld, speed);
-      }
+      speedStart = 8;
+      speedStop = 1;
+    }
+    else
+    {
+      speedStart = 4;
+      speedStop = 0.1;
     }
 
-    start = shift;
-
-    // Move slow
-    speed = slow;
-    for(shift = start; abs(abs(shift) - abs(stop)) >= abs(speed); shift+=speed)
+    for(speed = speedStart; speed > speedStop; speed /= 2)
     {
-      needleCalc(shift, a, b, c, d);
+      if(speed < 1) speed = 0.1;
 
-      // Debug trace
-      if (DEBUG == 1)
+      for(shift = start; abs(abs(shift) - abs(stop)) >= abs(speed); shift+=speed * sign)
       {
-        Serial.printf("--> %f %f %f %f\n", shift, angle, angleOld, speed);
+        needleCalc(shift, a, b, c, d);
+
+        // Debug trace
+        if (DEBUG == 1)
+        {
+          Serial.printf("--> %f %f %f %f\n", shift, angle, angleOld, speed * sign);
+        }
       }
+      start = shift;
     }
 
     // Move end
@@ -805,7 +804,6 @@ void wakeAndSleep()
   }
   else if (screensaverMode == true)
   {
-
     display.fillRect(x, y, 44, 22, TFT_BLACK);
 
     if (xDir)
@@ -848,7 +846,9 @@ void wakeAndSleep()
       y = 196;
     }
 
-    display.drawJpg(logo, sizeof(logo), x + offsetX, y + offsetY, 44, 22);
+    logoSprite.pushSprite(x + offsetX, y + offsetY, TFT_TRANSPARENT);
+
+    //Serial.printf("%d %d\n", x, y);
 
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       vTaskDelay(75);

@@ -38,23 +38,11 @@ void setup()
   offsetY = (display.height() - 240) / 2;
 
   // Init Sprite
-  //needleSprite.setColorDepth(8);
   needleSprite.createSprite(320, 130);
 
-  if(theme == 0) 
-  {
-    if (IC_MODEL == 705)
-      needleSprite.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0, 0, 320, 130);
-    else
-      needleSprite.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0, 0, 320, 130);
-  }
-  else
-  {
-    if (IC_MODEL == 705)
-      needleSprite.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0, 0, 320, 130);
-    else
-      needleSprite.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0, 0, 320, 130);
-  }
+  logoSprite.setColorDepth(8);
+  logoSprite.createSprite(44, 22);
+  logoSprite.drawJpg(logo, sizeof(logo), 0, 0, 44, 22);
 
   // Init Led
   if(M5.getBoard() == m5::board_t::board_M5Stack) {
@@ -135,8 +123,6 @@ void loop()
   static uint8_t tx = 0;
   
   if(checkConnection()) {
-    if(alternance == 0) getFrequency();
-    if(alternance == 4) getMode();
     if(alternance == 8) tx = getTX();
 
     if(tx != 0) screensaverTimer = millis();   // If transmit, refresh tempo
@@ -144,6 +130,9 @@ void loop()
     if (screensaverMode == false && screenshot == false && settingsMode == false)
     {
       settingLock = true;
+
+      if(alternance == 0) getFrequency();
+      if(alternance == 4) getMode();
 
       if(tx == 0) {
         for(uint8_t i = 0; i <= 9; i++){

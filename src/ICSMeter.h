@@ -1,11 +1,11 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.7"
+#define VERSION "0.1.8"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
-#define DEBUG 1
+#define DEBUG 0
 #define ATOM atom
 #define WIDTH displayWidth
 #define HEIGHT displayHeight
@@ -79,6 +79,7 @@ uint16_t offsetY = 0;
 
 // Sprite
 LGFX_Sprite needleSprite(&M5.Lcd);
+LGFX_Sprite logoSprite(&M5.Lcd);
 
 // LED
 #define FASTLED_INTERNAL // To disable pragma messages on compile
