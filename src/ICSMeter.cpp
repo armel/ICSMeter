@@ -38,6 +38,7 @@ void setup()
   offsetY = (display.height() - 240) / 2;
 
   // Init Sprite
+  needleSprite.setPsram(true);
   needleSprite.createSprite(320, 130);
 
   logoSprite.setColorDepth(8);
@@ -175,6 +176,13 @@ void loop()
 
   // Manage Screen Saver
   wakeAndSleep();
+
+  Serial.printf("%s %s %s %s\n", 
+    String(ESP.getHeapSize() / 1024) + " kb",
+    String(ESP.getFreeHeap() / 1024) + " kb", 
+    String(ESP.getPsramSize() / 1024) + " kb", 
+    String(ESP.getFreePsram() / 1024) + " kb"
+  );
 
   if(DEBUG == 1)
   {
