@@ -38,8 +38,12 @@ void setup()
   offsetY = (display.height() - 240) / 2;
 
   // Init Sprite
-  needleSprite.setPsram(true);
-  needleSprite.createSprite(320, 130);
+  
+  if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+  {
+    needleSprite.setPsram(true);
+    needleSprite.createSprite(320, 130);
+  }
 
   logoSprite.setColorDepth(8);
   logoSprite.createSprite(44, 22);
@@ -177,11 +181,11 @@ void loop()
   // Manage Screen Saver
   wakeAndSleep();
 
-  Serial.printf("%s %s %s %s\n", 
-    String(ESP.getHeapSize() / 1024) + " kb",
-    String(ESP.getFreeHeap() / 1024) + " kb", 
-    String(ESP.getPsramSize() / 1024) + " kb", 
-    String(ESP.getFreePsram() / 1024) + " kb"
+  Serial.printf("%d kb %d kb %d kb %d kb\n", 
+    ESP.getHeapSize() / 1024,
+    ESP.getFreeHeap() / 1024, 
+    ESP.getPsramSize() / 1024, 
+    ESP.getFreePsram() / 1024
   );
 
   if(DEBUG == 1)

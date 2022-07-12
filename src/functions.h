@@ -206,7 +206,7 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-void needleCalc(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 120)
+void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
 {
   uint16_t x, y;
   uint16_t aa, bb, cc, dd;
@@ -227,35 +227,63 @@ void needleCalc(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0,
   cc = 160 + x;
   dd = 220 - y;
 
-  if(theme == 0) 
+  if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
   {
-    if (IC_MODEL == 705)
-      needleSprite.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0, 0, 320, 130);
+    if(theme == 0) 
+    {
+      if (IC_MODEL == 705)
+        needleSprite.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0, 0, 320, 130);
+      else
+        needleSprite.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0, 0, 320, 130);
+    }
     else
-      needleSprite.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0, 0, 320, 130);
+    {
+      if (IC_MODEL == 705)
+        needleSprite.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0, 0, 320, 130);
+      else
+        needleSprite.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0, 0, 320, 130);
+    }
+
+    needleSprite.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+    needleSprite.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    needleSprite.drawLine(aa + 1 + offsetX, bb + offsetY, cc + 1 + offsetX, dd + offsetY, TFT_RED);
+    needleSprite.drawLine(aa + offsetX, bb + offsetY, cc + offsetX, dd + offsetY, TFT_RED);
+    needleSprite.drawLine(aa - 1 + offsetX, bb + offsetY, cc - 1 + offsetX, dd + offsetY, TFT_RED);
+    needleSprite.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    needleSprite.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+
+    needleSprite.pushSprite(0 + offsetX, 20 + offsetY, TFT_TRANSPARENT);
   }
-  else
+  else // Display mode
   {
-    if (IC_MODEL == 705)
-      needleSprite.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0, 0, 320, 130);
+    if(theme == 0) 
+    {
+      if (IC_MODEL == 705)
+        display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 130);
+      else
+        display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 130);
+    }
     else
-      needleSprite.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0, 0, 320, 130);
+    {
+      if (IC_MODEL == 705)
+        display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 130);
+      else
+        display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 130);
+    }
+
+    display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+    display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    display.drawLine(aa + 1 + offsetX, bb + offsetY, cc + 1 + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa + offsetX, bb + offsetY, cc + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa - 1 + offsetX, bb + offsetY, cc - 1 + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
   }
-
-  needleSprite.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
-  needleSprite.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
-  needleSprite.drawLine(aa + 1 + offsetX, bb + offsetY, cc + 1 + offsetX, dd + offsetY, TFT_RED);
-  needleSprite.drawLine(aa + offsetX, bb + offsetY, cc + offsetX, dd + offsetY, TFT_RED);
-  needleSprite.drawLine(aa - 1 + offsetX, bb + offsetY, cc - 1 + offsetX, dd + offsetY, TFT_RED);
-  needleSprite.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
-  needleSprite.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
-
-  needleSprite.pushSprite(0 + offsetX, 20 + offsetY, TFT_TRANSPARENT);
 }
 
 
 // Print needle
-void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 120)
+void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uint16_t d = 100)
 {
   int8_t sign = 1;
   int8_t speedStart = 4;
@@ -286,6 +314,12 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uin
     {
       speedStart = 4;
       speedStop = 0.1;
+    }
+
+    if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+    {
+      b += 20;
+      d += 20;
     }
 
     for(speed = speedStart; speed > speedStop; speed /= 2)
