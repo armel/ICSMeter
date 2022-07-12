@@ -181,6 +181,13 @@ void loop()
   // Manage Screen Saver
   wakeAndSleep();
 
+  Serial.printf("%d kb %d kb %d kb %d kb\n", 
+    ESP.getHeapSize() / 1024,
+    ESP.getFreeHeap() / 1024, 
+    ESP.getPsramSize() / 1024, 
+    ESP.getFreePsram() / 1024
+  );
+
   if(DEBUG == 1)
   {
     Serial.printf("%d kb %d kb %d kb %d kb\n", 

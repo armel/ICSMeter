@@ -839,7 +839,7 @@ void wakeAndSleep()
   }
   else if (screensaverMode == true)
   {
-    display.fillRect(x, y, 44, 22, TFT_BLACK);
+    display.fillRect(x + offsetX, y + offsetY, 44, 22, TFT_BLACK);
 
     if (xDir)
     {
