@@ -283,7 +283,7 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
 
 
 // Print needle
-void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uint16_t d = 100)
+void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 120)
 {
   int8_t sign = 1;
   int8_t speedStart = 4;
@@ -318,8 +318,8 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uin
 
     if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
     {
-      b += 20;
-      d += 20;
+      b -= 20;
+      d -= 20;
     }
 
     for(speed = speedStart; speed > speedStop; speed /= 2)
@@ -329,6 +329,8 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uin
       for(shift = start; abs(abs(shift) - abs(stop)) >= abs(speed); shift+=speed * sign)
       {
         needleCalc(shift, a, b, c, d);
+
+        Serial.printf("--> %f %f %f %f\n", shift, angle, angleOld, speed * sign);
 
         // Debug trace
         if (DEBUG == 1)
