@@ -183,8 +183,8 @@ void clearData()
 
   memset(filterOld, 0, sizeof(filterOld));
   memset(modeOld, 0, sizeof(modeOld));
+  memset(valStringOld, 0, sizeof(valStringOld));
 
-  valStringOld = "";
   subValStringOld = "";
 
   batteryCharginglOld = true;
@@ -303,71 +303,51 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
 // Print needle
 void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 120)
 {
-  int8_t sign = 1;
-  int8_t speedStart = 4;
-  float speedStop = 0.1;
-  float stop, start, shift, speed;
+  uint8_t speed = 8;
+  float move, shift;
 
   if (angle != angleOld)
   {
     if(angle > angleOld)
     {
-      start = angleOld;
-      stop = angle;
-      sign = 1;
+      shift = (angle - angleOld) / speed;
     }
     else
     {
-      start = angleOld;
-      stop = angle;
-      sign = -1;
+      shift = -(angleOld - angle) / speed;
     }
 
-    if(strcmp(modeOld, "CW") || strcmp(modeOld, "CW-R"))
-    {
-      speedStart = 8;
-      speedStop = 1;
-    }
-    else
-    {
-      speedStart = 4;
-      speedStop = 0.1;
-    }
+    move = angleOld;
 
-    for(speed = speedStart; speed > speedStop; speed /= 2)
+    for(uint8_t i = 1; i <= speed; i+= 1)
     {
-      if(speed < 1) speed = 0.1;
+      move += shift;
+      needleCalc(move, a, b, c, d);
 
-      for(shift = start; abs(abs(shift) - abs(stop)) >= abs(speed); shift+=speed * sign)
+      if (DEBUG == 1)
       {
-        needleCalc(shift, a, b, c, d);
-
-        // Debug trace
-        if (DEBUG == 1)
-        {
-          Serial.printf("--> %f %f %f %f\n", shift, angle, angleOld, speed * sign);
-        }
+        Serial.printf("--> %f %f %f %f\n", move, angle, angleOld, shift);
       }
-      start = shift;
     }
 
-    // Move end
-    needleCalc(angle, a, b, c, d);     
     angleOld = angle;
   }
 }
 
 // Print value
-void value(String valString, uint8_t x = 160, uint8_t y = 180)
+void value(char* valString, uint8_t x = 160, uint8_t y = 180)
 {
-  if (valString != valStringOld)
+  if (strcmp(valString, valStringOld) != 0)
   {
-    valStringOld = valString;
+    strncpy(valStringOld, valString, 32);
 
     display.setTextDatum(CC_DATUM);
     display.setFont(&stencilie16pt7b);
-    valString.replace(".", ",");
     //display.setFont(&YELLOWCRE8pt7b);
+    for(uint8_t i = 0; i < strlen(valString); i++)
+    {
+      if(valString[i] == '.') valString[i] = ';';
+    }
     display.setTextPadding(190);
     display.setTextColor(TFT_FRONT, TFT_BACK);
     display.drawString(valString, x + offsetX, y + offsetY);
@@ -384,7 +364,6 @@ void subValue(String valString, uint8_t x = 160, uint8_t y = 206)
     display.setTextDatum(CC_DATUM);
     display.setFont(&YELLOWCRE8pt7b);
     display.setTextPadding(160);
-    //display.setTextColor(TFT_BLACK, TFT_RED);
     display.setTextColor(TFT_FRONT, TFT_BACK);
     // valString.replace(".", ",");
     display.drawString(valString, x + offsetX, y + offsetY);

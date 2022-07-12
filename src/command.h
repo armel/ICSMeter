@@ -137,7 +137,7 @@ void sendCommand(char *request, size_t n, char *buffer, uint8_t limit)
 // Get Smeter
 void getSmeter()
 {
-  String valString;
+  char valString[32];  
 
   static char buffer[6];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x02, 0xFD};
@@ -178,26 +178,27 @@ void getSmeter()
     if (val0 <= 13)
     {
       angle = -38.60f;
-      valString = "S " + String(int(round(val1)));
+      snprintf(valString, 16, "%s %d", "S", int(round(val1)));
     }
     else if (val0 <= 120)
     {
       angle = mapFloat(val0, 14, 120, -38.60f, 6.50f); // SMeter image start at S1 so S0 is out of image on the left...
-      valString = "S " + String(int(round(val1)));
+      snprintf(valString, 16, "%s %d", "S", int(round(val1)));
     }
     else
     {
       angle = mapFloat(val0, 121, 240, 6.50f, 39.40f);
       if (int(round(val1) < 10))
-        valString = "S 9 + 0" + String(int(round(val1))) + " dB";
+
+        snprintf(valString, 16, "%s%d %s", "S 9 + 0", int(round(val1)), "dB");
       else
-        valString = "S 9 + " + String(int(round(val1))) + " dB";
+        snprintf(valString, 16, "%s %d %s", "S 9 +", int(round(val1)), "dB");
     }
 
     // Debug trace
     if (DEBUG == 1)
     {
-      Serial.printf("%s %d %f %f \n", valString.c_str(), val0, val1, angle);
+      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
     }
 
     // Draw line
@@ -234,7 +235,7 @@ void getSmeter()
 // Get SWR
 void getSWR()
 {
-  String valString;
+  char valString[32];  
 
   static char buffer[6];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x12, 0xFD};
@@ -309,12 +310,12 @@ void getSWR()
       val1 = mapFloat(val0, 226, 255, 10.0, 50.0);
     }
 
-    valString = "SWR " + String(val1);
+    snprintf(valString, 32, "%s %.2f", "SWR", val1);
 
     // Debug trace
     if (DEBUG == 1)
     {
-      Serial.printf("%s %d %f %f \n", valString.c_str(), val0, val1, angle);
+      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
     }
 
     // Draw line
@@ -328,7 +329,7 @@ void getSWR()
 // Get Power
 void getPower()
 {
-  String valString;
+  char valString[32];  
 
   static char buffer[6];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x11, 0xFD};
@@ -398,14 +399,14 @@ void getPower()
 
     val2 = round(val1 * 10);
     if (IC_MODEL == 705)
-      valString = "PWR " + String((val2 / 10)) + " W";
+      snprintf(valString, 16, "%s %.2f %s", "PWR", (val2 / 10), "W");
     else
-      valString = "PWR " + String(val2) + " W";
+      snprintf(valString, 16, "%s %.2f %s", "PWR", (val2), "W");
 
     // Debug trace
     if (DEBUG == 1)
     {
-      Serial.printf("%s %d %f %f \n", valString.c_str(), val0, val1, angle);
+      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
     }
 
     // Draw line
@@ -504,8 +505,6 @@ void getMode()
   display.setTextDatum(CC_DATUM);
 
   snprintf(valString, 16, "%s%d", "FIL", uint8_t(buffer[4]));
-
-  //valString = "FIL" + String(uint8_t(buffer[4]));
   if (strcmp(valString, filterOld) != 0)
   {
     strncpy(filterOld, valString, 16);
@@ -515,15 +514,12 @@ void getMode()
   }
 
   snprintf(valString, 16, "%s", mode[(uint8_t)buffer[3]]);
-  //valString = String(mode[(uint8_t)buffer[3]]);
 
   getDataMode(); // Data ON or OFF ?
 
   if (dataMode == 1)
   {
-    //valString += "-D";
     snprintf(valString, 16, "%s%s", valString, "-D");
-
   }
 
   if (strcmp(valString, modeOld) != 0)

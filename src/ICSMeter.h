@@ -132,14 +132,11 @@ uint8_t powerOld = 255;
 uint8_t batteryLevelOld = 0;
 
 String frequencyOld = "";
-//String filterOld = "";
-//String modeOld = "";
-String valStringOld = "";
 String subValStringOld = "";
 
+char valStringOld[32];
 char filterOld[16];  
 char modeOld[16];  
-
 char dataMode = 0;
 
 // Flags for button presses via Web site Screen Capture
