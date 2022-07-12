@@ -271,6 +271,9 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
         display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 130);
     }
 
+    bb += 20;
+    dd += 20;
+
     display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
     display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
     display.drawLine(aa + 1 + offsetX, bb + offsetY, cc + 1 + offsetX, dd + offsetY, TFT_RED);
@@ -279,8 +282,12 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
     display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
     display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
   }
-}
 
+  if(DEBUG)
+  {
+    Serial.printf("%d %d %d %d / %d %d %d %d\n", a, b, c, d, aa, bb, cc, dd);
+  }
+}
 
 // Print needle
 void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 120)
@@ -316,11 +323,13 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uin
       speedStop = 0.1;
     }
 
+    /*
     if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
     {
-      b -= 20;
-      d -= 20;
+      b += 20;
+      d += 20;
     }
+    */
 
     for(speed = speedStart; speed > speedStop; speed /= 2)
     {
