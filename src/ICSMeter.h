@@ -78,8 +78,8 @@ uint16_t offsetY = 0;
 #endif
 
 // Sprite
-LGFX_Sprite needleSprite(&M5.Lcd);
-LGFX_Sprite logoSprite(&M5.Lcd);
+LGFX_Sprite needleSprite(&display);
+LGFX_Sprite logoSprite(&display);
 
 // LED
 #define FASTLED_INTERNAL // To disable pragma messages on compile
