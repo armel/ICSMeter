@@ -488,8 +488,7 @@ void getFrequency()
 // Get Mode
 void getMode()
 {
-  String valString;
-
+  char valString[16];  
   static char buffer[5];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x04, 0xFD};
 
@@ -504,26 +503,32 @@ void getMode()
   display.setTextColor(TFT_WHITE);
   display.setTextDatum(CC_DATUM);
 
-  valString = "FIL" + String(uint8_t(buffer[4]));
-  if (valString != filterOld)
+  snprintf(valString, 16, "%s%d", "FIL", uint8_t(buffer[4]));
+
+  //valString = "FIL" + String(uint8_t(buffer[4]));
+  if (strcmp(valString, filterOld) != 0)
   {
-    filterOld = valString;
+    strncpy(filterOld, valString, 16);
     display.fillRoundRect(40 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BACK);
     display.drawRoundRect(40 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BORDER);
     display.drawString(valString, 60 + offsetX, 206 + offsetY);
   }
 
-  valString = String(mode[(uint8_t)buffer[3]]);
+  snprintf(valString, 16, "%s", mode[(uint8_t)buffer[3]]);
+  //valString = String(mode[(uint8_t)buffer[3]]);
 
   getDataMode(); // Data ON or OFF ?
 
   if (dataMode == 1)
   {
-    valString += "-D";
+    //valString += "-D";
+    snprintf(valString, 16, "%s%s", valString, "-D");
+
   }
-  if (valString != modeOld)
+
+  if (strcmp(valString, modeOld) != 0)
   {
-    modeOld = valString;
+    strncpy(modeOld, valString, 16);
     display.fillRoundRect(240 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BACK);
     display.drawRoundRect(240 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BORDER);
     display.drawString(valString, 260 + offsetX, 206 + offsetY);

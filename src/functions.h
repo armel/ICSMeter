@@ -144,7 +144,6 @@ void viewBattery()
 // View GUI
 void viewGUI()
 {
-
   resetColor();
 
   display.fillScreen(TFT_BLACK);
@@ -182,8 +181,9 @@ void clearData()
   SWROld = 255;
   powerOld = 255;
 
-  filterOld = "";
-  modeOld = "";
+  memset(filterOld, 0, sizeof(filterOld));
+  memset(modeOld, 0, sizeof(modeOld));
+
   valStringOld = "";
   subValStringOld = "";
 
@@ -323,7 +323,7 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uin
       sign = -1;
     }
 
-    if(modeOld == "CW" || modeOld == "CW-R")
+    if(strcmp(modeOld, "CW") || strcmp(modeOld, "CW-R"))
     {
       speedStart = 8;
       speedStop = 1;

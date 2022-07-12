@@ -132,10 +132,13 @@ uint8_t powerOld = 255;
 uint8_t batteryLevelOld = 0;
 
 String frequencyOld = "";
-String filterOld = "";
-String modeOld = "";
+//String filterOld = "";
+//String modeOld = "";
 String valStringOld = "";
 String subValStringOld = "";
+
+char filterOld[16];  
+char modeOld[16];  
 
 char dataMode = 0;
 
