@@ -244,13 +244,13 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
         needleSprite.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0, 0, 320, 130);
     }
 
-    needleSprite.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
-    needleSprite.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
-    needleSprite.drawLine(aa + 1 + offsetX, bb + offsetY, cc + 1 + offsetX, dd + offsetY, TFT_RED);
-    needleSprite.drawLine(aa + offsetX, bb + offsetY, cc + offsetX, dd + offsetY, TFT_RED);
-    needleSprite.drawLine(aa - 1 + offsetX, bb + offsetY, cc - 1 + offsetX, dd + offsetY, TFT_RED);
-    needleSprite.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
-    needleSprite.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+    needleSprite.drawLine(aa + 2, bb, cc + 3, dd, TFT_NEDDLE_2);
+    needleSprite.drawLine(aa + 2, bb, cc + 2, dd, TFT_NEDDLE_1);
+    needleSprite.drawLine(aa + 1, bb, cc + 1, dd, TFT_RED);
+    needleSprite.drawLine(aa, bb, cc, dd, TFT_RED);
+    needleSprite.drawLine(aa - 1, bb, cc - 1, dd, TFT_RED);
+    needleSprite.drawLine(aa - 2, bb, cc - 2, dd, TFT_NEDDLE_1);
+    needleSprite.drawLine(aa - 2, bb, cc - 3, dd, TFT_NEDDLE_2);
 
     needleSprite.pushSprite(0 + offsetX, 20 + offsetY, TFT_TRANSPARENT);
   }
@@ -283,7 +283,7 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
     display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
   }
 
-  if(DEBUG)
+  if (DEBUG == 1)
   {
     Serial.printf("%d %d %d %d / %d %d %d %d\n", a, b, c, d, aa, bb, cc, dd);
   }
@@ -323,14 +323,6 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uin
       speedStop = 0.1;
     }
 
-    /*
-    if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
-    {
-      b += 20;
-      d += 20;
-    }
-    */
-
     for(speed = speedStart; speed > speedStop; speed /= 2)
     {
       if(speed < 1) speed = 0.1;
@@ -338,8 +330,6 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uin
       for(shift = start; abs(abs(shift) - abs(stop)) >= abs(speed); shift+=speed * sign)
       {
         needleCalc(shift, a, b, c, d);
-
-        Serial.printf("--> %f %f %f %f\n", shift, angle, angleOld, speed * sign);
 
         // Debug trace
         if (DEBUG == 1)
