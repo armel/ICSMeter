@@ -54,6 +54,8 @@ void resetColor()
 // Print settings
 void viewSettings()
 {
+  char buf[16];
+
   // Settings
   display.setFont(0);
   display.setTextDatum(CC_DATUM);
@@ -62,23 +64,31 @@ void viewSettings()
   display.drawRoundRect(4 + offsetX, 4 + offsetY, 56, 13, 2, TFT_MODE_BORDER);
   display.setTextColor(TFT_WHITE);
 
+  snprintf(buf, 16, "%d %s", IC_MODEL, "BT");
+
   if (IC_CONNECT == BT)
-    display.drawString(String(IC_MODEL) + " BT", 32 + offsetX, 11 + offsetY);
+    snprintf(buf, 16, "%d %s", IC_MODEL, "BT");
   else
-    display.drawString(String(IC_MODEL) + " USB", 32 + offsetX, 11 + offsetY);
+    snprintf(buf, 16, "%d %s", IC_MODEL, "USB");
+
+  display.drawString(buf, 32 + offsetX, 11 + offsetY);
 
   if (transverter > 0)
   {
+    snprintf(buf, 16, "%s %d", "LO", transverter);
+
     display.fillRoundRect(62 + offsetX, 4 + offsetY, 26, 13, 2, TFT_MODE_BACK);
     display.drawRoundRect(62 + offsetX, 4 + offsetY, 26, 13, 2, TFT_MODE_BORDER);
     display.setTextColor(TFT_WHITE);
-    display.drawString("LO" + String(transverter), 76 + offsetX, 11 + offsetY);
+    display.drawString(buf, 76 + offsetX, 11 + offsetY);
   }
 }
 
 // Print battery
 void viewBattery()
 {
+  char buf[8];
+
   uint8_t batteryLevel;
   boolean batteryCharging;
 
@@ -116,7 +126,7 @@ void viewBattery()
         display.setFont(0);
         display.setTextDatum(CC_DATUM);
         display.setTextPadding(0);
-        display.drawString("+", 290, 11);
+        snprintf(buf, 8, "%s", "+");
       }
       else
       {
@@ -124,8 +134,9 @@ void viewBattery()
         display.setFont(0);
         display.setTextDatum(CR_DATUM);
         display.setTextPadding(0);
-        display.drawString(String(getBatteryLevel(1)) + "%", 290, 11);
+        snprintf(buf, 8, "%d%s", getBatteryLevel(1), "%");
       }
+      display.drawString(buf, 290, 11);
     }
   }
 }
