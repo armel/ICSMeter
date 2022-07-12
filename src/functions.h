@@ -303,8 +303,13 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
 // Print needle
 void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 120)
 {
-  uint8_t speed = 8;
+  uint8_t speed;
   float move, shift;
+
+  if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+    speed = 8;
+  else
+    speed = 2;
 
   if (angle != angleOld)
   {

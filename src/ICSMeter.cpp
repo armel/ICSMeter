@@ -38,7 +38,7 @@ void setup()
   offsetY = (display.height() - 240) / 2;
 
   // Init Sprite
-  
+
   if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
   {
     needleSprite.setPsram(true);
@@ -180,13 +180,6 @@ void loop()
 
   // Manage Screen Saver
   wakeAndSleep();
-
-  Serial.printf("%d kb %d kb %d kb %d kb\n", 
-    ESP.getHeapSize() / 1024,
-    ESP.getFreeHeap() / 1024, 
-    ESP.getPsramSize() / 1024, 
-    ESP.getFreePsram() / 1024
-  );
 
   if(DEBUG == 1)
   {
