@@ -110,6 +110,7 @@ int8_t beep = 0;
 int8_t transverter = 0;
 int8_t screensaver = 0;
 int8_t theme = 0;
+int8_t led = 0;
 uint8_t brightness = 64;
 uint8_t htmlGetRequest;
 
@@ -130,6 +131,7 @@ boolean startup = true;
 boolean wakeup = true;
 boolean batteryCharginglOld = true;
 
+int8_t ledOld = 0;
 int8_t measureOld = 5;
 uint8_t sOld = 255;
 uint8_t SWROld = 255;
@@ -155,11 +157,12 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Measured Values", "Transverter Mode", "Themes", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
+const char *settings[] = {"Measured Values", "Transverter Mode", "Themes", "Led Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceThemes[] = {"CLASSIC", "DARK"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
+const char *choiceLed[] = {"OFF", "TX", "MEASURES"};
 const char *choiceScreensaver[] = {"TIMEOUT"};
 const double choiceTransverter[] = {
     0,

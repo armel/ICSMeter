@@ -190,6 +190,15 @@ void clearData()
   batteryCharginglOld = true;
 
   measureOld = 5;
+
+  for(uint8_t i = 0; i <= 4; i++)
+  {
+    leds[4 - i] = CRGB::Black;
+    leds[5 + i] = CRGB::Black;
+  }
+
+  FastLED.setBrightness(16);
+  FastLED.show();
 }
 
 // Manage rotation

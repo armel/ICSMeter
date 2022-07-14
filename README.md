@@ -72,7 +72,6 @@ Flash| Memory	16MB|
 
 About the QSJ, count around 45€. You then have a complete development platform, totally autonomous, programmable in C and C++, MicroPython and UIFlow, from Linux, Windows or MacOS, all in a compact and ultra ergonomic box.
 
-
 # Installation
 
 ## Prepare the stack
@@ -239,6 +238,7 @@ The following options are available :
 | Measured Values      | Set Measured Values (PWR, S or SWR)       | 
 | Transverter Mode     | Set Transverter Mode (OFF, LO1 ~ LO5)     | 
 | Themes               | Set Themes (CLASSIC ~ DARK)               | 
+| Led Mode             | Set Led Mode (OFF, TX, MEASURES)          | 
 | Brightness           | Set Brightness (0 ~ 100%)                 | 
 | Beep                 | Set Beep (0 ~ 100%)                       |
 | Screensaver          | Set Screensaver TimeOut (1 ~ 60 min)      |
@@ -246,7 +246,15 @@ The following options are available :
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
  
-> Measured Values, Transverter Mode, Themes, Brightness, Beep and Screensaver are preserved at the next restart.
+> Measured Values, Transverter Mode, Themes, Led Mode, Brightness, Beep and Screensaver are preserved at the next restart.
+
+# About the needle animation
+
+I have been working on making the ICSMeter needle more efficient and smoother, without jerks. Now, because of the huge BluetoothSerial library, for the moment, to take advantage of the improvements on the needle movement, you have 2 solutions. The first is to use USB mode (and ICUSBProxy) with the M5Stacks Basic or Grey. The second is to use an M5Stack with PSRAM (CORE2, AWS, Fire, etc.), which offers more memory.
+
+So in short, if you use an M5Stack Basic or Grey and the BT mode... you will lose ICSMeter needle improvement.
+
+I try to do my best, but I am not a magician 🧙‍♂️
 
 # Using the Bin Loader (power user only...)
 

@@ -207,44 +207,57 @@ void getSmeter()
     value(valString);
 
     // If M5GO
-    if(val0 <= 120) {
-      uint8_t j = map(val0, 0, 120, 0, 4);
-      for(uint8_t i = 0; i <= 4; i++)
-      {
-        if(i <= j)
-        {
-          leds[4 - i] = CRGB::Blue;
-          leds[5 + i] = CRGB::Blue;
-        }
-        else
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(val0 <= 13) {
+        for(uint8_t i = 0; i <= 4; i++)
         {
           leds[4 - i] = CRGB::WhiteSmoke;
           leds[5 + i] = CRGB::WhiteSmoke;
         }
-      }
 
-      FastLED.setBrightness(16);
-      FastLED.show();
-    }
-    else {
-      uint8_t j = map(val0, 121, 240, 0, 4);
-
-      for(uint8_t i = 0; i <= 4; i++)
-      {
-        if(i <= j)
-        {
-          leds[i] = CRGB::Red;
-          leds[9 - i] = CRGB::Red;
-        }
-        else
-        {
-          leds[i] = CRGB::Blue;
-          leds[9 - i] = CRGB::Blue;
-        }
+        FastLED.setBrightness(16);
+        FastLED.show();
       }
-      
-      FastLED.setBrightness(16);
-      FastLED.show();
+      else if(val0 <= 120) {
+        uint8_t j = map(val0, 14, 120, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Blue;
+            leds[5 + i] = CRGB::Blue;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else {
+        uint8_t j = map(val0, 121, 240, 0, 4);
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[i] = CRGB::Red;
+            leds[9 - i] = CRGB::Red;
+          }
+          else
+          {
+            leds[i] = CRGB::Blue;
+            leds[9 - i] = CRGB::Blue;
+          }
+        }
+        
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
     }
 
     // If led strip...
@@ -365,35 +378,38 @@ void getSWR()
     value(valString);
 
     // If M5GO
-    if(val0 <= 110) {
-      uint8_t j = map(val0, 0, 120, 0, 4);
-      for(uint8_t i = 0; i <= 4; i++)
-      {
-        if(i <= j)
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(val0 <= 110) {
+        uint8_t j = map(val0, 0, 120, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
         {
-          leds[4 - i] = CRGB::Green;
-          leds[5 + i] = CRGB::Green;
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Green;
+            leds[5 + i] = CRGB::Green;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
         }
-        else
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else {
+
+        for(uint8_t i = 0; i <= 4; i++)
         {
-          leds[4 - i] = CRGB::WhiteSmoke;
-          leds[5 + i] = CRGB::WhiteSmoke;
+          leds[i] = CRGB::Red;
+          leds[9 - i] = CRGB::Red;
         }
+        
+        FastLED.setBrightness(16);
+        FastLED.show();
       }
-
-      FastLED.setBrightness(16);
-      FastLED.show();
-    }
-    else {
-
-      for(uint8_t i = 0; i <= 4; i++)
-      {
-        leds[i] = CRGB::Red;
-        leds[9 - i] = CRGB::Red;
-      }
-      
-      FastLED.setBrightness(16);
-      FastLED.show();
     }
   }
 }
@@ -424,8 +440,6 @@ void getPower()
 
     sprintf(str, "%02x%02x", buffer[4], buffer[5]);
     val0 = atoi(str);
-
-    Serial.printf("%d\n", val0);
   }
 
   if (val0 != val3 || reset == true)
@@ -436,7 +450,7 @@ void getPower()
     if (val0 <= 27)
     {
       angle = mapFloat(val0, 0, 27, -38.60f, -27.25f);
-      val1 = mapFloat(val0, 0, 27, 0, 5.0);
+      val1 = mapFloat(val0, 0, 27, 0, 0.5);
     }
     else if (val0 <= 51)
     {
@@ -450,23 +464,23 @@ void getPower()
     }
     else if (val0 <= 106)
     {
-      angle = mapFloat(val0, 80, 106, -13.00f, -6.50f);
-      val1 = mapFloat(val0, 80, 106, 2.0, 3.0);
+      angle = mapFloat(val0, 81, 106, -13.00f, -6.50f);
+      val1 = mapFloat(val0, 81, 106, 2.0, 3.0);
     }
     else if (val0 <= 124)
     {
-      angle = mapFloat(val0, 106, 124, -6.50f, 0.0f);
-      val1 = mapFloat(val0, 106, 124, 3.0, 4.0);
+      angle = mapFloat(val0, 107, 124, -6.50f, 0.0f);
+      val1 = mapFloat(val0, 107, 124, 3.0, 4.0);
     }
     else if (val0 <= 144)
     {
-      angle = mapFloat(val0, 124, 144, 0.0f, 6.00f);
-      val1 = mapFloat(val0, 124, 144, 4.00, 5.0);
+      angle = mapFloat(val0, 125, 148, 0.0f, 6.00f);
+      val1 = mapFloat(val0, 125, 148, 4.00, 5.0);
     }
     else
     {
-      angle = mapFloat(val0, 144, 226, 6.00f, 28.50f);
-      val1 = mapFloat(val0, 144, 226, 5.0, 10.0);
+      angle = mapFloat(val0, 149, 232, 6.00f, 28.50f);
+      val1 = mapFloat(val0, 149, 232, 5.0, 10.0);
     }
 
     val2 = round(val1 * 10);
@@ -481,11 +495,37 @@ void getPower()
       Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
     }
 
+      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
+
     // Draw line
     needle(angle);
 
     // Write Value
     value(valString);
+
+    // If M5GO
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(val0 <= 232) {
+        uint8_t j = map(val0, 0, 232, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Green;
+            leds[5 + i] = CRGB::Green;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+    }
   }
 }
 

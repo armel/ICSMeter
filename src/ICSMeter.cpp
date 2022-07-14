@@ -71,6 +71,7 @@ void setup()
   beep = preferences.getUInt("beep", 0);
   screensaver = preferences.getUInt("screensaver", 60);
   theme = preferences.getUInt("theme", 0);
+  led = preferences.getUInt("led", 0);
 
   // Bin Loader
   binLoader();
@@ -139,21 +140,22 @@ void loop()
       if(alternance == 0) getFrequency();
       if(alternance == 4) getMode();
 
-      if(tx == 0) {
-        /*
-        for(uint8_t i = 0; i <= 9; i++){
-          leds[i] = CRGB::Black;
+      if(strcmp(choiceLed[led], "TX") == 0)
+      {
+        if(tx == 0) {
+          for(uint8_t i = 0; i <= 9; i++){
+            leds[i] = CRGB::Black;
+          }
+          FastLED.setBrightness(16);
+          FastLED.show();
         }
-        FastLED.setBrightness(16);
-        FastLED.show();
-        */
-      }
-      else {
-        for(uint8_t i = 0; i <= 9; i++){
-          leds[i] = CRGB::Red;
+        else {
+          for(uint8_t i = 0; i <= 9; i++){
+            leds[i] = CRGB::Red;
+          }
+          FastLED.setBrightness(16);
+          FastLED.show();
         }
-        FastLED.setBrightness(16);
-        FastLED.show();
       }
      
       switch (measure)
