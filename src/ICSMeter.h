@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.7"
+#define VERSION "0.1.8"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -14,6 +14,11 @@
 
 #define BT 1
 #define USB 2
+
+#define ARITHMETIC 1
+#define GEOMETRIC 2
+
+#define NEEDLE GEOMETRIC // Possible value ARITHMETIC or GEOMETRIC
 
 #define M5ATOMDISPLAY_LOGICAL_WIDTH  WIDTH    // width
 #define M5ATOMDISPLAY_LOGICAL_HEIGHT  HEIGHT  // height
@@ -77,6 +82,10 @@ uint16_t offsetY = 0;
   M5AtomDisplay display(WIDTH, HEIGHT);
 #endif
 
+// Sprite
+LGFX_Sprite needleSprite(&display);
+LGFX_Sprite logoSprite(&display);
+
 // LED
 #define FASTLED_INTERNAL // To disable pragma messages on compile
 #define NUM_LEDS 10
@@ -101,6 +110,7 @@ int8_t beep = 0;
 int8_t transverter = 0;
 int8_t screensaver = 0;
 int8_t theme = 0;
+int8_t led = 0;
 uint8_t brightness = 64;
 uint8_t htmlGetRequest;
 
@@ -121,6 +131,7 @@ boolean startup = true;
 boolean wakeup = true;
 boolean batteryCharginglOld = true;
 
+int8_t ledOld = 0;
 int8_t measureOld = 5;
 uint8_t sOld = 255;
 uint8_t SWROld = 255;
@@ -128,11 +139,11 @@ uint8_t powerOld = 255;
 uint8_t batteryLevelOld = 0;
 
 String frequencyOld = "";
-String filterOld = "";
-String modeOld = "";
-String valStringOld = "";
 String subValStringOld = "";
 
+char valStringOld[32];
+char filterOld[16];  
+char modeOld[16];  
 char dataMode = 0;
 
 // Flags for button presses via Web site Screen Capture
@@ -146,11 +157,12 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Measured Values", "Transverter Mode", "Themes", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
+const char *settings[] = {"Measured Values", "Transverter Mode", "Themes", "Led Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceThemes[] = {"CLASSIC", "DARK"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
 const char *choiceBeep[] = {"BEEP LEVEL"};
+const char *choiceLed[] = {"OFF", "TX", "MEASURES"};
 const char *choiceScreensaver[] = {"TIMEOUT"};
 const double choiceTransverter[] = {
     0,

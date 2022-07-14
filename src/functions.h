@@ -54,6 +54,8 @@ void resetColor()
 // Print settings
 void viewSettings()
 {
+  char buf[16];
+
   // Settings
   display.setFont(0);
   display.setTextDatum(CC_DATUM);
@@ -62,23 +64,31 @@ void viewSettings()
   display.drawRoundRect(4 + offsetX, 4 + offsetY, 56, 13, 2, TFT_MODE_BORDER);
   display.setTextColor(TFT_WHITE);
 
+  snprintf(buf, 16, "%d %s", IC_MODEL, "BT");
+
   if (IC_CONNECT == BT)
-    display.drawString(String(IC_MODEL) + " BT", 32 + offsetX, 11 + offsetY);
+    snprintf(buf, 16, "%d %s", IC_MODEL, "BT");
   else
-    display.drawString(String(IC_MODEL) + " USB", 32 + offsetX, 11 + offsetY);
+    snprintf(buf, 16, "%d %s", IC_MODEL, "USB");
+
+  display.drawString(buf, 32 + offsetX, 11 + offsetY);
 
   if (transverter > 0)
   {
+    snprintf(buf, 16, "%s %d", "LO", transverter);
+
     display.fillRoundRect(62 + offsetX, 4 + offsetY, 26, 13, 2, TFT_MODE_BACK);
     display.drawRoundRect(62 + offsetX, 4 + offsetY, 26, 13, 2, TFT_MODE_BORDER);
     display.setTextColor(TFT_WHITE);
-    display.drawString("LO" + String(transverter), 76 + offsetX, 11 + offsetY);
+    display.drawString(buf, 76 + offsetX, 11 + offsetY);
   }
 }
 
 // Print battery
 void viewBattery()
 {
+  char buf[8];
+
   uint8_t batteryLevel;
   boolean batteryCharging;
 
@@ -116,7 +126,7 @@ void viewBattery()
         display.setFont(0);
         display.setTextDatum(CC_DATUM);
         display.setTextPadding(0);
-        display.drawString("+", 290, 11);
+        snprintf(buf, 8, "%s", "+");
       }
       else
       {
@@ -124,8 +134,9 @@ void viewBattery()
         display.setFont(0);
         display.setTextDatum(CR_DATUM);
         display.setTextPadding(0);
-        display.drawString(String(getBatteryLevel(1)) + "%", 290, 11);
+        snprintf(buf, 8, "%d%s", getBatteryLevel(1), "%");
       }
+      display.drawString(buf, 290, 11);
     }
   }
 }
@@ -133,7 +144,6 @@ void viewBattery()
 // View GUI
 void viewGUI()
 {
-
   resetColor();
 
   display.fillScreen(TFT_BLACK);
@@ -171,14 +181,24 @@ void clearData()
   SWROld = 255;
   powerOld = 255;
 
-  filterOld = "";
-  modeOld = "";
-  valStringOld = "";
+  memset(filterOld, 0, sizeof(filterOld));
+  memset(modeOld, 0, sizeof(modeOld));
+  memset(valStringOld, 0, sizeof(valStringOld));
+
   subValStringOld = "";
 
   batteryCharginglOld = true;
 
   measureOld = 5;
+
+  for(uint8_t i = 0; i <= 4; i++)
+  {
+    leds[4 - i] = CRGB::Black;
+    leds[5 + i] = CRGB::Black;
+  }
+
+  FastLED.setBrightness(16);
+  FastLED.show();
 }
 
 // Manage rotation
@@ -193,8 +213,8 @@ void rotate(uint16_t *x, uint16_t *y, float angle)
 
   angle = angle * PI / 180;
 
-  xNew = *x * cos(angle) - *y * sin(angle);
-  yNew = *x * sin(angle) + *y * cos(angle);
+  xNew = *x * cos(angle) + *y * sin(angle);
+  yNew = -*x * sin(angle) + *y * cos(angle);
 
   *x = xNew;
   *y = yNew;
@@ -206,32 +226,56 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-// Print needle
-void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uint16_t d = 100)
+void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
 {
   uint16_t x, y;
+  uint16_t aa, bb, cc, dd;
 
-  if (angle != angleOld)
+  x = a;
+  y = b;
+
+  rotate(&x, &y, angle);
+
+  aa = 160 + x;
+  bb = 220 - y;
+
+  x = c;
+  y = d;
+
+  rotate(&x, &y, angle);
+
+  cc = 160 + x;
+  dd = 220 - y;
+
+  if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
   {
-    angleOld = angle;
+    if(theme == 0) 
+    {
+      if (IC_MODEL == 705)
+        needleSprite.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0, 0, 320, 130);
+      else
+        needleSprite.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0, 0, 320, 130);
+    }
+    else
+    {
+      if (IC_MODEL == 705)
+        needleSprite.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0, 0, 320, 130);
+      else
+        needleSprite.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0, 0, 320, 130);
+    }
 
-    x = a;
-    y = b;
+    needleSprite.drawLine(aa + 2, bb, cc + 3, dd, TFT_NEDDLE_2);
+    needleSprite.drawLine(aa + 2, bb, cc + 2, dd, TFT_NEDDLE_1);
+    needleSprite.drawLine(aa + 1, bb, cc + 1, dd, TFT_RED);
+    needleSprite.drawLine(aa, bb, cc, dd, TFT_RED);
+    needleSprite.drawLine(aa - 1, bb, cc - 1, dd, TFT_RED);
+    needleSprite.drawLine(aa - 2, bb, cc - 2, dd, TFT_NEDDLE_1);
+    needleSprite.drawLine(aa - 2, bb, cc - 3, dd, TFT_NEDDLE_2);
 
-    rotate(&x, &y, angle);
-
-    a = 160 + x;
-    b = 220 - y;
-
-    x = c;
-    y = d;
-
-    rotate(&x, &y, angle);
-
-    c = 160 + x;
-    d = 220 - y;
-
-
+    needleSprite.pushSprite(0 + offsetX, 20 + offsetY, TFT_TRANSPARENT);
+  }
+  else // Display mode
+  {
     if(theme == 0) 
     {
       if (IC_MODEL == 705)
@@ -247,29 +291,102 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 200, uint16_t c = 0, uin
         display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 130);
     }
 
-    // display.drawFastHLine(0, 150, 320, TFT_BLACK);
+    bb += 20;
+    dd += 20;
 
-    display.drawLine(a + 2 + offsetX, b + offsetY, c + 3 + offsetX, d + offsetY, TFT_NEDDLE_2);
-    display.drawLine(a + 2 + offsetX, b + offsetY, c + 2 + offsetX, d + offsetY, TFT_NEDDLE_1);
-    display.drawLine(a + 1 + offsetX, b + offsetY, c + 1 + offsetX, d + offsetY, TFT_RED);
-    display.drawLine(a + offsetX, b + offsetY, c + offsetX, d + offsetY, TFT_RED);
-    display.drawLine(a - 1 + offsetX, b + offsetY, c - 1 + offsetX, d + offsetY, TFT_RED);
-    display.drawLine(a - 2 + offsetX, b + offsetY, c - 2 + offsetX, d + offsetY, TFT_NEDDLE_1);
-    display.drawLine(a - 2 + offsetX, b + offsetY, c - 3 + offsetX, d + offsetY, TFT_NEDDLE_2);
+    display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+    display.drawLine(aa + 2 + offsetX, bb + offsetY, cc + 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    display.drawLine(aa + 1 + offsetX, bb + offsetY, cc + 1 + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa + offsetX, bb + offsetY, cc + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa - 1 + offsetX, bb + offsetY, cc - 1 + offsetX, dd + offsetY, TFT_RED);
+    display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 2 + offsetX, dd + offsetY, TFT_NEDDLE_1);
+    display.drawLine(aa - 2 + offsetX, bb + offsetY, cc - 3 + offsetX, dd + offsetY, TFT_NEDDLE_2);
+  }
+
+  if (DEBUG == 1)
+  {
+    Serial.printf("%d %d %d %d / %d %d %d %d\n", a, b, c, d, aa, bb, cc, dd);
   }
 }
 
-// Print value
-void value(String valString, uint8_t x = 160, uint8_t y = 180)
+// Print needle
+void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 115)
 {
-  if (valString != valStringOld)
+  uint8_t speed;
+  float move, shift;
+  float offset, reason;
+
+  if(NEEDLE == ARITHMETIC)  // Arithmetic
   {
-    valStringOld = valString;
+    if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+      speed = 8;
+    else
+      speed = 2;
+
+    if (angle != angleOld)
+    {
+      if(angle > angleOld)
+      {
+        shift = (angle - angleOld) / speed;
+      }
+      else
+      {
+        shift = -(angleOld - angle) / speed;
+      }
+
+      move = angleOld;
+
+      for(uint8_t i = 1; i <= speed; i+= 1)
+      {
+        move += shift;
+        needleCalc(move, a, b, c, d);
+
+        if (DEBUG == 1)
+        {
+          Serial.printf("--> %f %f %f %f\n", move, angle, angleOld, shift);
+        }
+      }
+    }
+  }
+  else if(NEEDLE == GEOMETRIC)  // Geometric
+  {
+    if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+      speed = 8;
+    else
+      speed = 2;
+
+    offset = 90;
+    reason = (angle + offset)/(angleOld + offset);
+    reason = pow(reason, (float) 1 / speed);
+    move = (angleOld + offset);
+
+    for(uint8_t i = 1; i <= speed; i+= 1)
+    {
+      needleCalc((move * pow(reason, i)) - offset, a, b, c, d);
+
+      if (DEBUG == 1)
+      {
+        Serial.printf("--> %f %f %f %f\n", (move * pow(reason, i) - offset), angle, angleOld, reason);
+      }
+    }
+  }
+  angleOld = angle;
+}
+
+// Print value
+void value(char* valString, uint8_t x = 160, uint8_t y = 180)
+{
+  if (strcmp(valString, valStringOld) != 0)
+  {
+    strncpy(valStringOld, valString, 32);
 
     display.setTextDatum(CC_DATUM);
     display.setFont(&stencilie16pt7b);
-    valString.replace(".", ",");
     //display.setFont(&YELLOWCRE8pt7b);
+    for(uint8_t i = 0; i < strlen(valString); i++)
+    {
+      if(valString[i] == '.') valString[i] = ';';
+    }
     display.setTextPadding(190);
     display.setTextColor(TFT_FRONT, TFT_BACK);
     display.drawString(valString, x + offsetX, y + offsetY);
@@ -286,7 +403,6 @@ void subValue(String valString, uint8_t x = 160, uint8_t y = 206)
     display.setTextDatum(CC_DATUM);
     display.setFont(&YELLOWCRE8pt7b);
     display.setTextPadding(160);
-    //display.setTextColor(TFT_BLACK, TFT_RED);
     display.setTextColor(TFT_FRONT, TFT_BACK);
     // valString.replace(".", ",");
     display.drawString(valString, x + offsetX, y + offsetY);
@@ -752,8 +868,7 @@ void wakeAndSleep()
   }
   else if (screensaverMode == true)
   {
-
-    display.fillRect(x, y, 44, 22, TFT_BLACK);
+    display.fillRect(x + offsetX, y + offsetY, 44, 22, TFT_BLACK);
 
     if (xDir)
     {
@@ -795,7 +910,9 @@ void wakeAndSleep()
       y = 196;
     }
 
-    display.drawJpg(logo, sizeof(logo), x + offsetX, y + offsetY, 44, 22);
+    logoSprite.pushSprite(x + offsetX, y + offsetY, TFT_TRANSPARENT);
+
+    //Serial.printf("%d %d\n", x, y);
 
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       vTaskDelay(75);
@@ -804,11 +921,9 @@ void wakeAndSleep()
   }
 
   // Debug trace
-  if (DEBUG)
+  if (DEBUG == 1)
   {
-    Serial.print(screensaverMode);
-    Serial.print(" ");
-    Serial.println(millis() - screensaverTimer);
+    Serial.printf("%d %ld\n", screensaverMode, millis() - screensaverTimer);
   }
 }
 

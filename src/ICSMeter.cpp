@@ -3,6 +3,7 @@
 
 #include "settings.h"
 #include "ICSMeter.h"
+#include "debug.h"
 #include "font.h"
 #include "image.h"
 #include "tools.h"
@@ -24,11 +25,29 @@ void setup()
   pinMode(32, INPUT_PULLUP);
   pinMode(26, INPUT_PULLUP);
 
+  // Init Encoder
+  if(DEBUG == 2)
+  {
+    sensor.begin();
+  }
+
   // Init Display
   display.begin();
 
   offsetX = (display.width() - 320) / 2; 
   offsetY = (display.height() - 240) / 2;
+
+  // Init Sprite
+
+  if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+  {
+    needleSprite.setPsram(true);
+    needleSprite.createSprite(320, 130);
+  }
+
+  logoSprite.setColorDepth(8);
+  logoSprite.createSprite(44, 22);
+  logoSprite.drawJpg(logo, sizeof(logo), 0, 0, 44, 22);
 
   // Init Led
   if(M5.getBoard() == m5::board_t::board_M5Stack) {
@@ -52,6 +71,7 @@ void setup()
   beep = preferences.getUInt("beep", 0);
   screensaver = preferences.getUInt("screensaver", 60);
   theme = preferences.getUInt("theme", 0);
+  led = preferences.getUInt("led", 0);
 
   // Bin Loader
   binLoader();
@@ -107,10 +127,8 @@ void loop()
 {
   static uint8_t alternance = 0;
   static uint8_t tx = 0;
-
+  
   if(checkConnection()) {
-    if(alternance == 0) getFrequency();
-    if(alternance == 4) getMode();
     if(alternance == 8) tx = getTX();
 
     if(tx != 0) screensaverTimer = millis();   // If transmit, refresh tempo
@@ -119,19 +137,25 @@ void loop()
     {
       settingLock = true;
 
-      if(tx == 0) {
-        for(uint8_t i = 0; i <= 9; i++){
-          leds[i] = CRGB::Black;
+      if(alternance == 0) getFrequency();
+      if(alternance == 4) getMode();
+
+      if(strcmp(choiceLed[led], "TX") == 0)
+      {
+        if(tx == 0) {
+          for(uint8_t i = 0; i <= 9; i++){
+            leds[i] = CRGB::Black;
+          }
+          FastLED.setBrightness(16);
+          FastLED.show();
         }
-        FastLED.setBrightness(16);
-        FastLED.show();
-      }
-      else {
-       for(uint8_t i = 0; i <= 9; i++){
-          leds[i] = CRGB::Red;
+        else {
+          for(uint8_t i = 0; i <= 9; i++){
+            leds[i] = CRGB::Red;
+          }
+          FastLED.setBrightness(16);
+          FastLED.show();
         }
-        FastLED.setBrightness(16);
-        FastLED.show();
       }
      
       switch (measure)
@@ -161,12 +185,15 @@ void loop()
   // Manage Screen Saver
   wakeAndSleep();
 
-  if(DEBUG)
+  if(DEBUG == 1)
   {
-    Serial.print(screensaverMode);
-    Serial.print(" ");
-    Serial.print(millis() - screensaverTimer);
-    Serial.print(" ");
-    Serial.println(screensaver * 60 * 1000);
+    Serial.printf("%d kb %d kb %d kb %d kb\n", 
+      ESP.getHeapSize() / 1024,
+      ESP.getFreeHeap() / 1024, 
+      ESP.getPsramSize() / 1024, 
+      ESP.getFreePsram() / 1024
+    );
+
+    Serial.printf("%d %ld %ld\n", screensaverMode, millis() - screensaverTimer, long(screensaver * 60 * 1000));
   }
 }

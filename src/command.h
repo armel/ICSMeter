@@ -32,7 +32,7 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
           counter++;
           if (counter > limit)
           {
-            if (DEBUG)
+            if (DEBUG == 1)
             {
               Serial.print(" Overflow");
             }
@@ -96,7 +96,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
         buffer[i] = strtol(response.substring(i * 2, (i * 2) + 2).c_str(), NULL, 16);
       }
 
-      if (DEBUG)
+      if (DEBUG == 1)
       {
         Serial.println("-----");
         Serial.print(response);
@@ -137,7 +137,7 @@ void sendCommand(char *request, size_t n, char *buffer, uint8_t limit)
 // Get Smeter
 void getSmeter()
 {
-  String valString;
+  char valString[32];  
 
   static char buffer[6];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x02, 0xFD};
@@ -149,12 +149,17 @@ void getSmeter()
 
   float_t angle = 0;
 
-  size_t n = sizeof(request) / sizeof(request[0]);
+  if(DEBUG == 2) {
+    val0 = debugEncoder();
+  }
+  else
+  {
+    size_t n = sizeof(request) / sizeof(request[0]);
+    sendCommand(request, n, buffer, 6);
 
-  sendCommand(request, n, buffer, 6);
-
-  sprintf(str, "%02x%02x", buffer[4], buffer[5]);
-  val0 = atoi(str);
+    sprintf(str, "%02x%02x", buffer[4], buffer[5]);
+    val0 = atoi(str);
+  }
 
   if (val0 <= 120)
   { // 120 = S9 = 9 * (40/3)
@@ -172,32 +177,27 @@ void getSmeter()
 
     if (val0 <= 13)
     {
-      angle = 42.50f;
-      valString = "S " + String(int(round(val1)));
+      angle = -38.60f;
+      snprintf(valString, 16, "%s %d", "S", int(round(val1)));
     }
     else if (val0 <= 120)
     {
-      angle = mapFloat(val0, 14, 120, 42.50f, -6.50f); // SMeter image start at S1 so S0 is out of image on the left...
-      valString = "S " + String(int(round(val1)));
+      angle = mapFloat(val0, 14, 120, -38.60f, 6.50f); // SMeter image start at S1 so S0 is out of image on the left...
+      snprintf(valString, 16, "%s %d", "S", int(round(val1)));
     }
     else
     {
-      angle = mapFloat(val0, 121, 241, -6.50f, -43.0f);
+      angle = mapFloat(val0, 121, 240, 6.50f, 39.40f);
       if (int(round(val1) < 10))
-        valString = "S 9 + 0" + String(int(round(val1))) + " dB";
+        snprintf(valString, 16, "%s%d %s", "S 9 + 0", int(round(val1)), "dB");
       else
-        valString = "S 9 + " + String(int(round(val1))) + " dB";
+        snprintf(valString, 16, "%s %d %s", "S 9 +", int(round(val1)), "dB");
     }
 
     // Debug trace
-    if (DEBUG)
+    if (DEBUG == 1)
     {
-      Serial.print("Get S");
-      Serial.print(val0);
-      Serial.print(" ");
-      Serial.print(val1);
-      Serial.print(" ");
-      Serial.println(angle);
+      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
     }
 
     // Draw line
@@ -205,6 +205,60 @@ void getSmeter()
 
     // Write Value
     value(valString);
+
+    // If M5GO
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(val0 <= 13) {
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          leds[4 - i] = CRGB::WhiteSmoke;
+          leds[5 + i] = CRGB::WhiteSmoke;
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else if(val0 <= 120) {
+        uint8_t j = map(val0, 14, 120, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Blue;
+            leds[5 + i] = CRGB::Blue;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else {
+        uint8_t j = map(val0, 121, 240, 0, 4);
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[i] = CRGB::Red;
+            leds[9 - i] = CRGB::Red;
+          }
+          else
+          {
+            leds[i] = CRGB::Blue;
+            leds[9 - i] = CRGB::Blue;
+          }
+        }
+        
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+    }
 
     // If led strip...
     /*
@@ -234,7 +288,7 @@ void getSmeter()
 // Get SWR
 void getSWR()
 {
-  String valString;
+  char valString[32];  
 
   static char buffer[6];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x12, 0xFD};
@@ -246,12 +300,17 @@ void getSWR()
 
   float_t angle = 0;
 
-  size_t n = sizeof(request) / sizeof(request[0]);
+  if(DEBUG == 2) {
+    val0 = debugEncoder();
+  }
+  else
+  {
+    size_t n = sizeof(request) / sizeof(request[0]);
+    sendCommand(request, n, buffer, 6);
 
-  sendCommand(request, n, buffer, 6);
-
-  sprintf(str, "%02x%02x", buffer[4], buffer[5]);
-  val0 = atoi(str);
+    sprintf(str, "%02x%02x", buffer[4], buffer[5]);
+    val0 = atoi(str);
+  }
 
   if (val0 != val3 || reset == true)
   {
@@ -260,51 +319,56 @@ void getSWR()
 
     if (val0 <= 48)
     {
-      angle = mapFloat(val0, 0, 48, 42.50f, 32.50f);
+      angle = mapFloat(val0, 0, 48, -38.00f, -29.00f);
       val1 = mapFloat(val0, 0, 48, 1.0, 1.5);
     }
     else if (val0 <= 80)
     {
-      angle = mapFloat(val0, 49, 80, 32.50f, 24.0f);
+      angle = mapFloat(val0, 49, 80, -29.00f, -22.0f);
       val1 = mapFloat(val0, 49, 80, 1.5, 2.0);
+    }
+    else if (val0 <= 110)
+    {
+      angle = mapFloat(val0, 81, 110, -22.0f, -13.00f);
+      val1 = mapFloat(val0, 81, 110, 2.0, 2.5);
     }
     else if (val0 <= 120)
     {
-      angle = mapFloat(val0, 81, 120, 24.0f, 10.0f);
-      val1 = mapFloat(val0, 81, 120, 2.0, 3.0);
+      angle = mapFloat(val0, 111, 120, -13.00f, -8.50f);
+      val1 = mapFloat(val0, 111, 120, 2.5, 3.0);
+    }
+    else if (val0 <= 146)
+    {
+      angle = mapFloat(val0, 121, 146, -8.50f, -2.50f);
+      val1 = mapFloat(val0, 121, 146, 3.0, 3.5);
     }
     else if (val0 <= 155)
     {
-      angle = mapFloat(val0, 121, 155, 10.0f, 0.0f);
-      val1 = mapFloat(val0, 121, 155, 3.0, 4.0);
+      angle = mapFloat(val0, 147, 155, -2.50f, 0.8f);
+      val1 = mapFloat(val0, 147, 155, 3.5, 4.0);
     }
     else if (val0 <= 175)
     {
-      angle = mapFloat(val0, 156, 175, 0.0f, -7.0f);
+      angle = mapFloat(val0, 156, 175, 0.8f, 7.0f);
       val1 = mapFloat(val0, 156, 175, 4.0, 5.0);
     }
     else if (val0 <= 225)
     {
-      angle = mapFloat(val0, 176, 225, -7.0f, -19.0f);
+      angle = mapFloat(val0, 176, 225, 7.0f, 19.0f);
       val1 = mapFloat(val0, 176, 225, 5.0, 10.0);
     }
     else
     {
-      angle = mapFloat(val0, 226, 255, -19.0f, -30.50f);
+      angle = mapFloat(val0, 226, 255, 19.0f, 30.50f);
       val1 = mapFloat(val0, 226, 255, 10.0, 50.0);
     }
 
-    valString = "SWR " + String(val1);
+    snprintf(valString, 32, "%s %.2f", "SWR", val1);
 
     // Debug trace
-    if (DEBUG)
+    if (DEBUG == 1)
     {
-      Serial.print("Get SWR");
-      Serial.print(val0);
-      Serial.print(" ");
-      Serial.print(val1);
-      Serial.print(" ");
-      Serial.println(angle);
+      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
     }
 
     // Draw line
@@ -312,13 +376,48 @@ void getSWR()
 
     // Write Value
     value(valString);
+
+    // If M5GO
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(val0 <= 110) {
+        uint8_t j = map(val0, 0, 120, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Green;
+            leds[5 + i] = CRGB::Green;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+      else {
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          leds[i] = CRGB::Red;
+          leds[9 - i] = CRGB::Red;
+        }
+        
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+    }
   }
 }
 
 // Get Power
 void getPower()
 {
-  String valString;
+  char valString[32];  
 
   static char buffer[6];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x11, 0xFD};
@@ -331,12 +430,17 @@ void getPower()
 
   float_t angle = 0;
 
-  size_t n = sizeof(request) / sizeof(request[0]);
+  if(DEBUG == 2) {
+    val0 = debugEncoder();
+  }
+  else
+  {
+    size_t n = sizeof(request) / sizeof(request[0]);
+    sendCommand(request, n, buffer, 6);
 
-  sendCommand(request, n, buffer, 6);
-
-  sprintf(str, "%02x%02x", buffer[4], buffer[5]);
-  val0 = atoi(str);
+    sprintf(str, "%02x%02x", buffer[4], buffer[5]);
+    val0 = atoi(str);
+  }
 
   if (val0 != val3 || reset == true)
   {
@@ -345,62 +449,83 @@ void getPower()
 
     if (val0 <= 27)
     {
-      angle = mapFloat(val0, 0, 27, 42.50f, 30.50f);
+      angle = mapFloat(val0, 0, 27, -38.60f, -27.25f);
       val1 = mapFloat(val0, 0, 27, 0, 0.5);
     }
-    else if (val0 <= 49)
+    else if (val0 <= 51)
     {
-      angle = mapFloat(val0, 28, 49, 30.50f, 23.50f);
-      val1 = mapFloat(val0, 28, 49, 0.5, 1.0);
+      angle = mapFloat(val0, 28, 51, -27.25f, -21.25f);
+      val1 = mapFloat(val0, 28, 51, 0.5, 1.0);
     }
-    else if (val0 <= 78)
+    else if (val0 <= 80)
     {
-      angle = mapFloat(val0, 50, 78, 23.50f, 14.50f);
-      val1 = mapFloat(val0, 50, 78, 1.0, 2.0);
+      angle = mapFloat(val0, 51, 80, -21.25f, -13.00f);
+      val1 = mapFloat(val0, 51, 80, 1.0, 2.0);
     }
-    else if (val0 <= 104)
+    else if (val0 <= 106)
     {
-      angle = mapFloat(val0, 79, 104, 14.50f, 6.30f);
-      val1 = mapFloat(val0, 79, 104, 2.0, 3.0);
+      angle = mapFloat(val0, 81, 106, -13.00f, -6.50f);
+      val1 = mapFloat(val0, 81, 106, 2.0, 3.0);
     }
-    else if (val0 <= 143)
+    else if (val0 <= 124)
     {
-      angle = mapFloat(val0, 105, 143, 6.30f, -6.50f);
-      val1 = mapFloat(val0, 105, 143, 3.0, 5.0);
+      angle = mapFloat(val0, 107, 124, -6.50f, 0.0f);
+      val1 = mapFloat(val0, 107, 124, 3.0, 4.0);
     }
-    else if (val0 <= 175)
+    else if (val0 <= 144)
     {
-      angle = mapFloat(val0, 144, 175, -6.50f, -17.50f);
-      val1 = mapFloat(val0, 144, 175, 5.0, 7.0);
+      angle = mapFloat(val0, 125, 148, 0.0f, 6.00f);
+      val1 = mapFloat(val0, 125, 148, 4.00, 5.0);
     }
     else
     {
-      angle = mapFloat(val0, 176, 226, -17.50f, -30.50f);
-      val1 = mapFloat(val0, 176, 226, 7.0, 10.0);
+      angle = mapFloat(val0, 149, 232, 6.00f, 28.50f);
+      val1 = mapFloat(val0, 149, 232, 5.0, 10.0);
     }
 
     val2 = round(val1 * 10);
     if (IC_MODEL == 705)
-      valString = "PWR " + String((val2 / 10)) + " W";
+      snprintf(valString, 16, "%s %.2f %s", "PWR", (val2 / 10), "W");
     else
-      valString = "PWR " + String(val2) + " W";
+      snprintf(valString, 16, "%s %.2f %s", "PWR", (val2), "W");
 
     // Debug trace
-    if (DEBUG)
+    if (DEBUG == 1)
     {
-      Serial.print("Get PWR");
-      Serial.print(val0);
-      Serial.print(" ");
-      Serial.print(val1);
-      Serial.print(" ");
-      Serial.println(angle);
+      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
     }
+
+      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
 
     // Draw line
     needle(angle);
 
     // Write Value
     value(valString);
+
+    // If M5GO
+    if(strcmp(choiceLed[led], "MEASURES") == 0)
+    {
+      if(val0 <= 232) {
+        uint8_t j = map(val0, 0, 232, 0, 4);
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          if(i <= j)
+          {
+            leds[4 - i] = CRGB::Green;
+            leds[5 + i] = CRGB::Green;
+          }
+          else
+          {
+            leds[4 - i] = CRGB::WhiteSmoke;
+            leds[5 + i] = CRGB::WhiteSmoke;
+          }
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
+      }
+    }
   }
 }
 
@@ -476,8 +601,7 @@ void getFrequency()
 // Get Mode
 void getMode()
 {
-  String valString;
-
+  char valString[16];  
   static char buffer[5];
   char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x04, 0xFD};
 
@@ -492,26 +616,27 @@ void getMode()
   display.setTextColor(TFT_WHITE);
   display.setTextDatum(CC_DATUM);
 
-  valString = "FIL" + String(uint8_t(buffer[4]));
-  if (valString != filterOld)
+  snprintf(valString, 16, "%s%d", "FIL", uint8_t(buffer[4]));
+  if (strcmp(valString, filterOld) != 0)
   {
-    filterOld = valString;
+    strncpy(filterOld, valString, 16);
     display.fillRoundRect(40 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BACK);
     display.drawRoundRect(40 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BORDER);
     display.drawString(valString, 60 + offsetX, 206 + offsetY);
   }
 
-  valString = String(mode[(uint8_t)buffer[3]]);
+  snprintf(valString, 16, "%s", mode[(uint8_t)buffer[3]]);
 
   getDataMode(); // Data ON or OFF ?
 
   if (dataMode == 1)
   {
-    valString += "-D";
+    snprintf(valString, 16, "%s%s", valString, "-D");
   }
-  if (valString != modeOld)
+
+  if (strcmp(valString, modeOld) != 0)
   {
-    modeOld = valString;
+    strncpy(modeOld, valString, 16);
     display.fillRoundRect(240 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BACK);
     display.drawRoundRect(240 + offsetX, 198 + offsetY, 40, 15, 2, TFT_MODE_BORDER);
     display.drawString(valString, 260 + offsetX, 206 + offsetY);
