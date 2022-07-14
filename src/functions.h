@@ -301,42 +301,67 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
 }
 
 // Print needle
-void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 120)
+void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uint16_t d = 115)
 {
   uint8_t speed;
   float move, shift;
+  float offset, reason;
 
-  if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
-    speed = 8;
-  else
-    speed = 2;
-
-  if (angle != angleOld)
+  if(NEEDLE == ARITHMETIC)  // Arithmetic
   {
-    if(angle > angleOld)
-    {
-      shift = (angle - angleOld) / speed;
-    }
+    if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+      speed = 8;
     else
-    {
-      shift = -(angleOld - angle) / speed;
-    }
+      speed = 2;
 
-    move = angleOld;
+    if (angle != angleOld)
+    {
+      if(angle > angleOld)
+      {
+        shift = (angle - angleOld) / speed;
+      }
+      else
+      {
+        shift = -(angleOld - angle) / speed;
+      }
+
+      move = angleOld;
+
+      for(uint8_t i = 1; i <= speed; i+= 1)
+      {
+        move += shift;
+        needleCalc(move, a, b, c, d);
+
+        if (DEBUG == 1)
+        {
+          Serial.printf("--> %f %f %f %f\n", move, angle, angleOld, shift);
+        }
+      }
+    }
+  }
+  else if(NEEDLE == GEOMETRIC)  // Geometric
+  {
+    if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+      speed = 8;
+    else
+      speed = 2;
+
+    offset = 90;
+    reason = (angle + offset)/(angleOld + offset);
+    reason = pow(reason, (float) 1 / speed);
+    move = (angleOld + offset);
 
     for(uint8_t i = 1; i <= speed; i+= 1)
     {
-      move += shift;
-      needleCalc(move, a, b, c, d);
+      needleCalc((move * pow(reason, i)) - offset, a, b, c, d);
 
       if (DEBUG == 1)
       {
-        Serial.printf("--> %f %f %f %f\n", move, angle, angleOld, shift);
+        Serial.printf("--> %f %f %f %f\n", (move * pow(reason, i) - offset), angle, angleOld, reason);
       }
     }
-
-    angleOld = angle;
   }
+  angleOld = angle;
 }
 
 // Print value

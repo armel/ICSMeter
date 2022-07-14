@@ -15,6 +15,11 @@
 #define BT 1
 #define USB 2
 
+#define ARITHMETIC 1
+#define GEOMETRIC 2
+
+#define NEEDLE GEOMETRIC // Possible value ARITHMETIC or GEOMETRIC
+
 #define M5ATOMDISPLAY_LOGICAL_WIDTH  WIDTH    // width
 #define M5ATOMDISPLAY_LOGICAL_HEIGHT  HEIGHT  // height
 #define M5ATOMDISPLAY_REFRESH_RATE 60         // refresh rate
