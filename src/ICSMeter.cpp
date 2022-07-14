@@ -140,14 +140,16 @@ void loop()
       if(alternance == 4) getMode();
 
       if(tx == 0) {
+        /*
         for(uint8_t i = 0; i <= 9; i++){
           leds[i] = CRGB::Black;
         }
         FastLED.setBrightness(16);
         FastLED.show();
+        */
       }
       else {
-       for(uint8_t i = 0; i <= 9; i++){
+        for(uint8_t i = 0; i <= 9; i++){
           leds[i] = CRGB::Red;
         }
         FastLED.setBrightness(16);

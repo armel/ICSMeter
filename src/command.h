@@ -189,7 +189,6 @@ void getSmeter()
     {
       angle = mapFloat(val0, 121, 240, 6.50f, 39.40f);
       if (int(round(val1) < 10))
-
         snprintf(valString, 16, "%s%d %s", "S 9 + 0", int(round(val1)), "dB");
       else
         snprintf(valString, 16, "%s %d %s", "S 9 +", int(round(val1)), "dB");
@@ -206,6 +205,47 @@ void getSmeter()
 
     // Write Value
     value(valString);
+
+    // If M5GO
+    if(val0 <= 120) {
+      uint8_t j = map(val0, 0, 120, 0, 4);
+      for(uint8_t i = 0; i <= 4; i++)
+      {
+        if(i <= j)
+        {
+          leds[4 - i] = CRGB::Blue;
+          leds[5 + i] = CRGB::Blue;
+        }
+        else
+        {
+          leds[4 - i] = CRGB::WhiteSmoke;
+          leds[5 + i] = CRGB::WhiteSmoke;
+        }
+      }
+
+      FastLED.setBrightness(16);
+      FastLED.show();
+    }
+    else {
+      uint8_t j = map(val0, 121, 240, 0, 4);
+
+      for(uint8_t i = 0; i <= 4; i++)
+      {
+        if(i <= j)
+        {
+          leds[i] = CRGB::Red;
+          leds[9 - i] = CRGB::Red;
+        }
+        else
+        {
+          leds[i] = CRGB::Blue;
+          leds[9 - i] = CRGB::Blue;
+        }
+      }
+      
+      FastLED.setBrightness(16);
+      FastLED.show();
+    }
 
     // If led strip...
     /*
@@ -281,18 +321,18 @@ void getSWR()
     }
     else if (val0 <= 120)
     {
-      angle = mapFloat(val0, 110, 120, -13.00f, -8.50f);
-      val1 = mapFloat(val0, 110, 120, 2.5, 3.0);
+      angle = mapFloat(val0, 111, 120, -13.00f, -8.50f);
+      val1 = mapFloat(val0, 111, 120, 2.5, 3.0);
     }
     else if (val0 <= 146)
     {
-      angle = mapFloat(val0, 81, 120, -8.50f, -2.50f);
-      val1 = mapFloat(val0, 81, 120, 3.0, 3.5);
+      angle = mapFloat(val0, 121, 146, -8.50f, -2.50f);
+      val1 = mapFloat(val0, 121, 146, 3.0, 3.5);
     }
     else if (val0 <= 155)
     {
-      angle = mapFloat(val0, 121, 155, -2.50f, 0.8f);
-      val1 = mapFloat(val0, 121, 155, 3.5, 4.0);
+      angle = mapFloat(val0, 147, 155, -2.50f, 0.8f);
+      val1 = mapFloat(val0, 147, 155, 3.5, 4.0);
     }
     else if (val0 <= 175)
     {
@@ -323,6 +363,38 @@ void getSWR()
 
     // Write Value
     value(valString);
+
+    // If M5GO
+    if(val0 <= 110) {
+      uint8_t j = map(val0, 0, 120, 0, 4);
+      for(uint8_t i = 0; i <= 4; i++)
+      {
+        if(i <= j)
+        {
+          leds[4 - i] = CRGB::Green;
+          leds[5 + i] = CRGB::Green;
+        }
+        else
+        {
+          leds[4 - i] = CRGB::WhiteSmoke;
+          leds[5 + i] = CRGB::WhiteSmoke;
+        }
+      }
+
+      FastLED.setBrightness(16);
+      FastLED.show();
+    }
+    else {
+
+      for(uint8_t i = 0; i <= 4; i++)
+      {
+        leds[i] = CRGB::Red;
+        leds[9 - i] = CRGB::Red;
+      }
+      
+      FastLED.setBrightness(16);
+      FastLED.show();
+    }
   }
 }
 
