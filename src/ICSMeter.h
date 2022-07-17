@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.8"
+#define VERSION "0.1.9"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -96,7 +96,7 @@ CRGB leds[NUM_LEDS];
 CRGB strip[NUM_LEDS_STRIP];
 
 // Bluetooth connector
-BluetoothSerial CAT;
+BluetoothSerial serialBT;
 
 // Preferences
 Preferences preferences;
@@ -124,6 +124,7 @@ boolean screensaverMode = false;
 boolean settingsMode = false;
 boolean settingLock = true;
 boolean btConnected = false;
+boolean btClient = false;
 boolean wifiConnected = false;
 boolean proxyConnected = false;
 boolean txConnected = true;

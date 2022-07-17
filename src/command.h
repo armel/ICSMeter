@@ -11,24 +11,24 @@ void sendCommandBt(char *request, size_t n, char *buffer, uint8_t limit)
   {
     for (uint8_t i = 0; i < n; i++)
     {
-      CAT.write(request[i]);
+      serialBT.write(request[i]);
     }
 
     vTaskDelay(50);
 
-    while (CAT.available())
+    while (serialBT.available())
     {
-      byte1 = CAT.read();
-      byte2 = CAT.read();
+      byte1 = serialBT.read();
+      byte2 = serialBT.read();
 
       if (byte1 == 0xFE && byte2 == 0xFE)
       {
         counter = 0;
-        byte3 = CAT.read();
+        byte3 = serialBT.read();
         while (byte3 != 0xFD)
         {
           buffer[counter] = byte3;
-          byte3 = CAT.read();
+          byte3 = serialBT.read();
           counter++;
           if (counter > limit)
           {
@@ -65,7 +65,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
     command += String(s);
   }
 
-  command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
+  command += BAUD_RATE + String(",") + SERIAL_DEVICE;
 
   http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
   http.addHeader("User-Agent", "M5Stack");                                                               // Specify header

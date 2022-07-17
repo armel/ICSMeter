@@ -6,14 +6,12 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
   if (event == ESP_SPP_SRV_OPEN_EVT)
   {
-    btConnected = true;
+    btClient = true;
     Serial.println("BT Client Connected");
   }
   if (event == ESP_SPP_CLOSE_EVT)
   {
-    display.sleep();
-    wakeup = false;
-    btConnected = false;
+    btClient = false;
     Serial.println("BT Client disconnected");
   }
 }
@@ -279,16 +277,16 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
     if(theme == 0) 
     {
       if (IC_MODEL == 705)
-        display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 130);
+        display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 140);
       else
-        display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 130);
+        display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 140);
     }
     else
     {
       if (IC_MODEL == 705)
-        display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 130);
+        display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 140);
       else
-        display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 130);
+        display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 140);
     }
 
     bb += 20;
@@ -927,6 +925,8 @@ void wakeAndSleep()
   }
 }
 
+
+
 // Manage connexion error
 boolean checkConnection()
 {
@@ -950,10 +950,19 @@ boolean checkConnection()
     command += String(s);
   }
 
-  command += BAUDE_RATE + String(",") + SERIAL_DEVICE;
+  command += BAUD_RATE + String(",") + SERIAL_DEVICE;
 
   if (screenshot == false)
   {
+    if(btClient)
+    {
+      btConnected = true;
+    }
+    else 
+    {
+      btConnected = false;
+    }
+
     if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
       message = "Need Pairing";
     else if (IC_CONNECT == USB && wifiConnected == false)
@@ -999,6 +1008,15 @@ boolean checkConnection()
       {
         display.sleep();
         wakeup = false;
+
+        for(uint8_t i = 0; i <= 4; i++)
+        {
+          leds[4 - i] = CRGB::Black;
+          leds[5 + i] = CRGB::Black;
+        }
+
+        FastLED.setBrightness(16);
+        FastLED.show();
       }
     }
     else if (wakeup == false && startup == false)
