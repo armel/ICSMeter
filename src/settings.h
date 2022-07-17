@@ -16,7 +16,7 @@
 
 // Proxy Config
 #define SERIAL_DEVICE "/dev/ttyUSB0"            // Proxy Serial Device (/dev/ttyACM0, /dev/ttyUSB0, COM10, etc.)
-#define BAUDE_RATE 115200                       // Proxy Serial Device Baude Rate
+#define BAUD_RATE 115200                        // Proxy Serial Device Baud Rate
 #define PROXY_URL "http://192.168.1.32"         // Proxy HTTP URL
 #define PROXY_PORT 1234                         // Proxy HTTP Port
 
