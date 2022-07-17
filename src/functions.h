@@ -12,7 +12,7 @@ void callbackBT(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
   if (event == ESP_SPP_CLOSE_EVT)
   {
     btClient = false;
-    Serial.println("BT Client disconnected");
+    Serial.println("BT Client Disconnected");
   }
 }
 
@@ -27,7 +27,7 @@ void callbackWifiOn(WiFiEvent_t event, WiFiEventInfo_t info)
 void callbackWifiOff(WiFiEvent_t event, WiFiEventInfo_t info)
 {
   wifiConnected = false;
-  Serial.println("Wifi Client disconnected");
+  Serial.println("Wifi Client Disconnected");
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 }
