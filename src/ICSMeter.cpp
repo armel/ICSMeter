@@ -37,12 +37,47 @@ void setup()
   offsetX = (display.width() - 320) / 2; 
   offsetY = (display.height() - 240) / 2;
 
-  // Init Sprite
+  // Preferences
+  preferences.begin(NAME);
+  measure = preferences.getUInt("measure", 1);
+  brightness = preferences.getUInt("brightness", 64);
+  transverter = preferences.getUInt("transverter", 0);
+  beep = preferences.getUInt("beep", 0);
+  screensaver = preferences.getUInt("screensaver", 60);
+  theme = preferences.getUInt("theme", 0);
+  led = preferences.getUInt("led", 0);
+  config = preferences.getUInt("config", 0);
 
-  if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+  // Init Setting
+  icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
+  icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
+  if(String(choiceConfig[(config * 4) + 2]) == "USB")
+  {
+    icConnect = USB;
+    icSerialDevice = choiceConfig[(config * 4) + 3];
+  }
+  else
+  {
+    icConnect = BT;
+    uint8_t i = 0;
+    while(i <= 15)
+    {
+      icAddress[i/3] = strtol(String(choiceConfig[(config * 4) + 3]).substring(i, i + 2).c_str(), 0, 16);
+      Serial.println(icAddress[i/3]);
+      i += 3;
+    }
+  }
+  icConnectOld = icConnect;
+
+  // Init Sprite
+  if(icConnect == USB || ESP.getPsramSize() > 0) // Sprite mode
   {
     needleSprite.setPsram(true);
     needleSprite.createSprite(320, 130);
+  }
+  else
+  {
+    needleSprite.deleteSprite();
   }
 
   logoSprite.setColorDepth(8);
@@ -63,16 +98,6 @@ void setup()
   FastLED.setBrightness(32);
   */
  
-  // Preferences
-  preferences.begin(NAME);
-  measure = preferences.getUInt("measure", 1);
-  brightness = preferences.getUInt("brightness", 64);
-  transverter = preferences.getUInt("transverter", 0);
-  beep = preferences.getUInt("beep", 0);
-  screensaver = preferences.getUInt("screensaver", 60);
-  theme = preferences.getUInt("theme", 0);
-  led = preferences.getUInt("led", 0);
-
   // Bin Loader
   binLoader();
 
@@ -93,17 +118,33 @@ void setup()
 
   viewGUI();
 
-  if(IC_MODEL == 705 && IC_CONNECT == BT)
+  serialBT.register_callback(callbackBT);
+
+  if(icModel == 705 && icConnect == BT)
   {
-    serialBT.register_callback(callbackBT);
-    
-    if (!serialBT.begin(NAME))
+    serialBT.begin(NAME, true);
+    btClient = serialBT.connect(icAddress);
+
+    if(!btClient) 
     {
-      Serial.println("An error occurred initializing Bluetooth");
+      uint8_t attempt = 0;
+      while(!serialBT.connect(icAddress) && attempt < 2) 
+      {
+        Serial.printf("Attempt %d - Make sure IC-705 is available and in range.", attempt + 1);
+        attempt++;
+      }
     }
-    else
+ 
+    if(!btClient) 
     {
-      Serial.println("Bluetooth initialized");
+      if (!serialBT.begin(NAME))
+      {
+        Serial.println("An error occurred initializing Bluetooth");
+      }
+      else
+      {
+        Serial.println("Bluetooth initialized");
+      }
     }
   }
   else
@@ -119,7 +160,7 @@ void setup()
       NULL,     // Task input parameter
       4,        // Priority of the task
       NULL,     // Task handle
-      1);       // Core where the task should run
+      0);       // Core where the task should run
 }
 
 // Main loop

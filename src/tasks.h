@@ -113,6 +113,116 @@ void button(void *pvParameters)
         display.setTextPadding(w - 2);
         display.setTextColor(TFT_MENU_SELECT, TFT_MENU_BACK);
 
+        // Config
+        if(settingsString == "Config")
+        {
+          display.drawString(String(choiceConfig[config * 4]) + " / " + String(choiceConfig[(config * 4) + 2]), 160 + offsetX, h - 6 + offsetY);
+          size_t n = sizeof(choiceConfig) / sizeof(choiceConfig[0]);
+          n = (n / 4) - 1;
+
+          if(btnA || btnC) {
+            if(btnA == 1) {
+              config -= 1;
+              if(config < 0) {
+                config = n;
+              }
+            }
+            else if(btnC == 1) {
+              config += 1;
+              if(config > n) {
+                config = 0;
+              }
+            }
+          }
+          else if(btnB == 1) {
+            if(configOld != config) {
+              preferences.putUInt("config", config);
+
+              if(
+                (icConnect == USB && String(choiceConfig[(config * 4) + 2]) == "BT")
+                ||
+                (icConnect == BT && String(choiceConfig[(config * 4) + 2]) == "USB")
+              )
+              {
+                ESP.restart();
+              } 
+
+              if(String(choiceConfig[(config * 4) + 2]) == "USB")
+              {
+                serialBT.end();
+               
+                icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
+                icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
+                icConnect = USB;
+                icSerialDevice = choiceConfig[(config * 4) + 3];
+
+                if(icConnect == USB || ESP.getPsramSize() > 0) // Sprite mode
+                {
+                  needleSprite.deleteSprite();
+                  needleSprite.setPsram(true);
+                  needleSprite.createSprite(320, 130);
+                  Serial.println("Ok Sprite USB");
+                }
+                else
+                {
+                  needleSprite.deleteSprite();
+                }
+
+                btConnected = false;
+
+                if (WiFi.status() == WL_CONNECTED) wifiConnected = true;
+              }
+              else if(String(choiceConfig[(config * 4) + 2]) == "BT")
+              {
+                icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
+                icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
+                icConnect = BT;
+
+                uint8_t i = 0;
+                while(i <= 15)
+                {
+                  icAddress[i/3] = strtol(String(choiceConfig[(config * 4) + 3]).substring(i, i + 2).c_str(), 0, 16);
+                  i += 3;
+                }
+
+                if(icConnect == USB || ESP.getPsramSize() > 0) // Sprite mode
+                {
+                  needleSprite.deleteSprite();
+                  needleSprite.setPsram(true);
+                  needleSprite.createSprite(320, 130);
+                  Serial.println("Ok Sprite BT");
+                }
+                else
+                {
+                  needleSprite.deleteSprite();
+                }
+
+                wifiConnected = false;
+                serialBT.begin(NAME, true);
+                btClient = serialBT.connect(icAddress);
+
+                uint8_t attempt = 0;
+                while(!btClient) 
+                {
+                  btClient = serialBT.connect(icAddress);
+                  Serial.printf("Attempt %d - Make sure IC-705 is available and in range.", attempt + 1);
+                  attempt++;
+                  if(attempt == 10)
+                  {
+                    break;
+                  }
+                }
+              }
+            }
+            clearData();
+            viewGUI();
+            settingsSelect = false;
+            settingsMode = false;
+            vTaskDelay(pdMS_TO_TICKS(150));
+          }
+          vTaskDelay(pdMS_TO_TICKS(150));
+        }
+
         // Measured Values
         if(settingsString == "Measured Values")
         {

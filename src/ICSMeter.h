@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "0.1.9"
+#define VERSION "1.0.1"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
@@ -101,10 +101,19 @@ BluetoothSerial serialBT;
 // Preferences
 Preferences preferences;
 
+// Config
+long icModel;
+long icConnect;
+long icConnectOld;
+String icSerialDevice;
+char icCIVAddress = 0xA4;
+uint8_t icAddress[6];
+
 // Global Variables
 WiFiServer httpServer(80);
 WiFiClient httpClient, civClient;
 
+int8_t config = 0;
 int8_t measure = 1;
 int8_t beep = 0;
 int8_t transverter = 0;
@@ -132,8 +141,9 @@ boolean startup = true;
 boolean wakeup = true;
 boolean batteryCharginglOld = true;
 
+int8_t configOld = 255;
 int8_t ledOld = 0;
-int8_t measureOld = 5;
+int8_t measureOld = 255;
 uint8_t sOld = 255;
 uint8_t SWROld = 255;
 uint8_t powerOld = 255;
@@ -158,7 +168,7 @@ String binFilename[128];
 uint8_t binIndex = 0;
 
 // Menu
-const char *settings[] = {"Measured Values", "Transverter Mode", "Themes", "Led Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
+const char *settings[] = {"Config", "Measured Values", "Transverter Mode", "Themes", "Led Mode", "Brightness", "Beep", "Screensaver", "IP Address", "Shutdown", "Exit"};
 const char *choiceMeasures[] = {"PWR", "S", "SWR"};
 const char *choiceThemes[] = {"CLASSIC", "DARK"};
 const char *choiceBrightness[] = {"BRIGHTNESS"};
