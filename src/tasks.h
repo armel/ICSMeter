@@ -139,40 +139,26 @@ void button(void *pvParameters)
               preferences.putUInt("config", config);
 
               if(
-                (icConnect == USB && String(choiceConfig[(config * 4) + 2]) == "BT")
+                (icConnect == USB && strcmp(choiceConfig[(config * 4) + 2], "BT") == 0)
                 ||
-                (icConnect == BT && String(choiceConfig[(config * 4) + 2]) == "USB")
+                (icConnect == BT && strcmp(choiceConfig[(config * 4) + 2], "USB") == 0)
               )
               {
                 ESP.restart();
               } 
 
-              if(String(choiceConfig[(config * 4) + 2]) == "USB")
-              {
-                serialBT.end();
-               
+              if(strcmp(choiceConfig[(config * 4) + 2], "USB") == 0)
+              {               
                 icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
                 icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
                 icConnect = USB;
                 icSerialDevice = choiceConfig[(config * 4) + 3];
 
-                if(icConnect == USB || ESP.getPsramSize() > 0) // Sprite mode
-                {
-                  needleSprite.deleteSprite();
-                  needleSprite.setPsram(true);
-                  needleSprite.createSprite(320, 130);
-                  Serial.println("Ok Sprite USB");
-                }
-                else
-                {
-                  needleSprite.deleteSprite();
-                }
-
                 btConnected = false;
 
                 if (WiFi.status() == WL_CONNECTED) wifiConnected = true;
               }
-              else if(String(choiceConfig[(config * 4) + 2]) == "BT")
+              else if(strcmp(choiceConfig[(config * 4) + 2], "BT") == 0)
               {
                 icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
                 icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
@@ -185,31 +171,28 @@ void button(void *pvParameters)
                   i += 3;
                 }
 
-                if(icConnect == USB || ESP.getPsramSize() > 0) // Sprite mode
-                {
-                  needleSprite.deleteSprite();
-                  needleSprite.setPsram(true);
-                  needleSprite.createSprite(320, 130);
-                  Serial.println("Ok Sprite BT");
-                }
-                else
-                {
-                  needleSprite.deleteSprite();
-                }
-
                 wifiConnected = false;
+
+                uint8_t attempt = 0;
+
                 serialBT.begin(NAME, true);
                 btClient = serialBT.connect(icAddress);
 
-                uint8_t attempt = 0;
-                while(!btClient) 
+                while(!btClient && attempt < 3) 
                 {
                   btClient = serialBT.connect(icAddress);
-                  Serial.printf("Attempt %d - Make sure IC-705 is available and in range.", attempt + 1);
                   attempt++;
-                  if(attempt == 10)
+                }
+
+                if(!btClient) 
+                {
+                  if (!serialBT.begin(NAME))
                   {
-                    break;
+                    Serial.println("An error occurred initializing Bluetooth");
+                  }
+                  else
+                  {
+                    Serial.println("Bluetooth initialized");
                   }
                 }
               }

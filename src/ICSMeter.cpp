@@ -75,10 +75,6 @@ void setup()
     needleSprite.setPsram(true);
     needleSprite.createSprite(320, 130);
   }
-  else
-  {
-    needleSprite.deleteSprite();
-  }
 
   logoSprite.setColorDepth(8);
   logoSprite.createSprite(44, 22);
@@ -123,12 +119,11 @@ void setup()
   if(icModel == 705 && icConnect == BT)
   {
     uint8_t attempt = 0;
-    String dot = "";
-    display.setTextDatum(CC_DATUM);
-    display.setFont(&stencilie16pt7b);
-    display.setTextPadding(194);
-    display.setTextColor(TFT_FRONT, TFT_BACK);
-    display.drawString("IC-705" + dot, 160 + offsetX, 180 + offsetY);
+    char valString[24] = "Connexion";
+    char dot[4];
+
+    sprintf(dot, "%.*s", attempt, ",,,,,");
+    value(strcat(valString, dot));
 
     serialBT.begin(NAME, true);
     btClient = serialBT.connect(icAddress);
@@ -137,12 +132,8 @@ void setup()
     {
       Serial.printf("Attempt %d - Make sure IC-705 is available and in range.", attempt + 1);
 
-      dot += ".";
-      display.setTextDatum(CC_DATUM);
-      display.setFont(&stencilie16pt7b);
-      display.setTextPadding(194);
-      display.setTextColor(TFT_FRONT, TFT_BACK);
-      display.drawString("IC-705" + dot, 160 + offsetX, 180 + offsetY);
+      sprintf(dot, "%.*s", attempt, ",,,,,");
+      value(strcat(valString, dot));
 
       btClient = serialBT.connect(icAddress);
       attempt++;
