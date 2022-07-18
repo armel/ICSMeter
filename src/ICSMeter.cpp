@@ -120,9 +120,8 @@ void setup()
   {
     uint8_t attempt = 0;
     char valString[24] = "Connexion";
-    char dot[4];
+    char dot[4] = "";
 
-    sprintf(dot, "%.*s", attempt, ",,,,,");
     value(strcat(valString, dot));
 
     serialBT.begin(NAME, true);
@@ -132,7 +131,7 @@ void setup()
     {
       Serial.printf("Attempt %d - Make sure IC-705 is available and in range.", attempt + 1);
 
-      sprintf(dot, "%.*s", attempt, ",,,,,");
+      sprintf(dot, "%.*s", 1, ",,,,,");
       value(strcat(valString, dot));
 
       btClient = serialBT.connect(icAddress);
