@@ -51,7 +51,7 @@ void setup()
   // Init Setting
   icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
   icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
-  if(String(choiceConfig[(config * 4) + 2]) == "USB")
+  if(strcmp(choiceConfig[(config * 4) + 2], "USB") == 0)
   {
     icConnect = USB;
     icSerialDevice = choiceConfig[(config * 4) + 3];
