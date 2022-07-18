@@ -95,9 +95,9 @@ void setup()
 
   if(IC_MODEL == 705 && IC_CONNECT == BT)
   {
-    CAT.register_callback(callbackBT);
+    serialBT.register_callback(callbackBT);
     
-    if (!CAT.begin(NAME))
+    if (!serialBT.begin(NAME))
     {
       Serial.println("An error occurred initializing Bluetooth");
     }
