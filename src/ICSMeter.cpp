@@ -122,19 +122,32 @@ void setup()
 
   if(icModel == 705 && icConnect == BT)
   {
+    uint8_t attempt = 0;
+    String dot = "";
+    display.setTextDatum(CC_DATUM);
+    display.setFont(&stencilie16pt7b);
+    display.setTextPadding(194);
+    display.setTextColor(TFT_FRONT, TFT_BACK);
+    display.drawString("IC-705" + dot, 160 + offsetX, 180 + offsetY);
+
     serialBT.begin(NAME, true);
     btClient = serialBT.connect(icAddress);
 
-    if(!btClient) 
+    while(!btClient && attempt < 3) 
     {
-      uint8_t attempt = 0;
-      while(!serialBT.connect(icAddress) && attempt < 2) 
-      {
-        Serial.printf("Attempt %d - Make sure IC-705 is available and in range.", attempt + 1);
-        attempt++;
-      }
+      Serial.printf("Attempt %d - Make sure IC-705 is available and in range.", attempt + 1);
+
+      dot += ".";
+      display.setTextDatum(CC_DATUM);
+      display.setFont(&stencilie16pt7b);
+      display.setTextPadding(194);
+      display.setTextColor(TFT_FRONT, TFT_BACK);
+      display.drawString("IC-705" + dot, 160 + offsetX, 180 + offsetY);
+
+      btClient = serialBT.connect(icAddress);
+      attempt++;
     }
- 
+  
     if(!btClient) 
     {
       if (!serialBT.begin(NAME))
@@ -145,6 +158,14 @@ void setup()
       {
         Serial.println("Bluetooth initialized");
       }
+    }
+    else
+    {
+      display.setTextDatum(CC_DATUM);
+      display.setFont(&stencilie16pt7b);
+      display.setTextPadding(194);
+      display.setTextColor(TFT_FRONT, TFT_BACK);
+      display.drawString("", 160 + offsetX, 180 + offsetY);
     }
   }
   else
