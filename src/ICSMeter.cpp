@@ -49,6 +49,14 @@ void setup()
   config = preferences.getUInt("config", 0);
 
   // Init Setting
+  size_t n = sizeof(choiceConfig) / sizeof(choiceConfig[0]);
+  n = (n / 4) - 1;
+
+  if(config > n)
+  {
+    config = n;
+  }
+
   icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
   icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
   if(strcmp(choiceConfig[(config * 4) + 2], "USB") == 0)
