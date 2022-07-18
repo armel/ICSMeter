@@ -151,11 +151,8 @@ void setup()
     }
     else
     {
-      display.setTextDatum(CC_DATUM);
-      display.setFont(&stencilie16pt7b);
-      display.setTextPadding(194);
-      display.setTextColor(TFT_FRONT, TFT_BACK);
-      display.drawString("", 160 + offsetX, 180 + offsetY);
+      snprintf(valString, 24, "%s", "");
+      value(valString);
     }
   }
   else

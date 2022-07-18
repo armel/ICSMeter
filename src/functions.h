@@ -385,7 +385,7 @@ void value(char* valString, uint8_t x = 160, uint8_t y = 180)
     {
       if(valString[i] == '.') valString[i] = ';';
     }
-    display.setTextPadding(190);
+    display.setTextPadding(192);
     display.setTextColor(TFT_FRONT, TFT_BACK);
     display.drawString(valString, x + offsetX, y + offsetY);
   }
@@ -925,8 +925,6 @@ void wakeAndSleep()
   }
 }
 
-
-
 // Manage connexion error
 boolean checkConnection()
 {
@@ -934,7 +932,7 @@ boolean checkConnection()
 
   uint16_t httpCode;
 
-  String message = "";
+  char message[24] = "";
   String command = "";
   String response = "";
 
@@ -964,9 +962,9 @@ boolean checkConnection()
     }
 
     if (icModel == 705 && icConnect == BT && btConnected == false)
-      message = "Need Pairing";
+      snprintf(message, 24, "%s", "Need Pairing");
     else if (icConnect == USB && wifiConnected == false)
-      message = "Check Wifi";
+      snprintf(message, 24, "%s", "Check Wifi");
     else if (icConnect == USB && (proxyConnected == false || txConnected == false))
     {
       http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
@@ -985,18 +983,18 @@ boolean checkConnection()
         {
           Serial.println("TX connected");
           txConnected = true;
-          message = "";
+          snprintf(message, 24, "%s", "");
         }
         else
         {
           Serial.println("TX disconnected");
           txConnected = false;
-          message = "Check TX";
+          snprintf(message, 24, "%s %lu", "Check", icModel);
         }
       }
       else
       {
-        message = "Check Proxy";
+        snprintf(message, 24, "%s", "Check Proxy");
       }
       http.end();
     }
@@ -1033,19 +1031,16 @@ boolean checkConnection()
 
     // View message
 
-    if (message != "")
+    if (strcmp(message, "") != 0)
     {
       settingLock = true;
 
       if (screensaverMode == false && settingsMode == false)
       {
-        display.setTextDatum(CC_DATUM);
-        display.setFont(&stencilie16pt7b);
-        display.setTextPadding(194);
-        display.setTextColor(TFT_FRONT, TFT_BACK);
-        display.drawString(message, 160 + offsetX, 180 + offsetY);
+        value(message);
         vTaskDelay(750);
-        display.drawString("", 160 + offsetX, 180 + offsetY);
+        snprintf(message, 24, "%s", "");
+        value(message);
         frequencyOld = "";
         settingLock = false;
         vTaskDelay(250);
