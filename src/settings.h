@@ -2,15 +2,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // IC Config
-//  For each line, 
-//  IC Model (705, 7300 or 9700), 
-//  CI_V Address, 
-//  IC Connect (USB or BT),
-//  PC Serial Device (if USB) or 705 BT Address (if BT)
+// For each line, 
+//  - IC Model (705, 7300 or 9700), 
+//  - CI_V Address (0x94 by default on IC-7300, 0xA4 by default on IC-705), 
+//  - IC Connect (USB or BT),
+//  - Serial Device (if USB) or BT Address (if BT with IC-705)
 const char *choiceConfig[] = {
-    "7300", "0xA4", "USB", "/dev/ttyUSB0",     
+    "7300", "0x94", "USB", "/dev/ttyUSB0",     
      "705", "0xA4", "USB", "/dev/ttyACM0",    
-     "705", "0xA4", "BT", "01:A1:B2:C3:D4:10" 
+     "705", "0xA4", "BT",  "30:31:7D:33:B2:58" 
 };
 
 // Wifi Config
