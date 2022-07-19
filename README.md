@@ -90,7 +90,7 @@ As I said, an excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_c
 
 ### File `src/settings.h`
 
-#### Multi config
+#### Multi configs
 
 Since version 1.0.0, it's posssible to set multi configs. With this new feature, it is possible to switch from one configuration to another from the settings menu !
 
