@@ -235,6 +235,7 @@ The following options are available :
 
 | Settings             | Value                                     | 
 | -------------------- |:-----------------------------------------:| 
+| Config			   | Set Config                                |
 | Measured Values      | Set Measured Values (PWR, S or SWR)       | 
 | Transverter Mode     | Set Transverter Mode (OFF, LO1 ~ LO5)     | 
 | Themes               | Set Themes (CLASSIC ~ DARK)               | 
@@ -246,7 +247,7 @@ The following options are available :
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
  
-> Measured Values, Transverter Mode, Themes, Led Mode, Brightness, Beep and Screensaver are preserved at the next restart.
+> Config, Measured Values, Transverter Mode, Themes, Led Mode, Brightness, Beep and Screensaver are preserved at the next restart.
 
 # About the needle animation
 
