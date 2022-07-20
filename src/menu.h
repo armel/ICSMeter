@@ -17,7 +17,7 @@ void viewMenu(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
     display.setTextColor(TFT_MENU_SELECT);
     display.drawString(String(NAME) + " V" + String(VERSION) + " by " + String(AUTHOR), 160 + offsetX, 28 + y);
 
-    display.drawFastHLine(120 + offsetX, 3 + offsetY, 80, TFT_BLACK);
+    display.drawFastHLine(120 + offsetX, 3 + offsetY, 80, TFT_BACK);
     display.drawFastHLine(x + 1, 36 + y, w - 2, TFT_MENU_SELECT);
     display.drawFastHLine(x + 1, (y + h) - 24, w - 2, TFT_MENU_SELECT);
 }
