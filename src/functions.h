@@ -909,8 +909,7 @@ void wakeAndSleep()
     }
 
     logoSprite.pushSprite(x + offsetX, y + offsetY, TFT_TRANSPARENT);
-
-    //Serial.printf("%d %d\n", x, y);
+    vTaskDelay(100);
 
     if (icModel == 705 && icConnect == BT && btConnected == false)
       vTaskDelay(75);
