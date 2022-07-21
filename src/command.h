@@ -495,8 +495,6 @@ void getPower()
       Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
     }
 
-      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
-
     // Draw line
     needle(angle);
 
