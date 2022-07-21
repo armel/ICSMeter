@@ -62,12 +62,12 @@ void viewSettings()
   display.drawRoundRect(4 + offsetX, 4 + offsetY, 56, 13, 2, TFT_MODE_BORDER);
   display.setTextColor(TFT_WHITE);
 
-  snprintf(buf, 16, "%d %s", IC_MODEL, "BT");
+  snprintf(buf, 16, "%lu %s", icModel, "BT");
 
-  if (IC_CONNECT == BT)
-    snprintf(buf, 16, "%d %s", IC_MODEL, "BT");
+  if (icConnect == BT)
+    snprintf(buf, 16, "%lu %s", icModel, "BT");
   else
-    snprintf(buf, 16, "%d %s", IC_MODEL, "USB");
+    snprintf(buf, 16, "%lu %s", icModel, "USB");
 
   display.drawString(buf, 32 + offsetX, 11 + offsetY);
 
@@ -150,7 +150,7 @@ void viewGUI()
   {
     display.drawJpg(smeterTopClassic, sizeof(smeterTopClassic), 0 + offsetX, 0 + offsetY, 320, 20);
 
-    if (IC_MODEL == 705)
+    if (icModel == 705)
       display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 140);
     else
       display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 140);
@@ -160,7 +160,7 @@ void viewGUI()
   {
     display.drawJpg(smeterTopDark, sizeof(smeterTopDark), 0 + offsetX, 0 + offsetY, 320, 20);
 
-    if (IC_MODEL == 705)
+    if (icModel == 705)
       display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 140);
     else
       display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 140);
@@ -245,18 +245,18 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
   cc = 160 + x;
   dd = 220 - y;
 
-  if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+  if(icConnect == USB || ESP.getPsramSize() > 0) // Sprite mode
   {
     if(theme == 0) 
     {
-      if (IC_MODEL == 705)
+      if (icModel == 705)
         needleSprite.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0, 0, 320, 130);
       else
         needleSprite.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0, 0, 320, 130);
     }
     else
     {
-      if (IC_MODEL == 705)
+      if (icModel == 705)
         needleSprite.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0, 0, 320, 130);
       else
         needleSprite.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0, 0, 320, 130);
@@ -276,14 +276,14 @@ void needleCalc(float_t angle, uint16_t a, uint16_t b, uint16_t c, uint16_t d)
   {
     if(theme == 0) 
     {
-      if (IC_MODEL == 705)
+      if (icModel == 705)
         display.drawJpg(smeterMiddleClassic10, sizeof(smeterMiddleClassic10), 0 + offsetX, 20 + offsetY, 320, 140);
       else
         display.drawJpg(smeterMiddleClassic100, sizeof(smeterMiddleClassic100), 0 + offsetX, 20 + offsetY, 320, 140);
     }
     else
     {
-      if (IC_MODEL == 705)
+      if (icModel == 705)
         display.drawJpg(smeterMiddleDark10, sizeof(smeterMiddleDark10), 0 + offsetX, 20 + offsetY, 320, 140);
       else
         display.drawJpg(smeterMiddleDark100, sizeof(smeterMiddleDark100), 0 + offsetX, 20 + offsetY, 320, 140);
@@ -316,7 +316,7 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uin
 
   if(NEEDLE == ARITHMETIC)  // Arithmetic
   {
-    if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+    if(icConnect == USB || ESP.getPsramSize() > 0) // Sprite mode
       speed = 8;
     else
       speed = 2;
@@ -348,7 +348,7 @@ void needle(float_t angle, uint16_t a = 0, uint16_t b = 220, uint16_t c = 0, uin
   }
   else if(NEEDLE == GEOMETRIC)  // Geometric
   {
-    if(IC_CONNECT == USB || ESP.getPsramSize() > 0) // Sprite mode
+    if(icConnect == USB || ESP.getPsramSize() > 0) // Sprite mode
       speed = 8;
     else
       speed = 2;
@@ -385,7 +385,7 @@ void value(char* valString, uint8_t x = 160, uint8_t y = 180)
     {
       if(valString[i] == '.') valString[i] = ';';
     }
-    display.setTextPadding(190);
+    display.setTextPadding(192);
     display.setTextColor(TFT_FRONT, TFT_BACK);
     display.drawString(valString, x + offsetX, y + offsetY);
   }
@@ -909,12 +909,11 @@ void wakeAndSleep()
     }
 
     logoSprite.pushSprite(x + offsetX, y + offsetY, TFT_TRANSPARENT);
+    vTaskDelay(100);
 
-    //Serial.printf("%d %d\n", x, y);
-
-    if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
+    if (icModel == 705 && icConnect == BT && btConnected == false)
       vTaskDelay(75);
-    else if (IC_CONNECT == USB && wifiConnected == false)
+    else if (icConnect == USB && wifiConnected == false)
       vTaskDelay(75);
   }
 
@@ -925,8 +924,6 @@ void wakeAndSleep()
   }
 }
 
-
-
 // Manage connexion error
 boolean checkConnection()
 {
@@ -934,11 +931,11 @@ boolean checkConnection()
 
   uint16_t httpCode;
 
-  String message = "";
+  char message[24] = "";
   String command = "";
   String response = "";
 
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x03, 0xFD};
 
   char s[4];
 
@@ -950,7 +947,7 @@ boolean checkConnection()
     command += String(s);
   }
 
-  command += BAUD_RATE + String(",") + SERIAL_DEVICE;
+  command += BAUD_RATE + String(",") + icSerialDevice;
 
   if (screenshot == false)
   {
@@ -963,11 +960,11 @@ boolean checkConnection()
       btConnected = false;
     }
 
-    if (IC_MODEL == 705 && IC_CONNECT == BT && btConnected == false)
-      message = "Need Pairing";
-    else if (IC_CONNECT == USB && wifiConnected == false)
-      message = "Check Wifi";
-    else if (IC_CONNECT == USB && (proxyConnected == false || txConnected == false))
+    if (icModel == 705 && icConnect == BT && btConnected == false)
+      snprintf(message, 24, "%s", "Need Pairing");
+    else if (icConnect == USB && wifiConnected == false)
+      snprintf(message, 24, "%s", "Check Wifi");
+    else if (icConnect == USB && (proxyConnected == false || txConnected == false))
     {
       http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
       http.addHeader("User-Agent", "M5Stack");                                                               // Specify header
@@ -985,18 +982,18 @@ boolean checkConnection()
         {
           Serial.println("TX connected");
           txConnected = true;
-          message = "";
+          snprintf(message, 24, "%s", "");
         }
         else
         {
           Serial.println("TX disconnected");
           txConnected = false;
-          message = "Check TX";
+          snprintf(message, 24, "%s %lu", "Check", icModel);
         }
       }
       else
       {
-        message = "Check Proxy";
+        snprintf(message, 24, "%s", "Check Proxy");
       }
       http.end();
     }
@@ -1004,7 +1001,7 @@ boolean checkConnection()
     // Shutdown screen if no TX connexion
     if (wakeup == true && startup == false)
     {
-      if ((IC_CONNECT == BT && btConnected == false) || (IC_CONNECT == USB && txConnected == false))
+      if ((icConnect == BT && btConnected == false) || (icConnect == USB && txConnected == false))
       {
         display.sleep();
         wakeup = false;
@@ -1021,7 +1018,7 @@ boolean checkConnection()
     }
     else if (wakeup == false && startup == false)
     {
-      if ((IC_CONNECT == BT && btConnected == true) || (IC_CONNECT == USB && txConnected == true))
+      if ((icConnect == BT && btConnected == true) || (icConnect == USB && txConnected == true))
       {
         clearData();
         viewGUI();
@@ -1033,19 +1030,16 @@ boolean checkConnection()
 
     // View message
 
-    if (message != "")
+    if (strcmp(message, "") != 0)
     {
       settingLock = true;
 
       if (screensaverMode == false && settingsMode == false)
       {
-        display.setTextDatum(CC_DATUM);
-        display.setFont(&stencilie16pt7b);
-        display.setTextPadding(194);
-        display.setTextColor(TFT_FRONT, TFT_BACK);
-        display.drawString(message, 160 + offsetX, 180 + offsetY);
+        value(message);
         vTaskDelay(750);
-        display.drawString("", 160 + offsetX, 180 + offsetY);
+        snprintf(message, 24, "%s", "");
+        value(message);
         frequencyOld = "";
         settingLock = false;
         vTaskDelay(250);

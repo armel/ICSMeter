@@ -65,7 +65,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
     command += String(s);
   }
 
-  command += BAUD_RATE + String(",") + SERIAL_DEVICE;
+  command += BAUD_RATE + String(",") + icSerialDevice;
 
   http.begin(civClient, PROXY_URL + String(":") + PROXY_PORT + String("/") + String("?civ=") + command); // Specify the URL
   http.addHeader("User-Agent", "M5Stack");                                                               // Specify header
@@ -128,7 +128,7 @@ void sendCommandWifi(char *request, size_t n, char *buffer, uint8_t limit)
 // Send CI-V Command dispatcher
 void sendCommand(char *request, size_t n, char *buffer, uint8_t limit)
 {
-  if (IC_MODEL == 705 && IC_CONNECT == BT)
+  if (icModel == 705 && icConnect == BT)
     sendCommandBt(request, n, buffer, limit);
   else
     sendCommandWifi(request, n, buffer, limit);
@@ -140,7 +140,7 @@ void getSmeter()
   char valString[32];  
 
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x02, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x02, 0xFD};
   char str[2];
 
   uint8_t val0 = 0;
@@ -291,7 +291,7 @@ void getSWR()
   char valString[32];  
 
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x12, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x12, 0xFD};
   char str[2];
 
   uint8_t val0 = 0;
@@ -420,7 +420,7 @@ void getPower()
   char valString[32];  
 
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x15, 0x11, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x15, 0x11, 0xFD};
   char str[2];
 
   uint8_t val0 = 0;
@@ -484,7 +484,7 @@ void getPower()
     }
 
     val2 = round(val1 * 10);
-    if (IC_MODEL == 705)
+    if (icModel == 705)
       snprintf(valString, 16, "%s %.2f %s", "PWR", (val2 / 10), "W");
     else
       snprintf(valString, 16, "%s %.2f %s", "PWR", (val2), "W");
@@ -494,8 +494,6 @@ void getPower()
     {
       Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
     }
-
-      Serial.printf("%s %d %f %f \n", valString, val0, val1, angle);
 
     // Draw line
     needle(angle);
@@ -533,7 +531,7 @@ void getPower()
 void getDataMode()
 {
   static char buffer[6];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1A, 0x06, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1A, 0x06, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 
@@ -549,7 +547,7 @@ void getFrequency()
   String frequencyNew;
 
   static char buffer[8];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x03, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x03, 0xFD};
 
   double freq; // Current frequency in Hz
   const uint32_t decMulti[] = {1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
@@ -603,7 +601,7 @@ void getMode()
 {
   char valString[16];  
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x04, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x04, 0xFD};
 
   const char *mode[] = {"LSB", "USB", "AM", "CW", "RTTY", "FM", "WFM", "CW-R", "RTTY-R", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "DV"};
 
@@ -649,7 +647,7 @@ uint8_t getTX()
   uint8_t value;
 
   static char buffer[5];
-  char request[] = {0xFE, 0xFE, CI_V_ADDRESS, 0xE0, 0x1C, 0x00, 0xFD};
+  char request[] = {0xFE, 0xFE, icCIVAddress, 0xE0, 0x1C, 0x00, 0xFD};
 
   size_t n = sizeof(request) / sizeof(request[0]);
 

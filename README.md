@@ -90,35 +90,39 @@ As I said, an excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_c
 
 ### File `src/settings.h`
 
-#### IC Transceiver Model
+#### Multi configs
 
-Line 5, the constant `IC_MODEL` set your Transceiver model.
-Choose between : 705, 7300 or 9700.
+Since version 1.0.0, it's posssible to set multi configs. With this new feature, it is possible to switch from one configuration to another from the settings menu !
 
-> I don't own the IC-9700, so I haven't tested it.
+> Note that if you change the connection mode, for example from USB to BT or from BT to USB, there will be a brief reboot of your M5Stack.
 
-#### IC Connect method
+So, line 10, edit the constant array `choiceConfig` : 
 
-If you're a using an IC-7300 or IC-9700, choose __USB__ !
+```
+const char *choiceConfig[] = {
+    "7300", "0x94", "USB", "/dev/ttyUSB0",     
+     "705", "0xA4", "USB", "/dev/ttyACM0",    
+     "705", "0xA4", "BT",  "30:31:7D:33:B2:58" 
+};
+```
 
-Line 8, the constant `IC_CONNECT` set your connect method.
-Choose between : BT or USB
+By default, I have defined 3 configurations. 
 
-> Note that BT only works with IC-705.
+The first one is for my `7300`. Its CI-V Address is `0x94` and it is connected by `USB`, on port `/dev/ttyUSB0`.
 
-#### CI-V Address of your Transceiver
+The second one is for my `705`. Its CI-V Address is `0xA4` and it is connected by `USB`, on port `/dev/ttyACM0`.
 
-Line 11, the constant `CI_V_ADDRESS` set the CI-V Address of your Transceiver. I have indicated the default value. Refer to the documentation, if needed.
+The third one is always for my `705`. Its CI-V Address is always `0xA4` but it is connected by `BT` and the BD Address of my IC-705 is `30:31:7D:33:B2:58`.
 
-> Note that, if you read 94h as `CI_V_ADDRESS` on your Transceiver, you must indicate 0x94. If it's A4h, you must indicate 0xA4. And so on. 
+> To get the BD Address of your IC-705, enter Menu and go to Set > Bluetooth Set > Bluetooth Device Information
 
 #### Wifi Configuration 
 
 If you're a using an IC-7300 or IC-9700, __it's necessary__ !
 
-Line 14 and 15, the constants `WIFI_SSID` and `WIFI_PASSWORD` set your Wifi configuration.
+Line 17 and 18, the constants `WIFI_SSID` and `WIFI_PASSWORD` set your Wifi configuration.
 
-In complement, you can view your ICSMeter from a simple browser. It is even possible to control it by this way, as the buttons are clickable. In order to display your ICSMeter in your browser, just go to `http://ip_address_of_your_ICSMeter/`. As a reminder, the IP address that your ICSMeter retrieves is sometimes displayed on the screen.
+In complement, you can view your ICMultiMeter from a simple browser. It is even possible to control it by this way, as the buttons are clickable. In order to display your ICMultiMeter in your browser, just go to `http://ip_address_of_your_ICMultiMeter/`. As a reminder, the IP address that your ICMultiMeter retrieves is sometimes displayed on the screen.
 
 > Beware: it's slow! And there is no automatic refresh. You have to click on the background of the screen image to make a new capture. And otherwise, as said, the buttons are functional.
 
@@ -132,62 +136,25 @@ Please, take the time to read the [README.md](https://github.com/armel/ICUSBProx
 
 It's done ? Nice, so we can move forward.
 
-Line 18 and 19, the constants `SERIAL_DEVICE` and `BAUD_RATE` set the CI-V COM port settings. So COM port number (COM1, /dev/ttyUSB0, etc.) and Baud rate (115200, 19200, 9600, etc.).
-Line 20 and 21, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port of the Proxy.
+Line 21 the constant `BAUD_RATE` set the CI-V COM port speed settings (115200, 19200, 9600, etc.). Line 22 and 23, the constants `PROXY_URL` and `PROXY_PORT` set the URL and port of the Proxy.
+
+> About Proxy, the idea is to use a PC or a nano computer (like a Raspberry Pi) to connect the IC-7300 or IC-9700 transceiver via the USB cable (USB type A to USB type B). The M5Stack will talk to this PC by Wifi and the PC will talk to the transceiver by the USB cable. By this way, the M5Stack keeps the big advantage of being wireless.
 
 > About Proxy, the idea is to use a PC or a nano computer (like a Raspberry Pi) to connect the IC-7300 or IC-9700 transceiver via the USB cable (USB type A to USB type B). The M5Stack will talk to this PC by Wifi and the PC will talk to the transceiver by the USB cable. By this way, the M5Stack keeps the big advantage of being wireless.
 
 #### Transverter Configuration
 
-If you are using a Transverter, you can configure up to 5 Local Oscillator frequencies, lines 24 ~ 28. For example, if you are on 28500000 Hz and the constant `TRANSVERTER_LO_1` is set to 116000000 (default value), your M5Stack will display 144.500.000 (not 28.500.000), if you select this option in the settings menu. This can be useful. Change theses constants only if you need.
+If you are using a Transverter, you can configure up to 5 Local Oscillator frequencies, lines 26 ~ 30. For example, if you are on 28500000 Hz and the constant `TRANSVERTER_LO_1` is set to 116000000 (default value), your M5Stack will display 144.500.000 (not 28.500.000), if you select this option in the settings menu. This can be useful. Change theses constants only if you need.
 
-#### Examples of settings
+#### About TX settings
 
-First of all, here is a part of my transceiver settings, on IC-7300 :
+Here is a part of my transceiver settings, on IC-7300 :
 
 ```
-Connectors > CI-V > CI-V USB Port       Unlink from [REMOTE]
-Connectors > CI-V > CI-V USB Baud Rate  115200
-Connectors > CI-V > CI-V USB Echo Back  OFF
+Set > Connectors > CI-V > CI-V USB Port       Unlink from [REMOTE]
+Set > Connectors > CI-V > CI-V USB Baud Rate  115200
+Set > Connectors > CI-V > CI-V USB Echo Back  OFF
 ```
-
-Next, in `settings.h` ... 
-
-##### IC-705, BT
-
-| Settings        | Value           | 
-| ------------- |:-------------:| 
-| IC_MODEL      | 705 | 
-| IC_CONNECT      | BT      | 
-| CI_V_ADDRESS | 0xA4      |
-
-##### IC-705, USB
-
-| Settings        | Value           | 
-| ------------- |:-------------:| 
-| IC_MODEL      | 705 | 
-| IC_CONNECT      | USB      | 
-| CI_V_ADDRESS | 0xA4      |
-| WIFI_SSID   |  _My WiFi SSID_ |
-| WIFI_PASSWORD | _My WiFi Password_ |
-| SERIAL_DEVICE | "/dev/ttyACM0" |
-| BAUD_RATE | 115200 | 
-| PROXY_URL | "http://192.168.1.32" |
-| PROXY_PORT | 1234 |    
-
-##### IC-7300, USB
-
-| Settings        | Value           | 
-| ------------- |:-------------:| 
-| IC_MODEL      | 7300 | 
-| IC_CONNECT      | USB      | 
-| CI_V_ADDRESS | 0x94      |
-| WIFI_SSID   |  _My WiFi SSID_ |
-| WIFI_PASSWORD | _My WiFi Password_ |
-| SERIAL_DEVICE | "/dev/ttyUSB0" |
-| BAUD_RATE | 115200 | 
-| PROXY_URL | "http://192.168.1.32" |
-| PROXY_PORT | 1234 |    
 
 ### File `platformio.ini` (for ATOM Display only)
 
@@ -235,6 +202,7 @@ The following options are available :
 
 | Settings             | Value                                     | 
 | -------------------- |:-----------------------------------------:| 
+| Config			   | Set Config                                |
 | Measured Values      | Set Measured Values (PWR, S or SWR)       | 
 | Transverter Mode     | Set Transverter Mode (OFF, LO1 ~ LO5)     | 
 | Themes               | Set Themes (CLASSIC ~ DARK)               | 
@@ -246,7 +214,7 @@ The following options are available :
 | Shutdown             | Shutdown your M5Stack (even if in charge) |
 | Exit                 | Menu Exit                                 |
  
-> Measured Values, Transverter Mode, Themes, Led Mode, Brightness, Beep and Screensaver are preserved at the next restart.
+> Config, Measured Values, Transverter Mode, Themes, Led Mode, Brightness, Beep and Screensaver are preserved at the next restart.
 
 # About the needle animation
 
@@ -349,7 +317,7 @@ Icom and the Icom logo are registered trademarks of Icom Incorporated (Japan) in
 
 # Donations
 
-Special thanks to Rolf Schroeder DL8BAG, Brian Garber WB8AM, Matt B-Wilkinson M6VWM, Robert Agnew KD0TVP, Meinhard Frank Günther DL0CN, Johan Hansson SM0TSC, Tadeusz Pater VA7CPM, Frederic Ulmer F4ESO, Joshua Murray M0JMO, Mark Hammond N8MH, Angel Mateu Muzzio EA4GIG, Hiroshi Sasaki JL7KGW, Robert John Williams VK3IE, Mark Bumstead M0IAX, Félix Symann F1VEO, Patrick Ruhl DG2YRP, Michael Beck DH5DAX, Philippe Nicolas F4IQP, Timothy Nustad KD9KHZ, Martin Blanz DL9SAD and Edmund Thompson AE4TQ for their donations. That’s so kind of them. Thanks so much 🙏🏻
+Special thanks to Rolf Schroeder DL8BAG, Brian Garber WB8AM, Matt B-Wilkinson M6VWM, Robert Agnew KD0TVP, Meinhard Frank Günther DL0CN, Johan Hansson SM0TSC, Tadeusz Pater VA7CPM, Frederic Ulmer F4ESO, Joshua Murray M0JMO, Mark Hammond N8MH, Angel Mateu Muzzio EA4GIG, Hiroshi Sasaki JL7KGW, Robert John Williams VK3IE, Mark Bumstead M0IAX, Félix Symann F1VEO, Patrick Ruhl DG2YRP, Michael Beck DH5DAX, Philippe Nicolas F4IQP, Timothy Nustad KD9KHZ, Martin Blanz DL9SAD, Edmund Thompson AE4TQ and Gregory Kiyoi KN6RUQ for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
 If you find this project fun and useful then [offer me a beer](https://www.paypal.me/F4HWN) :) 
 
