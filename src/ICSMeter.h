@@ -1,7 +1,7 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#define VERSION "1.0.1"
+#define VERSION "1.0.2"
 #define AUTHOR "F4HWN"
 #define NAME "ICSMeter"
 
