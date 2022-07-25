@@ -152,7 +152,7 @@ void button(void *pvParameters)
                 icModel = strtol(choiceConfig[(config * 4) + 0], 0, 10);
                 icCIVAddress = strtol(String(choiceConfig[(config * 4) + 1]).substring(2, 4).c_str(), 0, 16);
                 icConnect = USB;
-                icSerialDevice = choiceConfig[(config * 4) + 3];
+                snprintf(icSerialDevice, 48, "%s", choiceConfig[(config * 4) + 3]);
 
                 btConnected = false;
 

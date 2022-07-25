@@ -62,7 +62,7 @@ void setup()
   if(strcmp(choiceConfig[(config * 4) + 2], "USB") == 0)
   {
     icConnect = USB;
-    icSerialDevice = choiceConfig[(config * 4) + 3];
+    snprintf(icSerialDevice, 48, "%s", choiceConfig[(config * 4) + 3]);
   }
   else
   {

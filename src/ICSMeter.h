@@ -105,7 +105,7 @@ Preferences preferences;
 long icModel;
 long icConnect;
 long icConnectOld;
-String icSerialDevice;
+char icSerialDevice[48];
 char icCIVAddress = 0xA4;
 uint8_t icAddress[6];
 
