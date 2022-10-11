@@ -15,6 +15,8 @@
 ![version](https://img.shields.io/github/v/release/armel/ICSMeter)
 ![activity](https://img.shields.io/github/commit-activity/y/armel/ICSMeter)
 
+This project is no longer supported.
+
 **You could use the code F4HWN in order to get 5% discount on the [M5Stack shop](https://shop.m5stack.com/?ref=LUxetaH4) 🎁**
 
 **An excellent [video](https://www.youtube.com/watch?v=SCPEO7Eiy1E&ab_channel=HAMRADIODUDE) was released by [@HamRadioDude](https://twitter.com/HamRadioDude) about the installation of the IC705SMeter project. It can help you ! This is the same approach here.**
